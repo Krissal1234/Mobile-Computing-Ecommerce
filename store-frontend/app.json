@@ -19,6 +19,8 @@
     },
     "android": {
       "adaptiveIcon": {
+        "package": "com.sportyrentals",
+        "googleServicesFile": "../store-backend/firebase",
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }

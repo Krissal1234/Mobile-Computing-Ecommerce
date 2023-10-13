@@ -1,3 +1,7 @@
+
+
+firebase.initializeApp(firebaseConfig);
+
 const express = require('express');
 const stripe = require('stripe')('sk_test_51LoBCWGC9MhpkKozXeOQoG0UPShJdolQg9mXSa9w799aFFX0uCvv9Xf2rFjaC0xhhBCtxrGV5Qia2dozYnHZzbaL00DFxT0TIE');
 
