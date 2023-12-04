@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, Text, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styles from './styles';
 import { getFunctions, httpsCallable } from "firebase/functions";
@@ -18,7 +18,7 @@ export default function LoginScreen({navigation}) {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%' }}
                 keyboardShouldPersistTaps="always">
@@ -50,10 +50,10 @@ export default function LoginScreen({navigation}) {
                     onPress={() => onLoginPress()}>
                     <Text style={styles.buttonTitle}>Log in</Text>
                 </TouchableOpacity>
-                <View style={styles.footerView}>
+                <SafeAreaView style={styles.footerView}>
                     <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
-                </View>
+                </SafeAreaView>
             </KeyboardAwareScrollView>
-        </View>
+        </SafeAreaView>
     )
 }
