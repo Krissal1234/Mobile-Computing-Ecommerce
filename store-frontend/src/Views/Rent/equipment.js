@@ -1,0 +1,25 @@
+import { Text, TouchableOpacity, SafeAreaView,Image } from 'react-native';
+import styles from './styles';
+
+
+
+
+export default function home({ navigation }) {
+
+    const rent = () => {
+        navigation.navigate('Login');
+    };
+
+    return (
+        <SafeAreaView style={styles.container}>
+
+
+            <TouchableOpacity
+                style={styles.button}
+                onPress={rent}>
+                <Text style={styles.buttonTitle}>rent equipment page</Text>
+            </TouchableOpacity>
+
+        </SafeAreaView>
+    );
+}
