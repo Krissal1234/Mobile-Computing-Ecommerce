@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/stack": "^6.3.18",
     "@stripe/stripe-react-native": "0.28.0",
@@ -21,6 +22,7 @@
     "react": "18.2.0",
     "react-native": "0.72.5",
     "react-native-gesture-handler": "^2.13.2",
+    "react-native-ico-material-design": "^5.1.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-navigation": "^5.0.0"
   },

@@ -1,7 +1,7 @@
 import { View, Text, Button, Alert, Image } from 'react-native'
 import React, { useEffect } from 'react'
 import axios from 'axios'
-import { BASE_URL } from '../Constants'
+import { BASE_URL } from '../../../Constants'
 import { initPaymentSheet, presentPaymentSheet } from '@stripe/stripe-react-native'
 
 const Checkout = () => {
