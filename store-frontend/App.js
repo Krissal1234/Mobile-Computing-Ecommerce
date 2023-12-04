@@ -38,7 +38,6 @@ import "react-native-gesture-handler";
 import React, { useEffect, useState, useMemo } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { LoginScreen } from "./src";
 
 import { decode, encode } from "base-64";
 if (!global.btoa) {
@@ -59,6 +58,7 @@ import Icon from "react-native-ico-material-design";
 import AddEquipment from "./src/Views/AddEquipment/AddEquipment";
 import HomeScreen from "./src/Views/Core";
 import SelectLeaseOrRent from "./src/Views/SelectLeaseOrRent/SelectLeaseOrRent";
+import LoginScreen from "./src/Views/Login/LoginScreen"
 import { UserContext } from "./src/Contexts/UserContext";
 import Core from "./src/Views/Core";
 

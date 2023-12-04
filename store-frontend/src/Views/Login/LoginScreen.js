@@ -3,6 +3,7 @@ import { Image, Text, TextInput, TouchableOpacity, SafeAreaView } from 'react-na
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styles from './styles';
 import { getFunctions, httpsCallable } from "firebase/functions";
+
 export default function LoginScreen({navigation}) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
