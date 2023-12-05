@@ -61,6 +61,7 @@ import SelectLeaseOrRent from "./src/Views/SelectLeaseOrRent/SelectLeaseOrRent";
 import LoginScreen from "./src/Views/Login/LoginScreen"
 import { UserContext } from "./src/Contexts/UserContext";
 import Core from "./src/Views/Core";
+import LeaseScreen from "./src/Views/Lease/equipment";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpCJtHqad3BnKh9PKURBVHQp7I6ykFCO0",
