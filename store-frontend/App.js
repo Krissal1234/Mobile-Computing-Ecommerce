@@ -61,17 +61,21 @@ import SelectLeaseOrRent from "./src/Views/SelectLeaseOrRent/SelectLeaseOrRent";
 import LoginScreen from "./src/Views/Login/LoginScreen"
 import { UserContext } from "./src/Contexts/UserContext";
 import Core from "./src/Views/Core";
+// import { initializeApp } from './path-to-firebaseConfig/firebaseConfig'; // Adjust the path accordingly
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBpCJtHqad3BnKh9PKURBVHQp7I6ykFCO0",
-  authDomain: "sportyrental.firebaseapp.com",
-  projectId: "sportyrentals",
-  messagingSenderId: "79967591982 ",
-  appId: "1:79967591982:android:f7f82758c2bc30443c09bf",
-};
+import RegisterScreen from "./src/Views/RegisterScreen/RegisterScreen";
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBpCJtHqad3BnKh9PKURBVHQp7I6ykFCO0",
+//   authDomain: "sportyrental.firebaseapp.com",
+//   projectId: "sportyrentals",
+//   messagingSenderId: "79967591982 ",
+//   appId: "1:79967591982:android:f7f82758c2bc30443c09bf",
+// };
 // useEffect(() => {
 //   if (!firebase.apps.length) {
-firebase.initializeApp(firebaseConfig);
+//firebase.functions().useEmulator('localhost', 5001);
+// firebase.initializeApp(firebaseConfig);
+
 //   }
 // }, []);
 
@@ -88,10 +92,12 @@ export default function App() {
         <Stack.Navigator>
           <Stack.Screen
             name="SelectLeaseOrRent"
+            // component={SelectLeaseOrRent}
             component={SelectLeaseOrRent}
           />
           <Stack.Screen name="Home" component={Core} options={{headerShown: false}} />
           <Stack.Screen name="Login" component={LoginScreen}  options={{headerShown: false}} />
+          <Stack.Screen name="Registration" component={RegisterScreen}  options={{headerShown: false}} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserContext.Provider>

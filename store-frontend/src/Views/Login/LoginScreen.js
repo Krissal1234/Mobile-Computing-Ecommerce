@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styles from './styles';
-import { getFunctions, httpsCallable } from "firebase/functions";
-
+import LoginController from '../../Controllers/LoginController';
 export default function LoginScreen({navigation}) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -12,9 +11,10 @@ export default function LoginScreen({navigation}) {
         navigation.navigate('Registration')
     }
 
-    const onLoginPress = () => {
-      const functions = getFunctions();
-
+    const onLoginPress = async () => {
+        console.log("clicked login");
+       //await LoginController.registerUser(email, "krissal1234", password,password);
+       await LoginController.loginUser(email, password);
       
     }
 
