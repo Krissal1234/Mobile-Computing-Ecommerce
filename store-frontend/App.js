@@ -61,7 +61,7 @@ import SelectLeaseOrRent from "./src/Views/SelectLeaseOrRent/SelectLeaseOrRent";
 import LoginScreen from "./src/Views/Login/LoginScreen"
 import { UserContext } from "./src/Contexts/UserContext";
 import Core from "./src/Views/Core";
-// import { initializeApp } from './path-to-firebaseConfig/firebaseConfig'; // Adjust the path accordingly
+import LeaseScreen from "./src/Views/Lease/equipment";
 
 import RegisterScreen from "./src/Views/RegisterScreen/RegisterScreen";
 // const firebaseConfig = {
