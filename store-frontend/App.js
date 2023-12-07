@@ -51,7 +51,7 @@ import HomeScreen from './src/Views/HomeScreen/Home.js'
 import LoginScreen from "./src/Views/Login/LoginScreen"
 import { UserContext } from "./src/Contexts/UserContext";
 import RentEquipment from './src/Views/Rent/Equipment';
-import LeaseEquipment from './src/Views/Lease/Equipment';
+import LeaseEquipment from './src/Views/Lease/EquipmentLease.js';
 import RegisterScreen from "./src/Views/RegisterScreen/RegisterScreen";
 
 // const firebaseConfig = {
