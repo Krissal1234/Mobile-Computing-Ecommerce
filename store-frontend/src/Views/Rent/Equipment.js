@@ -4,7 +4,7 @@ import styles from 'store-frontend/src/Views/styles';
 
 
 
-export default function home({ navigation }) {
+export default function RentEquipment ({ navigation }) {
 
     const rent = () => {
         navigation.navigate('Login');

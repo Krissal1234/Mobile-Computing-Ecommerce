@@ -32,10 +32,9 @@
 
 // export default App;
 // import firebase from 'firebase/app';
-import * as firebase from "firebase/app";
 
 import "react-native-gesture-handler";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -48,21 +47,11 @@ if (!global.atob) {
 }
 
 // Navigation
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Basket from "./src/Views/Basket/Basket";
-import Bookings from "./src/Views/Bookings/Bookings";
-import Equipment from "./src/Views/Equipment/Equipment";
-import Pitches from "./src/Views/Pitches/Pitches";
-import { Text, View } from "react-native";
-import Icon from "react-native-ico-material-design";
-import AddEquipment from "./src/Views/AddEquipment/AddEquipment";
-import HomeScreen from "./src/Views/HomeScreen/Home";
+import HomeScreen from 'store-frontend/src/Views/HomeScreen/Home.js'
 import LoginScreen from "./src/Views/Login/LoginScreen"
 import { UserContext } from "./src/Contexts/UserContext";
 import RentEquipment from './src/Views/Rent/Equipment';
 import LeaseEquipment from './src/Views/Lease/Equipment';
-import Core from "./src/Views/Core";
-import LeaseScreen from "./src/Views/Lease/Equipment";
 import RegisterScreen from "./src/Views/RegisterScreen/RegisterScreen";
 
 // const firebaseConfig = {

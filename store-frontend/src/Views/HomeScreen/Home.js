@@ -2,7 +2,7 @@ import { Text, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 import styles from 'store-frontend/src/Views/styles';
 import homeStyles from './styles';
 
-export default function home({ navigation }) {
+export default function Home({ navigation }) {
 
     const rent = () => {
         navigation.navigate('Login');
