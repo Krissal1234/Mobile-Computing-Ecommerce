@@ -8,6 +8,7 @@ import {colors} from 'store-frontend/src/Views/colors.js'
 export default function LoginScreen({navigation}) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [isImageLoaded, setIsImageLoaded] = useState(false);
 
     const onFooterLinkPress = () => {
         navigation.navigate('Registration')
@@ -20,6 +21,10 @@ export default function LoginScreen({navigation}) {
       
     }
 
+    const handleImageLoaded = () => {
+        setIsImageLoaded(true);
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAwareScrollView
@@ -28,7 +33,10 @@ export default function LoginScreen({navigation}) {
                 <Image
                     style={styles.logo}
                     source={require('store-frontend/assets/logo.png')}
+                    onLoad={handleImageLoaded}
                 />
+                {isImageLoaded && (
+                    <>
                 <TextInput
                     style={styles.input}
                     placeholder='E-mail'
@@ -56,6 +64,8 @@ export default function LoginScreen({navigation}) {
                 <SafeAreaView style={styles.footerView}>
                     <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
                 </SafeAreaView>
+                </>
+                )}
             </KeyboardAwareScrollView>
         </SafeAreaView>
     )
