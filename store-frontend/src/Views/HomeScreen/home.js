@@ -17,7 +17,6 @@ export default function home({ navigation }) {
             <Image  
                 source={require('store-frontend/assets/logo.png')}
                 style={homeStyles.logo}
-                onLoad={handleImageLoaded} // This will call handleImageLoaded when the image is loaded
             />
 
             <TouchableOpacity
