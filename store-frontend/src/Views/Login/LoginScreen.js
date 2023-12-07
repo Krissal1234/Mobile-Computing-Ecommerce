@@ -24,7 +24,7 @@ export default function LoginScreen({navigation}) {
         <SafeAreaView style={styles.container}>
             <KeyboardAwareScrollView
                 contentContainerStyle={styles.keyboardContainer}
-                keyboardShouldPersistTaps="always">
+                keyboardShouldPersistTaps="never">
                 <Image
                     style={styles.logo}
                     source={require('store-frontend/assets/logo.png')}

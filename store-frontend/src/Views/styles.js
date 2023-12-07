@@ -4,11 +4,17 @@ import {colors} from './colors'
 export default StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%',
         alignItems: 'center',
-        backgroundColor:colors.darkBlue
+        justifyContent: 'flex-start', // Adjusted
+        flexDirection: 'column',
+        backgroundColor: colors.darkBlue,
+        padding: '5%',
     },
     keyboardContainer:{
-        flexGrow:1,
+        flexGrow: 1,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
     },
     title: {
 
@@ -18,27 +24,27 @@ export default StyleSheet.create({
         width: '30%',
         padding:'40%',
         alignSelf: "center",
-        margin: 30
+        margin: '10%'
     },
     input: {
         backgroundColor: colors.white,
         width:'80%',
         marginHorizontal:'10%',
         marginTop: '10%',
-        height: '10%',
+        paddingVertical: 15,
         borderRadius: '20%',
         borderWidth:'3%',
         borderColor:colors.red,
         alignItems: "center",
         justifyContent: 'center',
-        paddingLeft:'5%'
+        padding:'5%'
     },
     button: {
         backgroundColor: colors.white,
         width:'80%',
         marginHorizontal:'10%',
         marginTop: '10%',
-        height: '10%',
+        paddingVertical: 15,
         borderRadius: '20%',
         borderWidth:'3%',
         borderColor:colors.red,
@@ -53,15 +59,15 @@ export default StyleSheet.create({
     footerView: {
         flex: 1,
         alignItems: "center",
-        marginTop: 20
+        marginTop: '5%'
     },
     footerText: {
-        fontSize: 16,
-        color: '#2e2e2d'
+        fontSize: '15%',
+        color: colors.white
     },
     footerLink: {
-        color: "#788eec",
+        color: colors.lightBlue,
         fontWeight: "bold",
-        fontSize: 16
+        fontSize: '15%'
     }
 })

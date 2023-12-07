@@ -3,6 +3,7 @@ import { Image, Text, TextInput, TouchableOpacity, SafeAreaView } from 'react-na
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styles from 'store-frontend/src/Views/styles';
 import LoginController from '../../Controllers/LoginController';
+import {colors} from 'store-frontend/src/Views/colors.js'
 
 export default function RegisterScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -38,16 +39,18 @@ export default function RegisterScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAwareScrollView
-        style={{ flex: 1, width: '100%' }}
-        keyboardShouldPersistTaps="always">
+        contentContainerStyle={styles.keyboardContainer}
+        keyboardShouldPersistTaps="never"
+        scrollEnabled={true}
+        alwaysBounceVertical={true}>
         <Image
           style={styles.logo}
-          source={require('../../../assets/icon.png')}
+          source={require('store-frontend/assets/logo.png')}
         />
           <TextInput
           style={styles.input}
           placeholder="Username"
-          placeholderTextColor="#aaaaaa"
+          placeholderTextColor={colors.grey}
           onChangeText={(text) => setUsername(text)}
           value={username}
           underlineColorAndroid="transparent"
@@ -56,7 +59,7 @@ export default function RegisterScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholder="E-mail"
-          placeholderTextColor="#aaaaaa"
+          placeholderTextColor={colors.grey}
           onChangeText={(text) => setEmail(text)}
           value={email}
           underlineColorAndroid="transparent"
@@ -64,7 +67,7 @@ export default function RegisterScreen({ navigation }) {
         />
         <TextInput
           style={styles.input}
-          placeholderTextColor="#aaaaaa"
+          placeholderTextColor={colors.grey}
           secureTextEntry
           placeholder="Password"
           onChangeText={(text) => setPassword(text)}
@@ -74,7 +77,7 @@ export default function RegisterScreen({ navigation }) {
         />
         <TextInput
           style={styles.input}
-          placeholderTextColor="#aaaaaa"
+          placeholderTextColor={colors.grey}
           secureTextEntry
           placeholder="Confirm Password"
           onChangeText={(text) => setPasswordVerify(text)}
