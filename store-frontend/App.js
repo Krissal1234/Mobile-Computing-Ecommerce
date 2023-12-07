@@ -56,14 +56,15 @@ import Pitches from "./src/Views/Pitches/Pitches";
 import { Text, View } from "react-native";
 import Icon from "react-native-ico-material-design";
 import AddEquipment from "./src/Views/AddEquipment/AddEquipment";
-import HomeScreen from "./src/Views/Core";
-import SelectLeaseOrRent from "./src/Views/SelectLeaseOrRent/SelectLeaseOrRent";
+import HomeScreen from "./src/Views/HomeScreen/Home";
 import LoginScreen from "./src/Views/Login/LoginScreen"
 import { UserContext } from "./src/Contexts/UserContext";
+import RentEquipment from './src/Views/Rent/Equipment';
+import LeaseEquipment from './src/Views/Lease/Equipment';
 import Core from "./src/Views/Core";
-import LeaseScreen from "./src/Views/Lease/equipment";
-
+import LeaseScreen from "./src/Views/Lease/Equipment";
 import RegisterScreen from "./src/Views/RegisterScreen/RegisterScreen";
+
 // const firebaseConfig = {
 //   apiKey: "AIzaSyBpCJtHqad3BnKh9PKURBVHQp7I6ykFCO0",
 //   authDomain: "sportyrental.firebaseapp.com",
@@ -89,15 +90,14 @@ export default function App() {
   return (
     <UserContext.Provider value={userProviderValue}>
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="SelectLeaseOrRent"
-            // component={SelectLeaseOrRent}
-            component={SelectLeaseOrRent}
-          />
-          <Stack.Screen name="Home" component={Core} options={{headerShown: false}} />
-          <Stack.Screen name="Login" component={LoginScreen}  options={{headerShown: false}} />
-          <Stack.Screen name="Registration" component={RegisterScreen}  options={{headerShown: false}} />
+        <Stack.Navigator initialRouteName="Home"  
+        screenOptions={{ headerShown: false, // This will hide the header for all screens
+        }}>
+          <Stack.Screen name="Home" component={HomeScreen}/>
+          <Stack.Screen name="Login" component={LoginScreen}/>
+          <Stack.Screen name="Registration" component={RegisterScreen}/>
+          <Stack.Screen name="RentEquipment" component={RentEquipment} />
+          <Stack.Screen name="LeaseEquipment" component={LeaseEquipment} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserContext.Provider>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import styles from './styles';
+import styles from 'store-frontend/src/Views/styles';
 import LoginController from '../../Controllers/LoginController';
 
 export default function RegisterScreen({ navigation }) {

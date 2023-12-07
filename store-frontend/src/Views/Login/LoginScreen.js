@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import styles from './styles';
+import styles from 'store-frontend/src/Views/styles';
 import LoginController from '../../Controllers/LoginController';
+import {colors} from 'store-frontend/src/Views/colors.js'
+
 export default function LoginScreen({navigation}) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -21,16 +23,16 @@ export default function LoginScreen({navigation}) {
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAwareScrollView
-                style={{ flex: 1, width: '100%' }}
+                contentContainerStyle={styles.keyboardContainer}
                 keyboardShouldPersistTaps="always">
                 <Image
                     style={styles.logo}
-                    source={require('../../../assets/icon.png')}
+                    source={require('store-frontend/assets/logo.png')}
                 />
                 <TextInput
                     style={styles.input}
                     placeholder='E-mail'
-                    placeholderTextColor="#aaaaaa"
+                    placeholderTextColor={colors.grey}
                     onChangeText={(text) => setEmail(text)}
                     value={email}
                     underlineColorAndroid="transparent"
@@ -38,9 +40,9 @@ export default function LoginScreen({navigation}) {
                 />
                 <TextInput
                     style={styles.input}
-                    placeholderTextColor="#aaaaaa"
                     secureTextEntry
                     placeholder='Password'
+                    placeholderTextColor={colors.grey}
                     onChangeText={(text) => setPassword(text)}
                     value={password}
                     underlineColorAndroid="transparent"

@@ -50,8 +50,8 @@ function RenterTabs() {
     );
   }
   
-  function LeaserTabs() {
-    return (
+function LeaserTabs() {
+  return (
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -84,23 +84,23 @@ function RenterTabs() {
           options={{ headerShown: false }}
         />
       </Tab.Navigator>
-    );
-  }
+  );
+}
 
 const Core = () => {
 
-    const {user, setUser} = useContext(UserContext);
-return (
-  <View style={{height: "100%", paddingTop: 30}}>
+  const {user, setUser} = useContext(UserContext);
+  return (
+    <View style={{height: "100%", paddingTop: 30}}>
 
-    <NavigationContainer independent={true}>
-      {
-        user && user.accountType === "Renter" ? <RenterTabs /> : <LeaserTabs />
-      }
-    </NavigationContainer>
+      <NavigationContainer independent={true}>
+        {
+          user && user.accountType === "Renter" ? <RenterTabs /> : <LeaserTabs />
+        }
+      </NavigationContainer>
 
-  </View>
-)
+    </View>
+  )
 }
 
 export default Core

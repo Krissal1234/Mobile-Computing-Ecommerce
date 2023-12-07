@@ -1,5 +1,6 @@
 import { Text, TouchableOpacity, SafeAreaView,Image } from 'react-native';
-import styles from './styles';
+import styles from 'store-frontend/src/Views/styles';
+import homeStyles from './styles';
 
 
 
@@ -19,7 +20,7 @@ export default function home({ navigation }) {
 
             <Image  
                 source={require('store-frontend/assets/logo.png')}
-                style={styles.logo} >    
+                style={homeStyles.logo} >    
             </Image>
 
             <TouchableOpacity

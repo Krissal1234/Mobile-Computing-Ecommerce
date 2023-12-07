@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, SafeAreaView,Image } from 'react-native';
-import styles from './styles';
+import styles from 'store-frontend/src/Views/styles';
 
 
 
