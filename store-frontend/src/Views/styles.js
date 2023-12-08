@@ -1,54 +1,56 @@
 import { StyleSheet } from 'react-native';
 import {colors} from './colors'
-
 export default StyleSheet.create({
     container: {
-        height:'100%',
+        flex: 1,
         width: '100%',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        flexDirection: 'column',
         backgroundColor: colors.darkBlue,
+        padding: '5%',
     },
     keyboardContainer:{
-        width:'100%',
+        flexGrow: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
     },
     title: {
-
     },
     logo: {
         height: '30%',
         width: '30%',
         padding:'40%',
         alignSelf: "center",
-        marginBottom:'10%',
-        marginTop:'5%',
+        marginBottom:40,
+        marginTop:10,
     },
     input: {
         backgroundColor: colors.white,
-        width:'80%',
-        marginTop:'5%',
-        paddingVertical:'5%',
-        borderRadius: '25%',
-        borderWidth:'3%',
+        width:300,
+        marginTop: 20,
+        paddingVertical: 15,
+        borderRadius: 25,
+        borderWidth:3,
         borderColor:colors.red,
         alignItems: "center",
         justifyContent: 'center',
-        padding:'5%'
+        padding:20
     },
     button: {
         backgroundColor: colors.white,
-        width:'80%',
-        marginTop: '10%',
-        paddingVertical: '5%',
-        borderRadius: '25%',
-        borderWidth:'3%',
+        width:300,
+        marginTop: 40,
+        paddingVertical: 15,
+        borderRadius: 25,
+        borderWidth:3,
         borderColor:colors.red,
         alignItems: "center",
         justifyContent: 'center'
     },
     buttonTitle: {
         color: colors.black,
-        fontSize: '18%',
+        fontSize: 16,
         fontWeight: "bold"
     },
     footerView: {
@@ -57,12 +59,12 @@ export default StyleSheet.create({
         marginTop: 5
     },
     footerText: {
-        fontSize: '16%',
+        fontSize: 15,
         color: colors.white
     },
     footerLink: {
         color: colors.lightBlue,
         fontWeight: "bold",
-        fontSize: '16%'
+        fontSize: 15
     }
 })
