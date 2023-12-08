@@ -13,7 +13,7 @@ export default function Home({ navigation }) {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={homeStyles.container}>
             <Image  
                 source={require('store-frontend/assets/logo.png')}
                 style={homeStyles.logo}

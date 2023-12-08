@@ -3,18 +3,14 @@ import {colors} from './colors'
 
 export default StyleSheet.create({
     container: {
-        flex: 1,
+        height:'100%',
         width: '100%',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        flexDirection: 'column',
         backgroundColor: colors.darkBlue,
-        padding: '5%',
     },
     keyboardContainer:{
-        flexGrow: 1,
+        width:'100%',
         alignItems: 'center',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
     },
     title: {
 
@@ -24,35 +20,35 @@ export default StyleSheet.create({
         width: '30%',
         padding:'40%',
         alignSelf: "center",
-        marginBottom:40,
-        marginTop:10,
+        marginBottom:'10%',
+        marginTop:'5%',
     },
     input: {
         backgroundColor: colors.white,
-        width:300,
-        marginTop: 20,
-        paddingVertical: 15,
-        borderRadius: 25,
-        borderWidth:3,
+        width:'80%',
+        marginTop:'5%',
+        paddingVertical:'5%',
+        borderRadius: '25%',
+        borderWidth:'3%',
         borderColor:colors.red,
         alignItems: "center",
         justifyContent: 'center',
-        padding:20
+        padding:'5%'
     },
     button: {
         backgroundColor: colors.white,
-        width:300,
-        marginTop: 40,
-        paddingVertical: 15,
-        borderRadius: 25,
-        borderWidth:3,
+        width:'80%',
+        marginTop: '10%',
+        paddingVertical: '5%',
+        borderRadius: '25%',
+        borderWidth:'3%',
         borderColor:colors.red,
         alignItems: "center",
         justifyContent: 'center'
     },
     buttonTitle: {
         color: colors.black,
-        fontSize: 16,
+        fontSize: '18%',
         fontWeight: "bold"
     },
     footerView: {
@@ -61,12 +57,12 @@ export default StyleSheet.create({
         marginTop: 5
     },
     footerText: {
-        fontSize: 15,
+        fontSize: '16%',
         color: colors.white
     },
     footerLink: {
         color: colors.lightBlue,
         fontWeight: "bold",
-        fontSize: 15
+        fontSize: '16%'
     }
 })
