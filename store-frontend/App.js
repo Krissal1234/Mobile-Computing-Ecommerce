@@ -74,12 +74,12 @@ const Stack = createStackNavigator();
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null)
-  const userProviderValue = useMemo(() => ({user, setUser}), [user, setUser])
+   const userProviderValue = useMemo(() => ({user, setUser}), [user, setUser])
 
   return (
     <UserContext.Provider value={userProviderValue}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home"  
+        <Stack.Navigator initialRouteName="Login"  
         screenOptions={{ headerShown: false, // This will hide the header for all screens
         }}>
           <Stack.Screen name="Home" component={HomeScreen}/>

@@ -21,12 +21,13 @@ export class LoginController {
       console.log("calling firebase register function");
       const registration = await registerUser(userData)
         console.log(registration.data.message);
-      // Return success status
-      if(registration.data.success == 'success'){
+      // Return success 
+      if(registration.data.success == true){
+        print("Success if statement");
         return {
           success: true,
           message: 'Registration successful!',
-          user,
+
         };
       }
 
@@ -78,31 +79,41 @@ export class LoginController {
 
   static loginUser = async (email, password) => {
     try {
-      const userCredential = await login(auth, email, password);
-      const userEmail = userCredential.user.providerData[0].email;
-  
-      // Checking if the user exists in the database
-      const isRegisteredUser = await getUserFunc(email);
-  
-      if (isRegisteredUser.status === 'error') {
-        console.log(isRegisteredUser.message);
+      // Check input validity
+      if (!email || !password) {
         return {
           success: false,
-          message: isRegisteredUser.message,
+          message: 'Invalid email or password',
         };
       }
-  
-      console.log("Logged in!");
+
+      // Authenticate user
+      const userCredential = await login(auth, email, password);
+
+      // Log successful login
+      console.log(`User ${email} logged in successfully`);
+
+      // Fetch additional user data if needed
+      // const userData = await getUserFunc(email);
+
       return {
         success: true,
         message: 'Login successful',
-        data: isRegisteredUser.data, // You might want to include user data in the response
+        userUID: userCredential.user.uid        // Include user data if needed
+        // userData: userData.data,
       };
     } catch (error) {
       console.error('Error calling login function:', error);
+
+      // Handle specific authentication errors
+      let errorMessage = 'Internal Server Error';
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        errorMessage = 'Invalid email or password';
+      }
+      
       return {
         success: false,
-        message: 'Internal Server Error',
+        message: errorMessage,
       };
     }
   };

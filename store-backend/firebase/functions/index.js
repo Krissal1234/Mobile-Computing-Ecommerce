@@ -82,6 +82,7 @@ admin.initializeApp(functions.config().firebase)
 
 const db = admin.firestore();
 
+//Register a User into sportyRentals -------------
 exports.registerUser = functions.https.onCall(async (data, context) => {
   try {
     // Extract data from the argument
@@ -90,7 +91,7 @@ exports.registerUser = functions.https.onCall(async (data, context) => {
     if (!email || !password || !username) {
       // Return an error response
       return {
-        status: 'error',
+        success: false,
         message: 'Invalid request. Missing required fields.',
       };
     }
@@ -99,7 +100,7 @@ exports.registerUser = functions.https.onCall(async (data, context) => {
     const emailExists = await isEmailInUse(email);
     if (emailExists) {
       return {
-        status: 'error',
+        success: false,
         message: 'Email is already in use.',
       };
     }
@@ -108,7 +109,7 @@ exports.registerUser = functions.https.onCall(async (data, context) => {
     const usernameExists = await isUsernameInUse(username);
     if (usernameExists) {
       return {
-        status: 'error',
+        success: false,
         message: 'Username is already in use.',
       };
     }
@@ -127,15 +128,15 @@ exports.registerUser = functions.https.onCall(async (data, context) => {
     });
 
     return {
-      status: 'success',
-      message: `User ${userRecord.uid} successfully registered.`,
+      success: true,
+      message: `User successfully registered.`,
     };
   } catch (error) {
     console.error('Error registering user:', error);
 
 
     return {
-      status: 'error',
+      success: false,
       message: 'Internal Server Error',
     };
   }
@@ -167,22 +168,51 @@ exports.getUser = functions.https.onCall(async (data, context) => {
 
     if (user.id) {
       return {
-        status: 'success',
+        success: true,
         message: 'User found',
         data: user,
       };
     } else {
       return {
-        status: 'error',
+        success: false,
         message: 'User not found',
       };
     }
   } catch (error) {
     console.error('Error getting user:', error);
     return {
-      status: 'error',
+      success: false,
       message: 'Internal Server Error',
     };
   }
 });
 
+/*
+Input an order into the database. Input from UI end:
+Equipment:    item_id,dates,pickup location/delivery location,pickup/delivery time, drop off/pick up time.
+
+    Pitches:    item_id,date,start time,end time.
+
+    When added to basket each item will have the above values added 
+    to them and when the user finishes their purchase    
+     these values will be passed to the server to be stored. 
+    certain details like price paid etc can be calculated in the 
+        backend using the above values and then stored.
+*/
+exports.inputEquipment = functions.https.onCall(async (data, context) => {
+  try {
+       
+    await admin.firestore().collection('equipments').doc(userRecord.uid).set({
+      email: email,
+      username: username,
+    });
+    
+
+  } catch (error) {
+    console.error('Error getting user:', error);
+    return {
+      success: false,
+      message: 'Internal Server Error',
+    };
+  }
+});

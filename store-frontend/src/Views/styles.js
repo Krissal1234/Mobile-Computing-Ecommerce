@@ -51,22 +51,22 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     buttonTitle: {
-        color: '#04080E',
+        color: colors.black,
         fontSize: 16,
         fontWeight: "bold"
     },
     footerView: {
         flex: 1,
         alignItems: "center",
-        marginTop: '5%'
+        marginTop: 5
     },
     footerText: {
-        fontSize: '15%',
+        fontSize: 15,
         color: colors.white
     },
     footerLink: {
         color: colors.lightBlue,
         fontWeight: "bold",
-        fontSize: '15%'
+        fontSize: 15
     }
 })

@@ -5,11 +5,11 @@ import homeStyles from './styles';
 export default function Home({ navigation }) {
 
     const rent = () => {
-        navigation.navigate('Login');
+        navigation.navigate('RentEquipment');
     };
 
     const lease = () => {
-        navigation.navigate('Login');
+        navigation.navigate('LeaseEquipment');
     };
 
     return (
