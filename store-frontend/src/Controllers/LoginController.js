@@ -99,7 +99,7 @@ export class LoginController {
       return {
         success: true,
         message: 'Login successful',
-        userUID: userCredential.user.uid        // Include user data if needed
+        user: userCredential        // Include user data if needed
         // userData: userData.data,
       };
     } catch (error) {

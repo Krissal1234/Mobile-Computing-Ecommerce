@@ -26,7 +26,7 @@ export default function LoginScreen({ navigation }) {
     const login = await LoginController.loginUser(email, password);
     if (login.success) {
         //Setting uid global variable
-      setUser(login.userUID);
+      setUser(login.user);
       navigation.navigate("Home");
       
     }

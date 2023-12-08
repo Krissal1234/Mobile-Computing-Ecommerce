@@ -34,10 +34,10 @@
 // import firebase from 'firebase/app';
 
 import "react-native-gesture-handler";
-import React, { useState, useMemo } from "react";
+import React, { useState,useEffect, useMemo } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-
+import {auth} from "./config/firebase.js"
 import { decode, encode } from "base-64";
 if (!global.btoa) {
   global.btoa = encode;
@@ -75,7 +75,22 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null)
    const userProviderValue = useMemo(() => ({user, setUser}), [user, setUser])
-
+   
+   useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        console.log("user logged in "); 
+        setUser(authUser);
+        // navigate, if user is already logged in.
+      } else {
+        console.log("user not logged int");
+        setUser(null);
+      }
+    });
+     
+     return () => unsubscribe();
+    }, []); 
+  
   return (
     <UserContext.Provider value={userProviderValue}>
       <NavigationContainer>
