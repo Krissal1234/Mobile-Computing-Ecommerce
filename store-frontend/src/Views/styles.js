@@ -3,17 +3,15 @@ import {colors} from './colors'
 export default StyleSheet.create({
     container: {
         flex: 1,
+        height:'100%',
         width: '100%',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        flexDirection: 'column',
         backgroundColor: colors.darkBlue,
-        padding: '5%',
     },
     keyboardContainer:{
-        flexGrow: 1,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
+        width:'100%',
+        alignItems:'center',
+        justifyContent:'center'
+
     },
     title: {
     },
