@@ -64,5 +64,19 @@ export default StyleSheet.create({
         color: colors.lightBlue,
         fontWeight: "bold",
         fontSize: '16%'
-    }
+    },
+    coreFooter:{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: colors.darkBlue,
+    },
+    footerIcons: {
+        width: '80%', // Adjust as needed
+        height: '80%', // Adjust as needed
+        resizeMode: 'contain', // This ensures the icon scales properly within the given width and height
+    },
+    
+
 })

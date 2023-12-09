@@ -1,25 +1,14 @@
-import { Text, TouchableOpacity, SafeAreaView,Image } from 'react-native';
+import { View, Text } from 'react-native'
+import React from 'react'
 import styles from 'store-frontend/src/Views/styles';
 
 
-
-
-export default function RentEquipment ({ navigation }) {
-
-    const rent = () => {
-        navigation.navigate('Login');
-    };
-
-    return (
-        <SafeAreaView style={styles.container}>
-
-
-            <TouchableOpacity
-                style={styles.button}
-                onPress={rent}>
-                <Text style={styles.buttonTitle}>rent equipment page</Text>
-            </TouchableOpacity>
-
-        </SafeAreaView>
-    );
+const Equipment = () => {
+  return (
+    <View style={styles.button}>
+      <Text>Rent Equipment</Text>
+    </View>
+  )
 }
+
+export default Equipment

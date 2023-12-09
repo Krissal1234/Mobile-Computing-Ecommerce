@@ -1,36 +1,34 @@
-import { Text, TouchableOpacity, SafeAreaView, Image } from 'react-native';
+// Home.js
+import React, { useContext } from 'react';
+import { TouchableOpacity, SafeAreaView, Text, Image } from 'react-native';
 import styles from 'store-frontend/src/Views/styles';
 import homeStyles from './styles';
+import { UserContext } from '../../Contexts/UserContext';
 
 export default function Home({ navigation }) {
+  const { setAccountType } = useContext(UserContext);
 
-    const rent = () => {
-        navigation.navigate('RentEquipment');
-    };
+  const handleRentClick = () => {
+    setAccountType('Renter');
+    navigation.navigate('RentEquipment');
+  };
 
-    const lease = () => {
-        navigation.navigate('LeaseEquipment');
-    };
+  const handleLeaseClick = () => {
+    setAccountType('Leaser');
+    navigation.navigate('LeaseEquipment');
+  };
 
-    return (
-        <SafeAreaView style={homeStyles.container}>
-            <Image  
-                source={require('store-frontend/assets/logo.png')}
-                style={homeStyles.logo}
-            />
+  return (
+    <SafeAreaView style={homeStyles.container}>
+      <Image source={require('store-frontend/assets/logo.png')} style={homeStyles.logo} />
 
-            <TouchableOpacity
-                style={styles.button}
-                onPress={rent}>
-                <Text style={styles.buttonTitle}>Rent</Text>
-            </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleRentClick}>
+        <Text style={styles.buttonTitle}>Rent</Text>
+      </TouchableOpacity>
 
-            <TouchableOpacity
-                style={styles.button}
-                onPress={lease}>
-                <Text style={styles.buttonTitle}>Lease</Text>
-            </TouchableOpacity>
-
-        </SafeAreaView>
-    );
+      <TouchableOpacity style={styles.button} onPress={handleLeaseClick}>
+        <Text style={styles.buttonTitle}>Lease</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
 }

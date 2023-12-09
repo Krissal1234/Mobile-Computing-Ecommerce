@@ -49,8 +49,8 @@ if (!global.atob) {
 // Navigation
 import HomeScreen from './src/Views/HomeScreen/Home.js'
 import LoginScreen from "./src/Views/Login/LoginScreen"
-import { UserContext } from "./src/Contexts/UserContext";
-import RentEquipment from './src/Views/Rent/Equipment';
+import { UserContext, UserProvider } from "./src/Contexts/UserContext";
+import RentEquipment from './src/Views/Rent/RentEquipment';
 import LeaseEquipment from './src/Views/Lease/EquipmentLease.js';
 import RegisterScreen from "./src/Views/RegisterScreen/RegisterScreen";
 
@@ -73,8 +73,6 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null)
-   const userProviderValue = useMemo(() => ({user, setUser}), [user, setUser])
    
    useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
@@ -92,7 +90,7 @@ export default function App() {
     }, []); 
   
   return (
-    <UserContext.Provider value={userProviderValue}>
+    <UserProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login"  
         screenOptions={{ headerShown: false, // This will hide the header for all screens
@@ -104,6 +102,6 @@ export default function App() {
           <Stack.Screen name="LeaseEquipment" component={LeaseEquipment} />
         </Stack.Navigator>
       </NavigationContainer>
-    </UserContext.Provider>
+    </UserProvider>
   );
 }
