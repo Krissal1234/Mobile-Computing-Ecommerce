@@ -6,7 +6,7 @@ import styles from 'store-frontend/src/Views/styles';
 const Equipment = () => {
   return (
     <View style={styles.button}>
-      <Text>Rent Pitches</Text>
+      <Text>Rent Bookings</Text>
     </View>
   )
 }
