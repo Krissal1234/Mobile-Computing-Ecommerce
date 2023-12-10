@@ -35,7 +35,18 @@ const Equipment = () => {
                 onPress={rent}>
                 <Text style={styles.buttonTitle}>rent equipment page</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={rent}>
+                <Text style={styles.buttonTitle}>rent equipment page</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={rent}>
+                <Text style={styles.buttonTitle}>rent equipment page</Text>
+            </TouchableOpacity>
             
+
         </View>
     </SafeAreaView>
 );

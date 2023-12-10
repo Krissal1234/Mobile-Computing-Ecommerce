@@ -72,9 +72,10 @@ export default StyleSheet.create({
         bottom: 0,
         backgroundColor: colors.darkBlue,
         paddingBottom:0,
-        height:'8%',
+        height:'9%',
         justifyContent:'center',
         alignItems:'center',
+        backdropFilter:'blur(10px)',
     },
     footerIcons: {
         marginTop:'20%',
@@ -84,6 +85,31 @@ export default StyleSheet.create({
     },
     footerIconContainer:{
         justifyContent:'center',
+    },
+    headerContainer: {
+        width: '100%',
+        height:'9%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: colors.darkBlue,
+        paddingHorizontal: '5%',
+        borderWidth: '3%',
+        borderColor:'transparent',
+        borderBottomColor: colors.white,
+    },
+    headerIcon: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection:'column'
+    },
+    iconImage: {
+        width: '80%',
+        height: '80%',
+        resizeMode: 'contain',
+        marginTop:'20%',
+        marginBottom:'20%',
     }
     
 

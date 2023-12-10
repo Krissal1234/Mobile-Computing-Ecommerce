@@ -1,6 +1,6 @@
-import { View, Text ,SafeAreaView,Image} from 'react-native'
+import { View, Text ,SafeAreaView,Image,TouchableOpacity} from 'react-native'
 import React, { useContext, useState } from 'react'
-import { NavigationContainer } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Basket from './Basket/Basket';
 import Bookings from './Bookings/Bookings';
@@ -20,6 +20,27 @@ import pitchFillIcon from '../../assets/pitch_fill_black.png'
 import pitchTransparentIcon from '../../assets/pitch.png'
 
 const Tab = createBottomTabNavigator();
+
+const Header = ({ navigation }) => {
+  const { showFilter } = useContext(UserContext);
+
+  return (
+    <View style={styles.headerContainer}>
+      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.headerIcon}>
+        <Image source={pitchFillIcon} style={styles.iconImage} />
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.headerIcon}>
+        <Image source={pitchFillIcon} style={styles.iconImage} />
+      </TouchableOpacity>
+      
+
+      <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.headerIcon}>
+        <Image source={pitchFillIcon} style={styles.iconImage} />
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 function RenterTabs() {
     return (
@@ -106,11 +127,15 @@ function LeaserTabs() {
 
 const Core = () => {
   const { accountType } = useContext(UserContext);
+  const navigation = useNavigation();
 
   return (
+    <View style={styles.container}>
     <SafeAreaView style={styles.container}>
+      <Header navigation={navigation} />
       {accountType === "Renter" ? <RenterTabs /> : <LeaserTabs />}
     </SafeAreaView>
+    </View>
   );
 }
 
