@@ -10,7 +10,7 @@ export default function Home({ navigation }) {
 
   const handleRentClick = () => {
     setAccountType('Renter');
-    navigation.navigate('RentEquipment');
+    navigation.navigate('Core');
   };
 
   const handleLeaseClick = () => {

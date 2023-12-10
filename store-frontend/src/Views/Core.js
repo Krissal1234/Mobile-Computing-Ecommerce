@@ -4,8 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Basket from './Basket/Basket';
 import Bookings from './Bookings/Bookings';
-import Equipment from './Rent/Equipment';
-import Pitches from './Pitches/Pitches';
+import RentEquipment from './Rent/Equipment';
+import RentPitches from './Rent/Pitches';
 import Icon from 'react-native-ico-material-design';
 import AddEquipment from './AddEquipment/AddEquipment';
 import { UserContext } from '../Contexts/UserContext';
@@ -38,19 +38,19 @@ function RenterTabs() {
             }
             return <Image source={iconName} style={styles.footerIcons} />;
           },
-          tabBarActiveTintColor: "white",
-          tabBarInactiveTintColor: "gray",
-          tabBarStyle: styles.coreFooter
+          tabBarLabel:'',
+          tabBarItemStyle:styles.footerIconContainer,
+          tabBarStyle: styles.coreFooter,
         })}
       >
-        <Tab.Screen
-          name="Pitches"
-          component={Pitches}
+      <Tab.Screen
+          name="Equipment"
+          component={RentEquipment}
           options={{ headerShown: false }}
         />
         <Tab.Screen
-          name="Equipment"
-          component={Equipment}
+          name="Pitches"
+          component={RentPitches}
           options={{ headerShown: false }}
         />
         <Tab.Screen
@@ -108,11 +108,9 @@ const Core = () => {
   const { accountType } = useContext(UserContext);
 
   return (
-    <View style={styles.coreFooter}>
-      <SafeAreaView style={{ backgroundColor: 'transparent' }}>
-        {accountType === "Renter" ? <RenterTabs /> : <LeaserTabs />}
-      </SafeAreaView>
-    </View>
+    <SafeAreaView style={styles.container}>
+      {accountType === "Renter" ? <RenterTabs /> : <LeaserTabs />}
+    </SafeAreaView>
   );
 }
 

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/root": "github:react-native-async-storage/async-storage",
+    "@react-native-community/blur": "^4.3.2",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-firebase/app": "^18.7.1",
     "@react-native-firebase/functions": "^18.7.1",
@@ -39,7 +40,8 @@
     "react-native-svg": "13.9.0",
     "react-native-svg-transformer": "^1.1.0",
     "react-native-vector-icons": "^10.0.2",
-    "react-navigation": "^5.0.0"
+    "react-navigation": "^5.0.0",
+    "expo-blur": "~12.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

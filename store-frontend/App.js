@@ -50,9 +50,11 @@ if (!global.atob) {
 import HomeScreen from './src/Views/HomeScreen/Home.js'
 import LoginScreen from "./src/Views/Login/LoginScreen"
 import { UserContext, UserProvider } from "./src/Contexts/UserContext";
-import RentEquipment from './src/Views/Rent/RentEquipment';
+import Core from './src/Views/Core';
 import LeaseEquipment from './src/Views/Lease/EquipmentLease.js';
 import RegisterScreen from "./src/Views/RegisterScreen/RegisterScreen";
+
+import Test from "./src/Views/Rent/Equipment";
 
 // const firebaseConfig = {
 //   apiKey: "AIzaSyBpCJtHqad3BnKh9PKURBVHQp7I6ykFCO0",
@@ -98,8 +100,10 @@ export default function App() {
           <Stack.Screen name="Home" component={HomeScreen}/>
           <Stack.Screen name="Login" component={LoginScreen}/>
           <Stack.Screen name="Registration" component={RegisterScreen}/>
-          <Stack.Screen name="RentEquipment" component={RentEquipment} />
+          <Stack.Screen name="Core" component={Core} />
           <Stack.Screen name="LeaseEquipment" component={LeaseEquipment} />
+
+          <Stack.Screen name="Test" component={Test} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserProvider>

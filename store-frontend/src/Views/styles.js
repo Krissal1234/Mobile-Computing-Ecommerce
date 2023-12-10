@@ -71,12 +71,20 @@ export default StyleSheet.create({
         right: 0,
         bottom: 0,
         backgroundColor: colors.darkBlue,
+        paddingBottom:0,
+        height:'8%',
+        justifyContent:'center',
+        alignItems:'center',
     },
     footerIcons: {
-        width: '80%', // Adjust as needed
-        height: '80%', // Adjust as needed
-        resizeMode: 'contain', // This ensures the icon scales properly within the given width and height
+        marginTop:'20%',
+        width: '80%',
+        height: '80%',
+        resizeMode: 'contain',
     },
+    footerIconContainer:{
+        justifyContent:'center',
+    }
     
 
 })

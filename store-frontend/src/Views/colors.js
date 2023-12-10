@@ -5,5 +5,6 @@ export const colors ={
     darkBlue: '#001B36',
     mutedBlue: '#2A3E57',
     lightBlue:'#00CBFF',
+    transparentDarkBlue:'rgba(0,27,54,0.8)',
     red: '#BD0205',
 }
