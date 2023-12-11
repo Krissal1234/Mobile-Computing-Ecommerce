@@ -151,8 +151,8 @@ const Core = () => {
       />
 
       <BlurView style={styles.headerContainer}
-      intensity={8}
-      tint="default"
+      intensity={10}
+      tint="dark"
       >
         <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.headerIcon}>
           <Image source={homeTransparent} style={styles.iconImage} />
