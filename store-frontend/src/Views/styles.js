@@ -93,24 +93,70 @@ export default StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: colors.darkBlue,
-        paddingHorizontal: '5%',
+        paddingHorizontal: '2%',
+        paddingBottom:'2%',
         borderWidth: '3%',
         borderColor:'transparent',
         borderBottomColor: colors.white,
     },
     headerIcon: {
         flex: 1,
+        flexGrow:0,
+        flexShrink:1,
+        flexBasis:'20%',
         alignItems: 'center',
         justifyContent: 'center',
-        flexDirection:'column'
+        padding:'1%'
+    },
+    iconButton: {
+      padding: '1%',
     },
     iconImage: {
         width: '80%',
         height: '80%',
         resizeMode: 'contain',
-        marginTop:'20%',
-        marginBottom:'20%',
-    }
+        padding:'1%'
+    },
+    filterButton: {
+        flexGrow:3,
+        flexShrink:0,
+        backgroundColor: colors.transWhite,
+        borderRadius: '30%',
+        alignItems:'center',
+        paddingHorizontal:'2%',
+        paddingVertical: '2%',
+        borderWidth: '1%',
+        borderColor: colors.semiTransWhite,
+    },
+    filterText: {
+        color: colors.white,
+        fontSize: '15%',
+        textAlign:'center',
+    },
+    fullScreenDropdown: {
+        position: 'absolute',
+        top:0,
+        bottom:0,
+        right:0,
+        left:0,
+        backgroundColor:colors.semiTransGrey,
+        zIndex: 1000,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+    dropDownScroll:{
+        flex:1,
+        margin:'20%',
+        width:'100%',
+        alignContent:'center',
+        justifyContent:'flex-start',
+    },
+    dropdownItem: {
+        fontSize: '20%',
+        color: colors.white,
+        alignSelf:'center',
+        paddingVertical:'3%',
+    },
     
 
 })

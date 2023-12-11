@@ -9,7 +9,7 @@ const rent = () => {
 const Equipment = () => {
   return (
     <SafeAreaView style={styles.container}>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1}}>
             <TouchableOpacity
                 style={styles.button}
                 onPress={rent}>

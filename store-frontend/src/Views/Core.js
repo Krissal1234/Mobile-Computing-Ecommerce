@@ -1,7 +1,8 @@
-import { View, Text ,SafeAreaView,Image,TouchableOpacity} from 'react-native'
+import { View, Text ,SafeAreaView,Image,TouchableOpacity,ScrollView} from 'react-native'
 import React, { useContext, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {BlurView} from 'expo-blur';
 import Basket from './Basket/Basket';
 import Bookings from './Bookings/Bookings';
 import RentEquipment from './Rent/Equipment';
@@ -18,29 +19,12 @@ import bookingsFillIcon from '../../assets/bookings_fill_black.png'
 import bookingsTransparentIcon from '../../assets/bookings.png'
 import pitchFillIcon from '../../assets/pitch_fill_black.png'
 import pitchTransparentIcon from '../../assets/pitch.png'
+import profileTransparent from '../../assets/profile.png'
+import profileFill from '../../assets/profile_fill_black.png'
+import homeTransparent from '../../assets/home_button.png'
+import homeFill from '../../assets/home_button_fill.png'
 
 const Tab = createBottomTabNavigator();
-
-const Header = ({ navigation }) => {
-  const { showFilter } = useContext(UserContext);
-
-  return (
-    <View style={styles.headerContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.headerIcon}>
-        <Image source={pitchFillIcon} style={styles.iconImage} />
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.headerIcon}>
-        <Image source={pitchFillIcon} style={styles.iconImage} />
-      </TouchableOpacity>
-      
-
-      <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.headerIcon}>
-        <Image source={pitchFillIcon} style={styles.iconImage} />
-      </TouchableOpacity>
-    </View>
-  );
-};
 
 function RenterTabs() {
     return (
@@ -126,16 +110,75 @@ function LeaserTabs() {
 }
 
 const Core = () => {
+  
+  const {sportFilter,setSportFilter} = useContext(UserContext);
+
+  const { showFilter,setShowFilter } = useContext(UserContext);
+  const [isDropdownExpanded, setIsDropdownExpanded] = useState(false);
+
+  setShowFilter(true);
+
+  const toggleDropdown = () => {
+    setIsDropdownExpanded(!isDropdownExpanded);
+  };
+
+  const selectSport = (sportName) => {
+    setSportFilter(sportName);
+    toggleDropdown();
+  };
+
   const { accountType } = useContext(UserContext);
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation} />
+
+      <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.headerIcon}>
+          <Image source={homeTransparent} style={styles.iconImage} />
+        </TouchableOpacity>
+
+        
+          {showFilter && (
+              <TouchableOpacity onPress={toggleDropdown} style={styles.filterButton}>
+                <Text style={styles.filterText}>{sportFilter}</Text>
+              </TouchableOpacity>
+            )}
+             
+
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.headerIcon}>
+          <Image source={profileTransparent} style={styles.iconImage} />
+        </TouchableOpacity>
+      </View>
+      
+      {isDropdownExpanded && (
+          <View style={styles.fullScreenDropdown}>
+            <ScrollView contentContainerStyle={styles.dropDownScroll}>
+
+              <TouchableOpacity onPress={() => selectSport('No Filter')}>
+                <Text style={styles.dropdownItem}>No Filter</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => selectSport('Football')}>
+                <Text style={styles.dropdownItem}>Football</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => selectSport('Basketball')}>
+                <Text style={styles.dropdownItem}>Basketball</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity onPress={() => selectSport('Tennis')}>
+                <Text style={styles.dropdownItem}>Tennis</Text>
+              </TouchableOpacity>
+
+              </ScrollView>
+          </View>
+        )}
+
       {accountType === "Renter" ? <RenterTabs /> : <LeaserTabs />}
     </SafeAreaView>
-    </View>
+
   );
 }
 
