@@ -8,7 +8,7 @@ const rent = () => {
 
 const Equipment = () => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
         <View style={{ flex: 1}}>
             <TouchableOpacity
                 style={styles.button}
@@ -48,7 +48,7 @@ const Equipment = () => {
             
 
         </View>
-    </SafeAreaView>
+    </View>
 );
 }
 

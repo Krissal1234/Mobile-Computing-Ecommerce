@@ -144,11 +144,10 @@ const Core = () => {
                 left: 0,
                 right: 0,
                 height: insets.top, // Blur only the non-safe area
-                zIndex: 1,
                 backgroundColor: colors.transDarkBlue
               }}
-              intensity={15} // Adjust the intensity as needed
-              tint="dark"   // 'light', 'dark', or 'default'
+              intensity={8} // Adjust the intensity as needed
+              tint="default"   // 'light', 'dark', or 'default'
       />
 
       <BlurView style={styles.headerContainer}

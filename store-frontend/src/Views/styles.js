@@ -75,7 +75,6 @@ export default StyleSheet.create({
         height:'9%',
         justifyContent:'center',
         alignItems:'center',
-        backdropFilter:'blur(10px)',
     },
     footerIcons: {
         marginTop:'20%',
