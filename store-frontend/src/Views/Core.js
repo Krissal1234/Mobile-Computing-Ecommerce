@@ -1,8 +1,10 @@
 import { View, Text ,SafeAreaView,Image,TouchableOpacity,ScrollView} from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import React, { useContext, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {BlurView} from 'expo-blur';
+import {colors} from './colors'
 import Basket from './Basket/Basket';
 import Bookings from './Bookings/Bookings';
 import RentEquipment from './Rent/Equipment';
@@ -128,35 +130,51 @@ const Core = () => {
   };
 
   const { accountType } = useContext(UserContext);
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
   return (
 
     <SafeAreaView style={styles.container}>
 
-      <View style={styles.headerContainer}>
+      <BlurView 
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: insets.top, // Blur only the non-safe area
+                zIndex: 1,
+                backgroundColor: colors.transDarkBlue
+              }}
+              intensity={15} // Adjust the intensity as needed
+              tint="dark"   // 'light', 'dark', or 'default'
+      />
+
+      <BlurView style={styles.headerContainer}
+      intensity={8}
+      tint="default"
+      >
         <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.headerIcon}>
           <Image source={homeTransparent} style={styles.iconImage} />
         </TouchableOpacity>
 
-        
-          {showFilter && (
-              <TouchableOpacity onPress={toggleDropdown} style={styles.filterButton}>
-                <Text style={styles.filterText}>{sportFilter}</Text>
-              </TouchableOpacity>
-            )}
-             
-
+        {showFilter && (
+            <TouchableOpacity onPress={toggleDropdown} style={styles.filterButton}>
+              <Text style={styles.filterText}>{sportFilter}</Text>
+            </TouchableOpacity>
+          )}
+              
         <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.headerIcon}>
           <Image source={profileTransparent} style={styles.iconImage} />
         </TouchableOpacity>
-      </View>
+      </BlurView>
       
       {isDropdownExpanded && (
           <BlurView
           style={styles.fullScreenDropdown}
-          intensity={30} // You can adjust the intensity of the blur
-          tint="dark"   // 'light', 'dark', or 'default'
+          intensity={8} // You can adjust the intensity of the blur
+          tint="default"   // 'light', 'dark', or 'default'
           >
             <ScrollView contentContainerStyle={styles.dropDownScroll}
             scrollEnabled={true}
