@@ -154,7 +154,11 @@ const Core = () => {
       
       {isDropdownExpanded && (
           <View style={styles.fullScreenDropdown}>
-            <ScrollView contentContainerStyle={styles.dropDownScroll}>
+            <ScrollView contentContainerStyle={styles.dropDownScroll}
+            scrollEnabled={true}
+            alwaysBounceVertical={true}
+            showsVerticalScrollIndicator={false}
+            >
 
               <TouchableOpacity onPress={() => selectSport('No Filter')}>
                 <Text style={styles.dropdownItem}>No Filter</Text>
@@ -171,7 +175,7 @@ const Core = () => {
               <TouchableOpacity onPress={() => selectSport('Tennis')}>
                 <Text style={styles.dropdownItem}>Tennis</Text>
               </TouchableOpacity>
-
+              
               </ScrollView>
           </View>
         )}

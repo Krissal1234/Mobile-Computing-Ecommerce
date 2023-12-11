@@ -141,15 +141,11 @@ export default StyleSheet.create({
         left:0,
         backgroundColor:colors.semiTransGrey,
         zIndex: 1000,
-        justifyContent: 'center',
+        justifyContent: 'start',
         alignItems: 'center',
       },
     dropDownScroll:{
-        flex:1,
-        margin:'20%',
-        width:'100%',
-        alignContent:'center',
-        justifyContent:'flex-start',
+        paddingTop:'20%',
     },
     dropdownItem: {
         fontSize: '20%',
