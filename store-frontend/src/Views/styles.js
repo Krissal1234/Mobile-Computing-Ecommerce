@@ -86,6 +86,12 @@ export default StyleSheet.create({
     footerIconContainer:{
         justifyContent:'center',
     },
+    headerContainerBlur:{
+        width:'100%',
+        top:0,
+        height:'20%',
+        backgroundColor:colors.white,
+    },
     headerContainer: {
         width: '100%',
         height:'9%',

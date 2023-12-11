@@ -153,7 +153,11 @@ const Core = () => {
       </View>
       
       {isDropdownExpanded && (
-          <View style={styles.fullScreenDropdown}>
+          <BlurView
+          style={styles.fullScreenDropdown}
+          intensity={30} // You can adjust the intensity of the blur
+          tint="dark"   // 'light', 'dark', or 'default'
+          >
             <ScrollView contentContainerStyle={styles.dropDownScroll}
             scrollEnabled={true}
             alwaysBounceVertical={true}
@@ -175,9 +179,9 @@ const Core = () => {
               <TouchableOpacity onPress={() => selectSport('Tennis')}>
                 <Text style={styles.dropdownItem}>Tennis</Text>
               </TouchableOpacity>
-              
+
               </ScrollView>
-          </View>
+          </BlurView>
         )}
 
       {accountType === "Renter" ? <RenterTabs /> : <LeaserTabs />}
