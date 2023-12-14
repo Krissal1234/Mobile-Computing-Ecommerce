@@ -101,7 +101,6 @@ export default function App() {
           <Stack.Screen name="Login" component={LoginScreen}/>
           <Stack.Screen name="Registration" component={RegisterScreen}/>
           <Stack.Screen name="Core" component={Core} />
-          <Stack.Screen name="LeaseEquipment" component={LeaseEquipment} />
 
           <Stack.Screen name="Test" component={Test} />
         </Stack.Navigator>

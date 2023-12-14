@@ -25,6 +25,10 @@ import profileTransparent from '../../assets/profile.png'
 import profileFill from '../../assets/profile_fill_black.png'
 import homeTransparent from '../../assets/home_button.png'
 import homeFill from '../../assets/home_button_fill.png'
+import Equipment from './Equipment/Equipment';
+import EquipmentLease from './Lease/EquipmentLease';
+import addEquipmentFillIcon from '../../assets/add_report_black.png';
+import addEquipmentTransparentIcon from '../../assets/add_report.png';
 
 const Tab = createBottomTabNavigator();
 
@@ -79,12 +83,21 @@ function LeaserTabs() {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
-            let iconName = "settings-cogwheel-button";
-            return <Icon name={iconName} color={color} />;
+            let iconName;
+            if (route.name === 'Pitches') {
+              iconName = focused ? pitchFillIcon : pitchTransparentIcon;
+            } else if (route.name === 'Equipment') {
+              iconName = focused ? equipmentFillIcon : equipmentTransparentIcon;
+            } else if (route.name === 'Bookings') {
+              iconName = focused ? bookingsFillIcon : bookingsTransparentIcon;
+            } else if (route.name === 'Add Equipment') {
+              iconName = focused ? addEquipmentFillIcon : addEquipmentTransparentIcon;
+            }
+            return <Image source={iconName} style={styles.footerIcons} />;
           },
-          tabBarActiveTintColor: "white",
-          tabBarInactiveTintColor: "gray",
-          tabBarStyle: {backgroundColor: "rgba(0, 22, 51, 1)"}
+          tabBarLabel:'',
+          tabBarItemStyle:styles.footerIconContainer,
+          tabBarStyle: styles.coreFooter,
         })}
       >
         <Tab.Screen
@@ -94,12 +107,12 @@ function LeaserTabs() {
         />
         <Tab.Screen
           name="Equipment"
-          component={Equipment}
+          component={EquipmentLease}
           options={{ headerShown: false }}
         />
         <Tab.Screen
           name="Pitches"
-          component={Pitches}
+          component={EquipmentLease}
           options={{ headerShown: false }}
         />
         <Tab.Screen

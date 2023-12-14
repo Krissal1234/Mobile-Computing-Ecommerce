@@ -15,7 +15,7 @@ export default function Home({ navigation }) {
 
   const handleLeaseClick = () => {
     setAccountType('Leaser');
-    navigation.navigate('LeaseEquipment');
+    navigation.navigate('Core');
   };
 
   return (
