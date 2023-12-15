@@ -153,6 +153,22 @@ export default StyleSheet.create({
         alignSelf:'center',
         paddingVertical:'3%',
     },
+    verticalScrollView: {
+        backgroundColor: 'red',
+        width: '100%',
+    },
+    horizontalScrollView: {
+        backgroundColor: 'white',
+    },
+    itemPreview:{
+        marginHorizontal: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        backgroundColor: 'blue',
+        justifyContent:'center',
+        height:'100%',
+
+    },
     
 
 })
