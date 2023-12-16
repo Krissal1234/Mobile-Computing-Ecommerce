@@ -128,10 +128,8 @@ const Core = () => {
   
   const {sportFilter,setSportFilter} = useContext(UserContext);
 
-  const { showFilter,setShowFilter } = useContext(UserContext);
+  const { showFilter} = useContext(UserContext);
   const [isDropdownExpanded, setIsDropdownExpanded] = useState(false);
-
-  setShowFilter(true);
 
   const toggleDropdown = () => {
     setIsDropdownExpanded(!isDropdownExpanded);
@@ -188,29 +186,29 @@ const Core = () => {
           intensity={8} // You can adjust the intensity of the blur
           tint="default"   // 'light', 'dark', or 'default'
           >
-            <ScrollView contentContainerStyle={styles.dropDownScroll}
-            scrollEnabled={true}
-            alwaysBounceVertical={true}
-            showsVerticalScrollIndicator={false}
-            >
+              <ScrollView contentContainerStyle={styles.dropDownScroll}
+              scrollEnabled={true}
+              alwaysBounceVertical={true}
+              showsVerticalScrollIndicator={false}
+              >
 
-              <TouchableOpacity onPress={() => selectSport('No Filter')}>
-                <Text style={styles.dropdownItem}>No Filter</Text>
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => selectSport('No Filter')}>
+                  <Text style={styles.dropdownItem}>No Filter</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => selectSport('Football')}>
-                <Text style={styles.dropdownItem}>Football</Text>
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => selectSport('Football')}>
+                  <Text style={styles.dropdownItem}>Football</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => selectSport('Basketball')}>
-                <Text style={styles.dropdownItem}>Basketball</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity onPress={() => selectSport('Tennis')}>
-                <Text style={styles.dropdownItem}>Tennis</Text>
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => selectSport('Basketball')}>
+                  <Text style={styles.dropdownItem}>Basketball</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity onPress={() => selectSport('Tennis')}>
+                  <Text style={styles.dropdownItem}>Tennis</Text>
+                </TouchableOpacity>
 
-              </ScrollView>
+                </ScrollView>
           </BlurView>
         )}
 

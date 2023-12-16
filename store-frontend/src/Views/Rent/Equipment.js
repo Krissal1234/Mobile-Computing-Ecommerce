@@ -1,12 +1,16 @@
-import { View, Text, SafeAreaView,TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, SafeAreaView,TouchableOpacity, ScrollView,Image } from 'react-native'
 import React from 'react'
 import styles from 'store-frontend/src/Views/styles';
-
-const rent = () => {
-  navigation.navigate('Login');
-};
+import { useNavigation } from '@react-navigation/native';
 
 const Equipment = () => {
+
+    const navigation=useNavigation();
+
+    const rent = () => {
+        navigation.navigate('Login');
+      };
+
   return (
     <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.verticalScrollView}>
@@ -15,55 +19,8 @@ const Equipment = () => {
                         showsHorizontalScrollIndicator={false}
             >
                 <TouchableOpacity
-                    style={styles.itemPreview}
                     onPress={rent}>
-                    <Text style={styles.buttonTitle}>rent equipment page</Text>
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    style={styles.itemPreview}
-                    onPress={rent}>
-                    <Text style={styles.buttonTitle}>rent equipment page</Text>
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    style={styles.itemPreview}
-                    onPress={rent}>
-                    <Text style={styles.buttonTitle}>rent equipment page</Text>
-                </TouchableOpacity> 
-
-            </ScrollView>   
-
-            <ScrollView horizontal contentContainerStyle={styles.horizontalScrollView}
-                        showsHorizontalScrollIndicator={false}
-            >
-                <TouchableOpacity
-                    style={styles.itemPreview}
-                    onPress={rent}>
-                    <Text style={styles.buttonTitle}>rent equipment page</Text>
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    style={styles.itemPreview}
-                    onPress={rent}>
-                    <Text style={styles.buttonTitle}>rent equipment page</Text>
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    style={styles.itemPreview}
-                    onPress={rent}>
-                    <Text style={styles.buttonTitle}>rent equipment page</Text>
-                </TouchableOpacity> 
-
-            </ScrollView>  
-
-            <ScrollView horizontal contentContainerStyle={styles.horizontalScrollView}
-                        showsHorizontalScrollIndicator={false}
-            >
-                <TouchableOpacity
-                    style={styles.itemPreview}
-                    onPress={rent}>
-                    <Text style={styles.buttonTitle}>rent equipment page</Text>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
                 </TouchableOpacity> 
 
                 <TouchableOpacity

@@ -1,14 +1,19 @@
 import { StyleSheet } from 'react-native';
 import {colors} from './colors'
+import { Dimensions } from 'react-native';
+
+const{width,height} = Dimensions.get('window');
+
 export default StyleSheet.create({
+
     container: {
         flex: 1,
-        height:'100%',
-        width: '100%',
+        height:height,
+        width: width,
         backgroundColor: colors.darkBlue,
     },
     keyboardContainer:{
-        width:'100%',
+        width:width,
         alignItems:'center',
         justifyContent:'center'
 
@@ -16,54 +21,55 @@ export default StyleSheet.create({
     title: {
     },
     logo: {
-        height: '30%',
-        width: '30%',
-        padding:'40%',
+        height: height*0.3,
+        width: width*0.4,
+        paddingVertical:height*0.19,
+        paddingHorizontal:width*0.41,
         alignSelf: "center",
-        marginBottom:'10%',
-        marginTop:'5%',
+        marginBottom:height*0.05,
+        marginTop:height*0.02,
     },
     input: {
         backgroundColor: colors.white,
-        width:'80%',
-        marginTop: '5%',
-        paddingVertical: '5%',
-        borderRadius: '25%',
-        borderWidth:'3%',
+        width:width*0.8,
+        marginTop: height*0.02,
+        paddingVertical: height*0.02,
+        paddingHorizontal: width*0.05,
+        borderRadius: height*0.035,
+        borderWidth:width*0.01,
         borderColor:colors.red,
         alignItems: "center",
         justifyContent: 'center',
-        padding:'5%',
     },
     button: {
         backgroundColor: colors.white,
-        width:'80%',
-        marginTop: '10%',
-        paddingVertical: '5%',
-        borderRadius: '25%',
-        borderWidth:'3%',
+        width:width*0.8,
+        marginTop: height*0.05,
+        paddingVertical: height*0.02,
+        borderRadius: height*0.035,
+        borderWidth:width*0.01,
         borderColor:colors.red,
         alignItems: "center",
         justifyContent: 'center'
     },
     buttonTitle: {
         color: colors.black,
-        fontSize: '18%',
+        fontSize: width*0.05,
         fontWeight: "bold"
     },
     footerView: {
         flex: 1,
         alignItems: "center",
-        marginTop: '5%'
+        marginTop: height*0.02
     },
     footerText: {
-        fontSize: '16%',
+        fontSize: width*0.045,
         color: colors.white
     },
     footerLink: {
         color: colors.lightBlue,
         fontWeight: "bold",
-        fontSize: '16%'
+        fontSize: width*0.047
     },
     coreFooter:{
         position: 'absolute',
@@ -72,65 +78,62 @@ export default StyleSheet.create({
         bottom: 0,
         backgroundColor: colors.darkBlue,
         paddingBottom:0,
-        height:'9%',
+        height:height*0.08,
         justifyContent:'center',
         alignItems:'center',
     },
     footerIcons: {
-        marginTop:'20%',
-        width: '80%',
-        height: '80%',
+        marginTop:height*0.03,
+        width: width*0.8,
+        height: height*0.055,
         resizeMode: 'contain',
     },
     footerIconContainer:{
         justifyContent:'center',
     },
     headerContainer: {
-        width: '106%',
-        height:'9%',
+        width: width,
+        height:height*0.09,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: colors.transDarkBlue,
-        paddingTop:'2%',
-        marginTop:'-3%',
-        borderWidth: '3%',
+        borderBottomWidth: width*0.01,
         alignSelf:'center',
-        borderColor:'transparent',
         borderBottomColor: colors.white,
     },
     headerIcon: {
         flex: 1,
         flexGrow:0,
         flexShrink:1,
-        flexBasis:'20%',
+        flexBasis:width*0.2,
         alignItems: 'center',
         justifyContent: 'center',
-        padding:'1%'
+        padding:width*0.05,
     },
     iconButton: {
-      padding: '1%',
+        padding:width*0.2
     },
     iconImage: {
-        width: '80%',
-        height: '80%',
+        height: height*0.045,
         resizeMode: 'contain',
-        padding:'1%'
+        justifyContent:'center',
+        alignContent:'center',
     },
     filterButton: {
         flexGrow:3,
         flexShrink:0,
         backgroundColor: colors.transWhite,
-        borderRadius: '30%',
+        borderRadius: height*0.025,
         alignItems:'center',
-        paddingHorizontal:'2%',
-        paddingVertical: '2%',
-        borderWidth: '1%',
+        paddingHorizontal:width*0.01,
+        paddingVertical: height*0.01,
+        borderWidth: 1,
         borderColor: colors.semiTransWhite,
     },
     filterText: {
         color: colors.white,
-        fontSize: '15%',
+        fontSize: width*0.04,
         textAlign:'center',
     },
     fullScreenDropdown: {
@@ -145,28 +148,35 @@ export default StyleSheet.create({
         alignItems: 'center',
       },
     dropDownScroll:{
-        paddingTop:'20%',
+        paddingTop:height*0.06,
     },
     dropdownItem: {
-        fontSize: '20%',
+        fontSize: width*0.05,
+        fontWeight:'480',
         color: colors.white,
         alignSelf:'center',
-        paddingVertical:'3%',
+        paddingVertical:height*0.015,
     },
     verticalScrollView: {
-        backgroundColor: 'red',
-        width: '100%',
+        width: width,
     },
     horizontalScrollView: {
-        backgroundColor: 'white',
+        marginVertical:height*0.05,
     },
     itemPreview:{
-        marginHorizontal: 10,
-        paddingHorizontal: 10,
-        paddingVertical: 10,
+        marginHorizontal: width*0.1,
+        paddingHorizontal: width*0.03,
+        paddingVertical: height*0.03,
         backgroundColor: 'blue',
         justifyContent:'center',
-        height:'100%',
+        alignContent:'center',
+    },
+    itemImg:{
+        height:height*0.19,
+        width:width*0.19,
+        paddingHorizontal:width*0.21,
+        paddingVertical:height*0.1,
+        marginHorizontal:width*0.05,
 
     },
     

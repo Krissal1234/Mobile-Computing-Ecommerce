@@ -7,9 +7,11 @@ import { UserContext } from '../../Contexts/UserContext';
 
 export default function Home({ navigation }) {
   const { setAccountType } = useContext(UserContext);
+  const {setShowFilter} = useContext(UserContext);
 
   const handleRentClick = () => {
     setAccountType('Renter');
+    setShowFilter(true);
     navigation.navigate('Core');
   };
 
