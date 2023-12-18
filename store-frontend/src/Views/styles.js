@@ -4,6 +4,9 @@ import { Dimensions } from 'react-native';
 
 const{width,height} = Dimensions.get('window');
 
+//heights that affect other elements are listed here
+const footerHeight = height*0.08;
+
 export default StyleSheet.create({
 
     container: {
@@ -11,6 +14,7 @@ export default StyleSheet.create({
         height:height,
         width: width,
         backgroundColor: colors.darkBlue,
+        paddingBottom:footerHeight,
     },
     keyboardContainer:{
         width:width,
@@ -78,13 +82,12 @@ export default StyleSheet.create({
         bottom: 0,
         backgroundColor: colors.darkBlue,
         paddingBottom:0,
-        height:height*0.08,
+        height:footerHeight,
         justifyContent:'center',
         alignItems:'center',
     },
     footerIcons: {
         marginTop:height*0.03,
-        width: width*0.8,
         height: height*0.055,
         resizeMode: 'contain',
     },

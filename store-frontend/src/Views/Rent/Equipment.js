@@ -24,18 +24,96 @@ const Equipment = () => {
                 </TouchableOpacity> 
 
                 <TouchableOpacity
-                    style={styles.itemPreview}
                     onPress={rent}>
-                    <Text style={styles.buttonTitle}>rent equipment page</Text>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
                 </TouchableOpacity> 
 
                 <TouchableOpacity
-                    style={styles.itemPreview}
                     onPress={rent}>
-                    <Text style={styles.buttonTitle}>rent equipment page</Text>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
+                </TouchableOpacity> 
+
+                <TouchableOpacity
+                    onPress={rent}>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
                 </TouchableOpacity> 
 
             </ScrollView>   
+
+            <ScrollView horizontal contentContainerStyle={styles.horizontalScrollView}
+                        showsHorizontalScrollIndicator={false}
+            >
+                <TouchableOpacity
+                    onPress={rent}>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
+                </TouchableOpacity> 
+
+                <TouchableOpacity
+                    onPress={rent}>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
+                </TouchableOpacity> 
+
+                <TouchableOpacity
+                    onPress={rent}>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
+                </TouchableOpacity> 
+
+                <TouchableOpacity
+                    onPress={rent}>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
+                </TouchableOpacity> 
+
+            </ScrollView> 
+
+            <ScrollView horizontal contentContainerStyle={styles.horizontalScrollView}
+                        showsHorizontalScrollIndicator={false}
+            >
+                <TouchableOpacity
+                    onPress={rent}>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
+                </TouchableOpacity> 
+
+                <TouchableOpacity
+                    onPress={rent}>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
+                </TouchableOpacity> 
+
+                <TouchableOpacity
+                    onPress={rent}>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
+                </TouchableOpacity> 
+
+                <TouchableOpacity
+                    onPress={rent}>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
+                </TouchableOpacity> 
+
+            </ScrollView> 
+
+            <ScrollView horizontal contentContainerStyle={styles.horizontalScrollView}
+                        showsHorizontalScrollIndicator={false}
+            >
+                <TouchableOpacity
+                    onPress={rent}>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
+                </TouchableOpacity> 
+
+                <TouchableOpacity
+                    onPress={rent}>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
+                </TouchableOpacity> 
+
+                <TouchableOpacity
+                    onPress={rent}>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
+                </TouchableOpacity> 
+
+                <TouchableOpacity
+                    onPress={rent}>
+                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
+                </TouchableOpacity> 
+
+            </ScrollView> 
 
         </ScrollView>
     </View>
