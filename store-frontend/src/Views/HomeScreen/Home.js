@@ -16,7 +16,7 @@ export default function Home({ navigation }) {
     setShowFilter(true);
     navigation.navigate('Core');
       
-   
+
   };
 
   const handleLeaseClick = () => {

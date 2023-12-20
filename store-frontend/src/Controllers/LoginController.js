@@ -19,18 +19,18 @@ export class LoginController {
         password: password,
         username: username
       };
-      console.log("calling firebase register function");
       const registration = await registerUser(userData)
-        console.log(registration.data.message);
       // Return success 
       if(registration.data.success == true){
-        print("Success if statement");
         return {
           success: true,
           message: 'Registration successful!',
         };
       }else if(registration.data.success == false){
-          //
+          return {
+            success: false,
+            message: registration.data.message
+          }
       }
     } catch (error) {
       // Handle specific error cases

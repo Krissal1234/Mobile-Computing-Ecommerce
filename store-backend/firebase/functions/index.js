@@ -2,6 +2,7 @@
 
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
+const { user } = require("firebase-functions/v1/auth");
 admin.initializeApp(functions.config().firebase)
 
 const db = admin.firestore();
@@ -112,33 +113,15 @@ exports.getUser = functions.https.onCall(async (data, context) => {
 });
 
 
-exports.postEquipment = functions.https.onCall((data, context) => {
+exports.postEquipment = functions.https.onCall(async (data, context) => {
   // Ensure user is authenticated
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
   data.createdAt = admin.firestore.FieldValue.serverTimestamp(); // optional: add timestamp when data is added
-  //const {title, sport_category, condition,price, available_status, deliveryType,description,pickup_location, images, owner } = data;
-  // You can use these fields as needed in your function
-  
-  
-  // Create an object to store in Firebase
-  // const equipmentEntry = {
-  //   title,
-  //   description,
-  //   price,
-  //   sport_category,
-  //   available_status,
-  //   deliveryType,
-  //   condition,
-  //   images,
-  //   pickup_location,
-  //   owner,
-  //   createdAt: 
-  // };
 
   // Add the equipment data to Firestore
-  return db.collection('equipment').add(data)
+  return await db.collection('equipment').add(data)
     .then(docRef => {
       console.log('Document written with ID: ', docRef.id);
       return { success: true, message: 'Equipment successfully added', id: docRef.id };
@@ -150,16 +133,15 @@ exports.postEquipment = functions.https.onCall((data, context) => {
 });
 
 //FACILITY INPUT
-exports.postFacility = functions.https.onCall((data, context) => {
+exports.postFacility = functions.https.onCall(async (data, context) => {
   // Ensure user is authenticated
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
   data.createdAt = admin.firestore.FieldValue.serverTimestamp(); // optional: add timestamp when data is added
 
-
   // Add the equipment data to Firestore
-  return db.collection('facilities').add(data)
+  return await db.collection('facilities').add(data)
     .then(docRef => {
       console.log('Document written with ID: ', docRef.id);
       return { success: true, message: 'Facility successfully added', id: docRef.id };
@@ -168,4 +150,46 @@ exports.postFacility = functions.https.onCall((data, context) => {
       console.error('Error adding document: ', error);
       return { success: false, message: 'Error adding facility data', error: error };
     });
+});
+
+exports.getListingsByUserUid = functions.https.onCall(async (data,context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
+  try {
+
+    const userUid = data.userUid;
+
+
+    const equipmentQuery = db.collection("equipment").where("owner.userUid", "==", userUid).get();
+    const facilitiesQuery = db.collection("facilities").where("owner.userUid", "==", userUid).get();
+   
+    const [equipmentSnapshot, facilitiesSnapshot] = await Promise.all([equipmentQuery, facilitiesQuery]);
+
+    let equipmentList = [];
+    let facilitiesList = [];
+
+    equipmentSnapshot.forEach(doc => {
+      equipmentList.push({ id: doc.id, ...doc.data(), type: 'equipment' });
+    });
+
+    facilitiesSnapshot.forEach(doc => {
+      facilitiesList.push({ id: doc.id, ...doc.data(), type: 'facility' });
+    });
+
+    // Combine both lists
+    const combinedListings = equipmentList.concat(facilitiesList);
+
+    return {
+      success: true,
+      message: 'Listings retrieved successfully for the user',
+      data: combinedListings,
+    };
+  } catch (error) {
+    console.error('Error retrieving listings by user UID:', error);
+    return {
+      success: false,
+      message: 'Internal Server Error',
+    };
+  }
 });
