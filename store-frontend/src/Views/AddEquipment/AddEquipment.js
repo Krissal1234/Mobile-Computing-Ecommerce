@@ -1,40 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, Modal, FlatList } from 'react-native';
 import { Card, Button } from 'react-native-paper';
 import ImagePicker from 'react-native-image-picker';
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AddEquipment = () => {
   const [title, setTitle] = useState('');
-  const [description1, setDescription1] = useState('');
-  const [description2, setDescription2] = useState('');
+  const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
-  const [image, setImage] = useState(null);
+  const [sportCategory, setSportCategory] = useState('');
+  const [available_status, setAvailableStatus] = useState('');
+  const [deliveryType, setDeliveryType] = useState(null);
+  const [condition, setCondition] = useState('');
+  const [images, setImages] = useState([]);
+  const [pickup_location, setPickupLocation] = useState({ latitude: '', longitude: '' });
+  const [owner, setOwner] = useState('');
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
+  const [available, setAvailable] = useState(null);
 
   const navigation = useNavigation();
 
   useEffect(() => {
-    console.log('Selected Image:', image);
-  }, [image]);
+    console.log('Selected Images:', images);
+  }, [images]);
 
   const handleChoosePhoto = () => {
     ImagePicker.showImagePicker(
       {
-        title: 'Select Equipment Image',
+        title: 'Select Equipment Images',
         cancelButtonTitle: 'Cancel',
         takePhotoButtonTitle: 'Take Photo',
         chooseFromLibraryButtonTitle: 'Choose from Library',
+        mediaType: 'photo',
+        multiple: true,
       },
       (response) => {
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-        } else {
-          setImage(response);
+        if (!response.didCancel && !response.error) {
+          setImages([...images, response]);
         }
       }
     );
@@ -43,102 +48,238 @@ const AddEquipment = () => {
   const handleAddEquipment = () => {
     const newEquipment = {
       title,
-      description1,
-      description2,
+      description,
       price,
-      pickupLocation: {
-        latitude,
-        longitude,
-      },
-      image,
+      sportCategory,
+      available_status,
+      deliveryType,
+      condition,
+      images,
+      pickup_location: deliveryType === 'Delivery' ? null : pickup_location,
+      owner,
+      available,
     };
 
     console.log('New Equipment:', newEquipment);
 
+    // You can perform any further actions with the new equipment data here.
+
     navigation.navigate('LeasingEquipment');
   };
 
+  const deliveryOptions = ['Null', 'Pickup', 'Delivery'];
+  const availableOptions = ['True', 'False'];
+
+  const toggleDropdown = () => {
+    setIsDropdownVisible(!isDropdownVisible);
+  };
+
+  const toggleAvailableDropdown = () => {
+    setIsAvailableDropdownVisible(!isAvailableDropdownVisible);
+  };
+
+  const handleSelectItem = (item) => {
+    setDeliveryType(item);
+    if (item === 'Delivery') {
+      setPickupLocation({ latitude: '', longitude: '' });
+    }
+    toggleDropdown();
+  };
+
+  const handleSelectAvailable = (item) => {
+    setAvailable(item);
+    toggleAvailableDropdown();
+  };
+
   return (
-    <View style={styles.container}>
-      <Card style={styles.card}>
-        <TouchableOpacity onPress={handleChoosePhoto}>
-          {image ? (
-            <Image source={{ uri: image.uri }} style={styles.image} />
-          ) : (
-            <Text style={styles.choosePhotoText}>Choose Equipment Photo</Text>
-          )}
-        </TouchableOpacity>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.container}>
+          <Card style={styles.card}>
+            <TouchableOpacity onPress={handleChoosePhoto}>
+              {images.length > 0 ? (
+                images.map((image, index) => (
+                  <Image key={index} source={{ uri: image.uri }} style={styles.image} />
+                ))
+              ) : (
+                <Text style={styles.choosePhotoText}>Choose Equipment Photos</Text>
+              )}
+            </TouchableOpacity>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Equipment Title"
-          value={title}
-          onChangeText={(text) => setTitle(text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Description 1"
-          value={description1}
-          onChangeText={(text) => setDescription1(text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Description 2"
-          value={description2}
-          onChangeText={(text) => setDescription2(text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Price Per Day"
-          value={price}
-          onChangeText={(text) => setPrice(text)}
-        />
-
-        <View style={styles.mapContainer}>
-          <Text style={styles.mapLabel}>Enter Pick Up Location:</Text>
-          <TextInput
-            style={styles.mapInput}
-            placeholder="Latitude"
-            keyboardType="numeric"
-            value={latitude}
-            onChangeText={(text) => setLatitude(text)}
-          />
-          <TextInput
-            style={styles.mapInput}
-            placeholder="Longitude"
-            keyboardType="numeric"
-            value={longitude}
-            onChangeText={(text) => setLongitude(text)}
-          />
-
-          <MapView
-            style={styles.map}
-            region={{
-              latitude: parseFloat(latitude) || 0,
-              longitude: parseFloat(longitude) || 0,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-            onPress={(e) => {
-              setLatitude(e.nativeEvent.coordinate.latitude.toString());
-              setLongitude(e.nativeEvent.coordinate.longitude.toString());
-            }}
-          >
-            <Marker
-              coordinate={{
-                latitude: parseFloat(latitude) || 0,
-                longitude: parseFloat(longitude) || 0,
-              }}
-              title="Selected Location"
+            {/* Equipment Title */}
+            <Text style={styles.label}>Equipment Title</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Equipment Title"
+              value={title}
+              onChangeText={(text) => setTitle(text)}
             />
-          </MapView>
-        </View>
-      </Card>
 
-      <Button mode="contained" onPress={handleAddEquipment}>
-        Add Equipment
-      </Button>
-    </View>
+            {/* Description */}
+            <Text style={styles.label}>Description</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Description"
+              value={description}
+              onChangeText={(text) => setDescription(text)}
+            />
+
+            {/* Price Per Day */}
+            <Text style={styles.label}>Price Per Day</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Price Per Day"
+              value={price}
+              onChangeText={(text) => setPrice(text)}
+            />
+
+            {/* Sport Category */}
+            <Text style={styles.label}>Sport Category</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Sport Category"
+              value={sportCategory}
+              onChangeText={(text) => setSportCategory(text)}
+            />
+
+            {/* Available */}
+            <Text style={styles.label}>Available</Text>
+            <View style={styles.input}>
+              <TouchableOpacity style={styles.dropdownButton} onPress={toggleAvailableDropdown}>
+                <Text style={styles.dropdownButtonText}>
+                  {available !== null ? available : 'Select Availability'}
+                </Text>
+              </TouchableOpacity>
+              {/* Dropdown Modal */}
+              <Modal transparent={true} visible={isAvailableDropdownVisible} animationType="slide">
+                <TouchableOpacity
+                  style={styles.dropdownOverlay}
+                  onPress={toggleAvailableDropdown}
+                />
+                <View style={styles.dropdownContainer}>
+                  <FlatList
+                    data={availableOptions}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        style={styles.dropdownItem}
+                        onPress={() => handleSelectAvailable(item)}
+                      >
+                        <Text>{item}</Text>
+                      </TouchableOpacity>
+                    )}
+                    keyExtractor={(item) => item}
+                  />
+                </View>
+              </Modal>
+            </View>
+
+            {/* Available Status */}
+            <Text style={styles.label}>Available Status</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Available Status"
+              value={available_status}
+              onChangeText={(text) => setAvailableStatus(text)}
+            />
+
+            {/* Delivery Type */}
+            <Text style={styles.label}>Delivery Type</Text>
+            <View style={styles.input}>
+              <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
+                <Text style={styles.dropdownButtonText}>
+                  {deliveryType !== null ? deliveryType : 'Select Delivery Type'}
+                </Text>
+              </TouchableOpacity>
+              {/* Dropdown Modal */}
+              <Modal transparent={true} visible={isDropdownVisible} animationType="slide">
+                <TouchableOpacity
+                  style={styles.dropdownOverlay}
+                  onPress={toggleDropdown}
+                />
+                <View style={styles.dropdownContainer}>
+                  <FlatList
+                    data={deliveryOptions}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        style={styles.dropdownItem}
+                        onPress={() => handleSelectItem(item)}
+                      >
+                        <Text>{item}</Text>
+                      </TouchableOpacity>
+                    )}
+                    keyExtractor={(item) => item}
+                  />
+                </View>
+              </Modal>
+            </View>
+
+            {deliveryType !== 'Delivery' && (
+              // Render pickup location input only when not Delivery
+              <View style={styles.mapContainer}>
+                <Text style={styles.label}>Pick Up Location</Text>
+                <TextInput
+                  style={styles.mapInput}
+                  placeholder="Enter Latitude"
+                  keyboardType="numeric"
+                  value={pickup_location.latitude}
+                  onChangeText={(text) => setPickupLocation({ ...pickup_location, latitude: text })}
+                />
+                <TextInput
+                  style={styles.mapInput}
+                  placeholder="Enter Longitude"
+                  keyboardType="numeric"
+                  value={pickup_location.longitude}
+                  onChangeText={(text) => setPickupLocation({ ...pickup_location, longitude: text })}
+                />
+
+                <MapView
+                  style={styles.map}
+                  region={{
+                    latitude: parseFloat(pickup_location.latitude) || 0,
+                    longitude: parseFloat(pickup_location.longitude) || 0,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                  }}
+                  onPress={(e) => {
+                    const { latitude, longitude } = e.nativeEvent.coordinate;
+                    setPickupLocation({ latitude: latitude.toString(), longitude: longitude.toString() });
+                  }}
+                >
+                  <Marker
+                    coordinate={{
+                      latitude: parseFloat(pickup_location.latitude) || 0,
+                      longitude: parseFloat(pickup_location.longitude) || 0,
+                    }}
+                    title="Selected Location"
+                  />
+                </MapView>
+              </View>
+            )}
+            {/* Condition */}
+            <Text style={styles.label}>Condition</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Condition"
+              value={condition}
+              onChangeText={(text) => setCondition(text)}
+            />
+
+            {/* Owner */}
+            <Text style={styles.label}>Owner</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter Owner"
+              value={owner}
+              onChangeText={(text) => setOwner(text)}
+            />
+
+            <Button mode="contained" onPress={handleAddEquipment}>
+              Add Equipment
+            </Button>
+          </Card>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -148,6 +289,11 @@ const styles = {
     padding: 10,
     backgroundColor: '#fff',
   },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'space-between',
+    paddingBottom: 30,
+  },
   card: {
     padding: 15,
     marginBottom: 10,
@@ -156,12 +302,18 @@ const styles = {
     borderWidth: 2,
     borderColor: '#A2383A',
   },
+  label: {
+    color: '#A2383A',
+    marginBottom: 5,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
     marginBottom: 10,
     padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
   },
   image: {
     width: '100%',
@@ -179,20 +331,40 @@ const styles = {
   mapContainer: {
     marginTop: 10,
   },
-  mapLabel: {
-    marginBottom: 5,
-    color: '#A2383A',
-  },
   mapInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
     marginBottom: 10,
     padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
   },
   map: {
     height: 200,
     marginTop: 10,
+  },
+  dropdownButton: {
+    backgroundColor: '#eee',
+    padding: 10,
+    borderRadius: 5,
+  },
+  dropdownButtonText: {
+    color: '#333',
+  },
+  dropdownOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  dropdownContainer: {
+    position: 'absolute',
+    top: 140,
+    right: 10,
+    backgroundColor: '#fff',
+    elevation: 5,
+    borderRadius: 5,
+    padding: 10,
+  },
+  dropdownItem: {
+    padding: 10,
   },
 };
 
