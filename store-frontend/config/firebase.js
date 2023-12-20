@@ -24,3 +24,4 @@ export const auth = initializeAuth(app, {
 
 export const login = signInWithEmailAndPassword;
 export const postEquipment = httpsCallable(functions,'postEquipment');
+export const postFacility = httpsCallable(functions, 'postFacility');

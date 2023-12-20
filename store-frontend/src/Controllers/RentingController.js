@@ -1,32 +1,22 @@
-import { postEquipment } from '../../config/firebase';
+import { postEquipment,postFacility } from '../../config/firebase';
 
 export class RentingController {
 
   //Post equipment to be rented out, e.g. boxing gloves
   static async PostEquipment(equipmentData, user) {
-    const { title, sportCategory, condition, price, available_status, deliveryType, description, pickup_location, images } = equipmentData;
-    //console.log("user from renting:" + user.user.uid);
-   const owner = {userUid: user.user.uid, email: user.user.email, username: user.user.displayName};
-   
-    // /console.log("user from renting:" + user);
-    const equipmentEntry = {
-      title,
-      description,
-      price,
-      sportCategory,
-      available_status,
-      deliveryType,
-      condition,
-      images,
-      owner,
+   const {deliveryType,pickup_location} = equipmentData;
+    equipmentData.owner = {
+      userUid: user.user.uid, 
+      email: user.user.email, 
+      username: user.user.displayName
     };
 
     if (deliveryType === 'pickup') {
-      equipmentEntry.pickup_location = pickup_location;
+      equipmentData.pickup_location = pickup_location;
     }
 
     try {
-      var response = await postEquipment(equipmentEntry);
+      var response = await postEquipment(equipmentData);
       if(response.data.success){
         return { success: true, message: 'Equipment inputted successfully'};
       }else{
@@ -38,26 +28,27 @@ export class RentingController {
     }
   }
 
+//Fields expected
+  // title,
+  // description,
+  // price,
+  // sport_category,
+  // available_status,
+  // standard_rent_time,
+  // images,
+  // location,
+  // unavailable_dates,
   static async postFacility(facilityData, user){
-    const { title, sportCategory, price, description, location, images, dates } = equipmentData;
-   const owner = {userUid: user.user.uid, email: user.user.email, username: user.user.displayName};
-   
-    const equipmentEntry = {
-      title,
-      description,
-      price,
-      sportCategory,
-      images,
-      location,
-      owner,
+    //Adding owner field
+    facilityData.owner = {
+      userUid: user.user.uid, 
+      email: user.user.email, 
+      username: user.user.displayName
     };
-
-    if (deliveryType === 'pickup') {
-      equipmentEntry.pickup_location = pickup_location;
-    }
+    console.log("facilitydata i ncontroller"+  facilityData.location);
 
     try {
-      var response = await postEquipment(equipmentEntry);
+      var response = await postFacility(facilityData);
       if(response.data.success){
         console.log('Equipment posted successfully:', response);
         return { success: true, message: 'Equipment inputted successfully'};

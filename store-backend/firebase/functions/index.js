@@ -1,81 +1,5 @@
 /* eslint-disable */
 
-// exports.PostProductItemToFirestore = onCall((request, response) => {
-//   // const testData = {
-//   //   "title": "Mountain Bike",
-//   //   "description": "A durable mountain bike for off-road adventures.",
-//   //   "category": "Bicycles",
-//   //   "price": 20.00,
-//   //   "currency": "EUR"
-//   //   "location": {
-//   //    "lon" : 23.1232,
-//   //    "lat": 25.2323,
-//   //   },
-//   //   "rental_period": {
-//   //     "min_days": 1,
-//   //     "max_days": 7
-//   //   },
-//   //   "owner": {
-//   //     "user_id": "seller123",
-//   //     "username": "bike_owner",
-//   //     "email": "owner@example.com",
-//   //     "phone": "+1234567890"
-//   //   },
-//   //   "images": [
-//   //     "https://example.com/bike_image1.jpg",
-//   //     "https://example.com/bike_image2.jpg"
-//   //   ],
-//   // };
-
-
-//     // const pitch = {
-//   //   "title": "Mountain Bike",
-//   //   "description": "A durable mountain bike for off-road adventures.",
-//   //   "sport": "football",
-//   //    category: equipment/pitches
-//   //   "price": 20.00,
-//   //   "currency": "EUR"
-//   //   "location": {
-//   //    "lon" : 23.1232,
-//   //    "lat": 25.2323,
-//   //   },
-//   //   "rental_period": {
-//         //hourly basis
-//   //   },
-//   //   "owner": {
-//   //     "user_id": "seller123",
-//   //     "username": "bike_owner",
-//   //     "email": "owner@example.com",
-//   //     "phone": "+1234567890"
-//   //   },
-//   //   "images": [
-//   //     "https://example.com/bike_image1.jpg",
-//   //     "https://example.com/bike_image2.jpg"
-//   //   ],
-//   // };
-
-
-
-
-//   const data = request.body;
-
-//   if (!data || Object.keys(data).length === 0) {
-//     return response.status(400).json({ error: 'Bad Request: Missing or empty request body.' });
-//   }
-//   //Idea: Add rating field over here, then create another function
-//   // that can add to the rating by requiring the id and rating
-//   //Store in database
-//   firestore.collection("items").add(data)
-//     .then((docRef) => {
-//       logger.info("Document added with ID: ", docRef.id, { structuredData: true });
-//       response.status(200).send(); 
-//      })
-//     .catch((error) => {
-//       logger.error("Error adding document: ", error, { structuredData: true });
-//       response.status(500).send("Internal Server Error");
-//     });
-// });
-
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 admin.initializeApp(functions.config().firebase)
@@ -187,46 +111,34 @@ exports.getUser = functions.https.onCall(async (data, context) => {
   }
 });
 
-/*
-Input an order into the database. Input from UI end:
-Equipment:    item_id,dates,pickup location/delivery location,pickup/delivery time, drop off/pick up time.
 
-    Pitches:    item_id,date,start time,end time.
-
-    When added to basket each item will have the above values added 
-    to them and when the user finishes their purchase    
-     these values will be passed to the server to be stored. 
-    certain details like price paid etc can be calculated in the 
-        backend using the above values and then stored.
-*/
 exports.postEquipment = functions.https.onCall((data, context) => {
   // Ensure user is authenticated
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
-
-  const {title, sportCategory, condition,price, available_status, deliveryType,description,pickup_location, images, owner } = data;
+  data.createdAt = admin.firestore.FieldValue.serverTimestamp(); // optional: add timestamp when data is added
+  //const {title, sport_category, condition,price, available_status, deliveryType,description,pickup_location, images, owner } = data;
   // You can use these fields as needed in your function
   
   
   // Create an object to store in Firebase
-  const equipmentEntry = {
-    title,
-    description,
-    price,
-    sportCategory,
-    available_status,
-    deliveryType,
-    condition,
-    images,
-    pickup_location,
-    owner,
-    createdAt: admin.firestore.FieldValue.serverTimestamp(), // optional: add timestamp when data is added
-  };
+  // const equipmentEntry = {
+  //   title,
+  //   description,
+  //   price,
+  //   sport_category,
+  //   available_status,
+  //   deliveryType,
+  //   condition,
+  //   images,
+  //   pickup_location,
+  //   owner,
+  //   createdAt: 
+  // };
 
   // Add the equipment data to Firestore
-  const db = admin.firestore();
-  return db.collection('equipment').add(equipmentEntry)
+  return db.collection('equipment').add(data)
     .then(docRef => {
       console.log('Document written with ID: ', docRef.id);
       return { success: true, message: 'Equipment successfully added', id: docRef.id };
@@ -234,5 +146,26 @@ exports.postEquipment = functions.https.onCall((data, context) => {
     .catch(error => {
       console.error('Error adding document: ', error);
       return { success: false, message: 'Error adding equipment data', error: error };
+    });
+});
+
+//FACILITY INPUT
+exports.postFacility = functions.https.onCall((data, context) => {
+  // Ensure user is authenticated
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
+  data.createdAt = admin.firestore.FieldValue.serverTimestamp(); // optional: add timestamp when data is added
+
+
+  // Add the equipment data to Firestore
+  return db.collection('facilities').add(data)
+    .then(docRef => {
+      console.log('Document written with ID: ', docRef.id);
+      return { success: true, message: 'Facility successfully added', id: docRef.id };
+    })
+    .catch(error => {
+      console.error('Error adding document: ', error);
+      return { success: false, message: 'Error adding facility data', error: error };
     });
 });
