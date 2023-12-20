@@ -199,20 +199,40 @@ Equipment:    item_id,dates,pickup location/delivery location,pickup/delivery ti
     certain details like price paid etc can be calculated in the 
         backend using the above values and then stored.
 */
-exports.inputEquipment = functions.https.onCall(async (data, context) => {
-  try {
-       
-    await admin.firestore().collection('equipments').doc(userRecord.uid).set({
-      email: email,
-      username: username,
-    });
-    
-
-  } catch (error) {
-    console.error('Error getting user:', error);
-    return {
-      success: false,
-      message: 'Internal Server Error',
-    };
+exports.postEquipment = functions.https.onCall((data, context) => {
+  // Ensure user is authenticated
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
+
+  const {title, sportCategory, condition,price, available_status, deliveryType,description,pickup_location, images, owner } = data;
+  // You can use these fields as needed in your function
+  
+  
+  // Create an object to store in Firebase
+  const equipmentEntry = {
+    title,
+    description,
+    price,
+    sportCategory,
+    available_status,
+    deliveryType,
+    condition,
+    images,
+    pickup_location,
+    owner,
+    createdAt: admin.firestore.FieldValue.serverTimestamp(), // optional: add timestamp when data is added
+  };
+
+  // Add the equipment data to Firestore
+  const db = admin.firestore();
+  return db.collection('equipment').add(equipmentEntry)
+    .then(docRef => {
+      console.log('Document written with ID: ', docRef.id);
+      return { success: true, message: 'Equipment successfully added', id: docRef.id };
+    })
+    .catch(error => {
+      console.error('Error adding document: ', error);
+      return { success: false, message: 'Error adding equipment data', error: error };
+    });
 });

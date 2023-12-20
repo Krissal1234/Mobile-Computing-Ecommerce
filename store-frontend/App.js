@@ -76,21 +76,6 @@ const Stack = createStackNavigator();
 export default function App() {
   const [loading, setLoading] = useState(true);
    
-   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((authUser) => {
-      if (authUser) {
-        console.log("user logged in "); 
-        setUser(authUser);
-        // navigate, if user is already logged in.
-      } else {
-        console.log("user not logged int");
-        setUser(null);
-      }
-    });
-     
-     return () => unsubscribe();
-    }, []); 
-  
   return (
     <UserProvider>
       <NavigationContainer>

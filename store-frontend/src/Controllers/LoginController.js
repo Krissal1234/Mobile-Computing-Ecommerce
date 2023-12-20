@@ -9,6 +9,7 @@ export class LoginController {
 
     const result = this.validateRegistrationInputs(email, password,passwordVerify);
     if (!result.success){
+      console.log("success is false if");
       return result.message;
     }
     
@@ -27,10 +28,10 @@ export class LoginController {
         return {
           success: true,
           message: 'Registration successful!',
-
         };
+      }else if(registration.data.success == false){
+          //
       }
-
     } catch (error) {
       // Handle specific error cases
       if (error.code === 'auth/invalid-email') {

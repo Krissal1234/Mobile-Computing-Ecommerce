@@ -2,6 +2,8 @@
 import { getApp, initializeApp } from "firebase/app";
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpCJtHqad3BnKh9PKURBVHQp7I6ykFCO0",
@@ -16,5 +18,9 @@ const functions = getFunctions();
 
 export const registerUser = httpsCallable(functions, 'registerUser');
 export const getUserFunc = httpsCallable(functions, 'getUser');
-export const auth = getAuth();
+export const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+});
+
 export const login = signInWithEmailAndPassword;
+export const postEquipment = httpsCallable(functions,'postEquipment');

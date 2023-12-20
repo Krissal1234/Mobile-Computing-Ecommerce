@@ -5,6 +5,7 @@ import styles from 'store-frontend/src/Views/styles';
 import LoginController from '../../Controllers/LoginController';
 import { colors } from 'store-frontend/src/Views/colors.js';
 import { UserContext } from '../../Contexts/UserContext';
+import { RentingController } from '../../Controllers/RentingController';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -17,15 +18,16 @@ export default function LoginScreen({ navigation }) {
   };
 
   //For testing remove for production
-  useEffect(() => {
-    console.log('User after login:', user);
-  }, [user]); 
+  // useEffect(() => {
+  //   console.log('User after login:', user);
+  // }, [user]); 
 
   const onLoginPress = async () => {
     console.log('clicked login');
     const login = await LoginController.loginUser(email, password);
     if (login.success) {
         //Setting uid global variable
+      console.log({user, setUser})
       setUser(login.user);
       navigation.navigate("Home");
       
