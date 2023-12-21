@@ -1,4 +1,4 @@
-import { View, Text ,SafeAreaView,Image,TouchableOpacity,ScrollView} from 'react-native'
+import { View, Text ,SafeAreaView,Image,TouchableOpacity,ScrollView, StatusBar} from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import React, { useContext, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
@@ -146,7 +146,7 @@ const Core = () => {
 
   return (
 
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.coreSafeAreaView  }>
 
       <BlurView 
               style={{
@@ -211,8 +211,7 @@ const Core = () => {
                 </ScrollView>
           </BlurView>
         )}
-
-      {accountType === "Renter" ? <RenterTabs /> : <LeaserTabs />}
+          {accountType === "Renter" ? <RenterTabs /> : <LeaserTabs />}
     </SafeAreaView>
 
   );

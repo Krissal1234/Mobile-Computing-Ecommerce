@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StatusBar, StyleSheet } from 'react-native';
 import {colors} from './colors'
 import { Dimensions } from 'react-native';
 
@@ -8,7 +8,10 @@ const{width,height} = Dimensions.get('window');
 const footerHeight = height*0.08;
 
 export default StyleSheet.create({
-
+    coreSafeAreaView: {
+        flex: 1, 
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+    },
     container: {
         flex: 1,
         height:height,
