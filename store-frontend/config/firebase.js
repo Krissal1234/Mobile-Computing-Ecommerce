@@ -29,3 +29,6 @@ export const login = signInWithEmailAndPassword;
 export const postEquipment = httpsCallable(functions,'postEquipment');
 export const postFacility = httpsCallable(functions, 'postFacility');
 export const getListingsByUserUid = httpsCallable(functions, 'getListingsByUserUid');
+export const getEquipmentById = httpsCallable(functions,'getEquipmentById');
+export const getFacilityById = httpsCallable(functions,'getFacilityById');
+export const postOrder = httpsCallable(functions, 'postOrder');

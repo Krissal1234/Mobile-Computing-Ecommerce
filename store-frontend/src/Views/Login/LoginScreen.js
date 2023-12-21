@@ -5,7 +5,7 @@ import styles from 'store-frontend/src/Views/styles';
 import LoginController from '../../Controllers/LoginController';
 import { colors } from 'store-frontend/src/Views/colors.js';
 import { UserContext } from '../../Contexts/UserContext';
-import { RentingController } from '../../Controllers/RentingController';
+import { ListingsController } from '../../Controllers/ListingsController';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');

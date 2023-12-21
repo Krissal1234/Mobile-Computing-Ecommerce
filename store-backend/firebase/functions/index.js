@@ -1,5 +1,6 @@
 /* eslint-disable */
 
+const e = require("express");
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 const { user } = require("firebase-functions/v1/auth");
@@ -161,8 +162,8 @@ exports.getListingsByUserUid = functions.https.onCall(async (data,context) => {
     const userUid = data.userUid;
 
 
-    const equipmentQuery = db.collection("equipment").where("owner.userUid", "==", userUid).get();
-    const facilitiesQuery = db.collection("facilities").where("owner.userUid", "==", userUid).get();
+    const equipmentQuery = await db.collection("equipment").where("owner.userUid", "==", userUid).get();
+    const facilitiesQuery = await db.collection("facilities").where("owner.userUid", "==", userUid).get();
    
     const [equipmentSnapshot, facilitiesSnapshot] = await Promise.all([equipmentQuery, facilitiesQuery]);
 
@@ -192,4 +193,59 @@ exports.getListingsByUserUid = functions.https.onCall(async (data,context) => {
       message: 'Internal Server Error',
     };
   }
+});
+// exports.getFacilitySportsCategories = functions.https.onCall(async (data,context) => {
+
+
+// });
+
+exports.getFacilityById =functions.https.onCall(async (data,context) => {
+
+try{
+    const facility = await db.collection('facilities').doc(data.itemId).get();
+    if(!facility.exists){
+      return {success: false, message: "Facility not found"};
+    }else{
+      return {success: true, message: "Facility found", data: facility};
+    }
+}catch(error){
+    console.error("Error getting facility", error);
+    return {success:false, message: "Internal server error, check firebase logs"};
+}
+
+});
+
+exports.getEquipmentById= functions.https.onCall(async (data,context) => {
+
+  try{
+    const equipment = await db.collection('equipment').doc(data.itemId).get();
+    if(!equipment.exists){
+      return {success: false, message: "Equipment not found"};
+    }else{
+      return {success: true, message: "Equipment found", data: equipment};
+    }
+}catch(error){
+    console.error("Error getting equipment", error);
+    return {success:false, message: "Internal server error, check firebase logs"};
+}
+
+});
+
+exports.postOrder = functions.https.onCall(async (data,context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
+  
+  const orderDetails = data;
+  orderDetails.createdAt =  admin.firestore.FieldValue.serverTimestamp(); // optional: add timestamp when data is added
+  
+  return await db.collection('orders').add(orderDetails)
+  .then(docRef => {
+    console.log('order written with ID: ', docRef.id);
+    return { success: true, message: 'Order successfully added', id: docRef.id };
+  })
+  .catch(error => {
+    console.error('Error adding order: ', error);
+    return { success: false, message: 'Error processing order', error: error };
+  });
 });

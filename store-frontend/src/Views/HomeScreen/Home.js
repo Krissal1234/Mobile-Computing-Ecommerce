@@ -4,7 +4,6 @@ import { TouchableOpacity, SafeAreaView, Text, Image } from 'react-native';
 import styles from 'store-frontend/src/Views/styles';
 import homeStyles from './styles';
 import { UserContext } from '../../Contexts/UserContext';
-import { RentingController } from '../../Controllers/RentingController';
 
 export default function Home({ navigation }) {
   const { setAccountType } = useContext(UserContext);
@@ -15,8 +14,6 @@ export default function Home({ navigation }) {
     setAccountType('Renter');
     setShowFilter(true);
     navigation.navigate('Core');
-      
-
   };
 
   const handleLeaseClick = () => {
