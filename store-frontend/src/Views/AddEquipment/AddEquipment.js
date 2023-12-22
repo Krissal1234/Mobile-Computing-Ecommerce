@@ -11,15 +11,13 @@ const AddEquipment = () => {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [sportCategory, setSportCategory] = useState('');
-  const [available_status, setAvailableStatus] = useState('');
+  const [available_status, setAvailableStatus] = useState(null);
   const [deliveryType, setDeliveryType] = useState(null);
   const [condition, setCondition] = useState('');
   const [images, setImages] = useState([]);
   const [pickup_location, setPickupLocation] = useState({ latitude: '', longitude: '' });
-  const [owner, setOwner] = useState('');
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
-  const [available, setAvailable] = useState(null);
 
   const navigation = useNavigation();
 
@@ -56,14 +54,11 @@ const AddEquipment = () => {
       condition,
       images,
       pickup_location: deliveryType === 'Delivery' ? null : pickup_location,
-      owner,
-      available,
     };
 
     console.log('New Equipment:', newEquipment);
 
     // You can perform any further actions with the new equipment data here.
-
     navigation.navigate('LeasingEquipment');
   };
 
@@ -87,7 +82,7 @@ const AddEquipment = () => {
   };
 
   const handleSelectAvailable = (item) => {
-    setAvailable(item);
+    setAvailableStatus(item);
     toggleAvailableDropdown();
   };
 
@@ -147,7 +142,7 @@ const AddEquipment = () => {
             <View style={styles.input}>
               <TouchableOpacity style={styles.dropdownButton} onPress={toggleAvailableDropdown}>
                 <Text style={styles.dropdownButtonText}>
-                  {available !== null ? available : 'Select Availability'}
+                  {available_status !== null ? available_status : 'Select Availability'}
                 </Text>
               </TouchableOpacity>
               {/* Dropdown Modal */}
@@ -173,14 +168,7 @@ const AddEquipment = () => {
               </Modal>
             </View>
 
-            {/* Available Status */}
-            <Text style={styles.label}>Available Status</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Available Status"
-              value={available_status}
-              onChangeText={(text) => setAvailableStatus(text)}
-            />
+        
 
             {/* Delivery Type */}
             <Text style={styles.label}>Delivery Type</Text>
@@ -235,8 +223,8 @@ const AddEquipment = () => {
                 <MapView
                   style={styles.map}
                   region={{
-                    latitude: parseFloat(pickup_location.latitude) || 0,
-                    longitude: parseFloat(pickup_location.longitude) || 0,
+                    latitude: parseFloat(pickup_location.latitude) || 35.9375,
+                    longitude: parseFloat(pickup_location.longitude) || 14.3754,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                   }}
@@ -247,8 +235,8 @@ const AddEquipment = () => {
                 >
                   <Marker
                     coordinate={{
-                      latitude: parseFloat(pickup_location.latitude) || 0,
-                      longitude: parseFloat(pickup_location.longitude) || 0,
+                      latitude: parseFloat(pickup_location.latitude) || 35.9375,
+                      longitude: parseFloat(pickup_location.longitude) || 14.3754,
                     }}
                     title="Selected Location"
                   />
@@ -262,15 +250,6 @@ const AddEquipment = () => {
               placeholder="Enter Condition"
               value={condition}
               onChangeText={(text) => setCondition(text)}
-            />
-
-            {/* Owner */}
-            <Text style={styles.label}>Owner</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Owner"
-              value={owner}
-              onChangeText={(text) => setOwner(text)}
             />
 
             <Button mode="contained" onPress={handleAddEquipment}>
