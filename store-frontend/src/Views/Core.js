@@ -146,7 +146,7 @@ const Core = () => {
 
   return (
 
-    <SafeAreaView style={styles.coreSafeAreaView  }>
+    <SafeAreaView style={styles.container  }>
 
       <BlurView 
               style={{
