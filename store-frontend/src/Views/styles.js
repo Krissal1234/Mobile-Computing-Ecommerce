@@ -11,12 +11,10 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         height:height,
-        width: width,
+        width: width, 
         backgroundColor: colors.darkBlue,
-        paddingBottom:footerHeight,
         ...Platform.select({
-            ios: {
-
+            ios: {  
             },
             android: {
                 paddingTop:StatusBar.currentHeight,
@@ -84,7 +82,7 @@ export default StyleSheet.create({
         fontSize: width*0.047
     },
     coreFooter:{
-        position: 'absolute',
+        position: 'fixed',
         left: 0,
         right: 0,
         bottom: 0,
