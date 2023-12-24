@@ -14,7 +14,7 @@ const AddEquipment = () => {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [sportCategory, setSportCategory] = useState('');
-  const [available_status, setAvailableStatus] = useState(null);
+  const [availableStatus, setAvailableStatus] = useState(null);
   const [deliveryType, setDeliveryType] = useState(null);
   const [condition, setCondition] = useState('');
   const [images, setImages] = useState([]);
@@ -52,11 +52,11 @@ const AddEquipment = () => {
       description,
       price,
       sportCategory,
-      available_status,
+      availableStatus,
       deliveryType,
       condition,
       images,
-      pickup_location: deliveryType === 'delivery' ? null : pickup_location,
+      pickupLocation: deliveryType === 'delivery' ? null : pickup_location,
     };
 
     console.log('New Equipment:', newEquipment);
@@ -148,7 +148,7 @@ const AddEquipment = () => {
             <View style={styles.input}>
               <TouchableOpacity style={styles.dropdownButton} onPress={toggleAvailableDropdown}>
                 <Text style={styles.dropdownButtonText}>
-                  {available_status !== null ? available_status : 'Select Availability'}
+                  {availableStatus !== null ? availableStatus : 'Select Availability'}
                 </Text>
               </TouchableOpacity>
               {/* Dropdown Modal */}

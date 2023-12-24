@@ -2,6 +2,7 @@ import { postEquipment} from '../../config/firebase';
 
 
 export class EquipmentController {
+
     // title: 'Boxing Gloves',
     //  sport_category: 'Boxing',
     //  condition: 'New',
@@ -11,13 +12,10 @@ export class EquipmentController {
     //  description: 'High-quality leather boxing gloves',
     //  pickup_location: '123 Main St',
     //  images: ['image_url1', 'image_url2'],
-
-
-  
     static async PostEquipment(equipmentData,user) {
         const {deliveryType,pickup_location} = equipmentData;
          equipmentData.owner = {
-           user_uid: user.user.uid, 
+           userUid: user.user.uid, 
            email: user.user.email, 
            username: user.user.displayName
          };

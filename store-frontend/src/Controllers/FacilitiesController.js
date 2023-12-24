@@ -17,7 +17,7 @@ export class FacilitiesController {
     
           //Adding owner to the facility data
         facilityData.owner = {
-          user_uid: user.user.uid, 
+          userUid: user.user.uid, 
           email: user.user.email, 
           username: user.user.displayName
         };

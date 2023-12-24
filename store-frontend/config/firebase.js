@@ -9,12 +9,12 @@ const firebaseConfig = {
   apiKey: "AIzaSyBpCJtHqad3BnKh9PKURBVHQp7I6ykFCO0",
   authDomain: "sportyrental.firebaseapp.com",
   projectId: "sportyrentals",
-  messagingSenderId: "79967591982 ",
+  messagingSenderId: "79967591982",
   appId: "1:79967591982:android:f7f82758c2bc30443c09bf",
 };
 
 const app = initializeApp(firebaseConfig);
-const functions = getFunctions();
+const functions = getFunctions(app);
 //For firebase emulator
 //connectFunctionsEmulator(functions, "127.0.0.1", 50001)
 

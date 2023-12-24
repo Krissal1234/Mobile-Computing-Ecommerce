@@ -7,18 +7,18 @@ export class OrderController {
     //expected parameter:
     //usersBasket = [
 //     {
-//         item_id: "equipment123",
-//          price_per_hour: 2,
-//         rental_period: {
+//         itemId: "equipment123",
+//          pricePerHour: 2,
+//         rentalPeriod: {
 //             start: "2023-07-01",
 //             end: "2023-07-05"
 //         },
 //         // Additional details...
 //     },
 //     {
-//         item_id: "facility456",
-//          price_per_hour: 1,
-//         rental_period: {
+//         itemId: "facility456",
+//          pricePerHour: 1,
+//         rentalPeriod: {
 //             start: "2023-07-03T08:00",
 //             end: "2023-07-03T18:00"
 //         },
@@ -32,7 +32,7 @@ export class OrderController {
             return {success: false, message: "The basket is empty"};
         }
 
-        let total_price = 0;
+        let totalPrice = 0;
 
         //Calculating total price
         usersBasket.forEach(item => {
@@ -40,19 +40,20 @@ export class OrderController {
             const startTime = new Date(rental_period.start);
             const endTime = new Date(rental_period.end);
             const durationHours = (endTime - startTime) / 3600000; // Convert milliseconds to hours
-            total_price += durationHours * price_per_hour;
+            totalPrice += durationHours * price_per_hour;
         });
         //Adding user data to order
         const user ={
-            user_uid: user.user.uid, 
+            userUid: user.user.uid, 
             email: user.user.email, 
             username: user.user.displayName
           };
 
         const orderDetails = {
-            total_price,
+            totalPrice,
             items: usersBasket,
-            user: user
+            user: user,
+            status: "processing" //This will change to paid/finished, once paypal payment succeeds
         }
 
 
@@ -66,7 +67,7 @@ export class OrderController {
         }
     }catch(error){
         console.error(error);
-        return {success:false, message: "Internl server error"}    }
+        return {success:false, message: "Internal server error"}    }
 
     }
 }
