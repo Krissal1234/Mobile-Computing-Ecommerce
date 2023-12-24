@@ -1,5 +1,4 @@
-import { UserContext } from '../../Contexts/UserContext';
-const {user} = useContext(UserContext);
+
 import { postOrder } from '../../../store-backend/firebase/functions';
 
 
@@ -27,7 +26,7 @@ export class OrderController {
 //     }
 //     // ... more items ...
 // ];
-    static async createOrder(usersBasket){
+    static async createOrder(usersBasket,user){
         //usersBasket {
         if(!usersBasket || usersBasket.length == 0){
             return {success: false, message: "The basket is empty"};

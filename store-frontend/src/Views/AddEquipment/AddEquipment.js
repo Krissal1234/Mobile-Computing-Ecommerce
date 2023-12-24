@@ -5,6 +5,9 @@ import ImagePicker from 'react-native-image-picker';
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { EquipmentController } from '../../Controllers/EquipmentController';
+import { UserContext } from '../../Contexts/UserContext';
+import { useContext } from 'react';
 
 const AddEquipment = () => {
   const [title, setTitle] = useState('');
@@ -18,7 +21,7 @@ const AddEquipment = () => {
   const [pickup_location, setPickupLocation] = useState({ latitude: '', longitude: '' });
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
-
+  const {user} = useContext(UserContext);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -43,7 +46,7 @@ const AddEquipment = () => {
     );
   };
 
-  const handleAddEquipment = () => {
+  const handleAddEquipment = async () => {
     const newEquipment = {
       title,
       description,
@@ -53,17 +56,19 @@ const AddEquipment = () => {
       deliveryType,
       condition,
       images,
-      pickup_location: deliveryType === 'Delivery' ? null : pickup_location,
+      pickup_location: deliveryType === 'delivery' ? null : pickup_location,
     };
 
     console.log('New Equipment:', newEquipment);
 
-    // You can perform any further actions with the new equipment data here.
-    navigation.navigate('LeasingEquipment');
+   //This will input the equipment into the database.
+    const response = await EquipmentController.PostEquipment(newEquipment,user); //TODO: find a way to use a laoding screen while you wait for this function to return (Communicate with the rest of UI team becuase it will be needed throughout the project)
+    console.log(response.message);
+     //TODO: Display a success message or error message based on what the above function returns (you can check what it returns by going into the function)
   };
 
-  const deliveryOptions = ['Null', 'Pickup', 'Delivery'];
-  const availableOptions = ['True', 'False'];
+  const deliveryOptions = ['pickup', 'delivery']; //TODO: show capitals in UI but pass it to the firebase function in lowercase to keep lowercase standard. 
+  const availableOptions = ['true', 'false']; //TODO: Change this to yes or no for frontend, but then you will pass true or false to the firebase function
 
   const toggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
@@ -75,7 +80,7 @@ const AddEquipment = () => {
 
   const handleSelectItem = (item) => {
     setDeliveryType(item);
-    if (item === 'Delivery') {
+    if (item === 'delivery') {
       setPickupLocation({ latitude: '', longitude: '' });
     }
     toggleDropdown();
@@ -123,7 +128,8 @@ const AddEquipment = () => {
             <Text style={styles.label}>Price Per Day</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter Price Per Day"
+              placeholder="Price per hour"
+              //TODO: Check if the value inputted is an integer, and conver it to an integer
               value={price}
               onChangeText={(text) => setPrice(text)}
             />
@@ -201,7 +207,7 @@ const AddEquipment = () => {
               </Modal>
             </View>
 
-            {deliveryType !== 'Delivery' && (
+            {deliveryType !== 'delivery' && (
               // Render pickup location input only when not Delivery
               <View style={styles.mapContainer}>
                 <Text style={styles.label}>Pick Up Location</Text>

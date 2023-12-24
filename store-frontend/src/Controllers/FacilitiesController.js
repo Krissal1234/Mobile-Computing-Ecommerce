@@ -1,6 +1,5 @@
 import { postFacility } from '../../config/firebase';
-import { UserContext } from '../../Contexts/UserContext';
-const {user} = useContext(UserContext);
+
 
 
 
@@ -13,7 +12,7 @@ export class FacilitiesController {
   // available_status,
   // images,
   // location,
-   static async postFacility(facilityData){
+   static async postFacility(facilityData, user){
         //Adding owner field
     
           //Adding owner to the facility data

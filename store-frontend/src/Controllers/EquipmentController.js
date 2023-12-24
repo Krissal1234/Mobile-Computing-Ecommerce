@@ -1,7 +1,4 @@
 import { postEquipment} from '../../config/firebase';
-import { UserContext } from '../../Contexts/UserContext';
-const {user} = useContext(UserContext);
-
 
 
 export class EquipmentController {
@@ -17,7 +14,7 @@ export class EquipmentController {
 
 
   
-    static async PostEquipment(equipmentData) {
+    static async PostEquipment(equipmentData,user) {
         const {deliveryType,pickup_location} = equipmentData;
          equipmentData.owner = {
            user_uid: user.user.uid, 
@@ -43,9 +40,6 @@ export class EquipmentController {
            return { success: false, message: "An error occurred when inputting your equipment." };
          }
        }
-       static async getEquipmentSportsCategories(){
 
-       }
-
-       createEquipe
+       
 }
