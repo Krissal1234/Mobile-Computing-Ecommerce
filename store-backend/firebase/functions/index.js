@@ -113,7 +113,7 @@ exports.getUser = functions.https.onCall(async (data, context) => {
   }
 });
 
-
+//Equipment Input
 exports.postEquipment = functions.https.onCall(async (data, context) => {
   // Ensure user is authenticated
   if (!context.auth) {
@@ -259,7 +259,7 @@ exports.getAllEquipment = functions.https.onCall(async (data,context) => {
       const snapshot = await db.collection('equipment').get();
       //To append the document id  
       const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      return {success: true, message: "Successfully retrieved equipment data", items};
+      return {success: true, message: "Successfully retrieved equipment data", data:items};
     }catch(error){
       console.error("Error getting equipment",error);
       return {success:false, message: "Internal server error"}
@@ -274,9 +274,55 @@ exports.getAllFacilities = functions.https.onCall(async (data,context) => {
       const snapshot = await db.collection('facilities').get();
       //To append the document id  
       const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      return {success: true, message: "Successfully retrieved facilities", items};
+      return {success: true, message: "Successfully retrieved facilities", data:items};
     }catch(error){
       console.error("Error getting facilities",error);
       return {success:false, message: "Internal server error"}
     }
 });
+
+exports.filterFacilitiesBySport = functions.https.onCall(async (data,context) => {
+  try {
+    // Get the filter value from the request query parameters
+    const filter = data.filter; 
+
+    // Reference to your Firestore collection
+    const facilitiesRef = db.collection('facilities');
+
+    // Apply the filter to the query !!Adjust FieldName!!
+    const querySnapshot = await facilitiesRef.where('sport_category', '==', filter).get();
+
+    const filteredData = [];
+    querySnapshot.forEach((doc) => {
+      filteredData.push(doc.data());
+    });
+
+    return {success: true, message: "Successfully filtered Facilities", data:filteredData};
+    }catch(error){
+      console.error("Error filtering facilities",error);
+      return {success:false, message: "Internal server error"}
+    }
+})
+
+exports.filterEquipmentBySport = functions.https.onCall(async (data,contex) => {
+  try {
+    // Get the filter value from the request query parameters
+    const filter = data.filter; 
+
+    // Reference to Firestore collection of Equipment 
+    const EquipmentRef = db.collection('equipment');
+
+    // Apply the filter to the query //Adjust fieldName
+    const querySnapshot = await EquipmentRef.where('sport_category', '==', filter).get();
+
+    const filteredData = [];
+    querySnapshot.forEach((doc) => {
+      filteredData.push(doc.data());
+    });
+
+    return {success: true, message: "Successfully filtered equipment", data:filteredData};
+    }catch(error){
+      console.error("Error filtering equipment",error);
+      return {success:false, message: "Internal server error"}
+    }
+})
