@@ -32,3 +32,5 @@ export const getListingsByUserUid = httpsCallable(functions, 'getListingsByUserU
 export const getEquipmentById = httpsCallable(functions,'getEquipmentById');
 export const getFacilityById = httpsCallable(functions,'getFacilityById');
 export const postOrder = httpsCallable(functions, 'postOrder');
+export const getAllAvailableEquipment = httpsCallable(functions, 'getAllAvailableEquipment');
+export const getAllAvailableFacilities = httpsCallable(functions, 'getAllAvailableFacilities');

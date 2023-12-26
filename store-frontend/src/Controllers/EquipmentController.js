@@ -1,4 +1,4 @@
-import { postEquipment} from '../../config/firebase';
+import { postEquipment, getAllAvailableEquipment} from '../../config/firebase';
 
 
 export class EquipmentController {
@@ -39,5 +39,13 @@ export class EquipmentController {
          }
        }
 
-       
+      static async getAllAvailableEquipemnt(){
+        //return all equipment with availability status true
+        try{
+          var equipment = await getAllAvailableEquipment();
+          return {success: true, message: "Successfully retrieved available equipment", data: equipment};
+        }catch(error){
+          return {success: false, message: "Internal Server Error"}
+        }
+      }
 }
