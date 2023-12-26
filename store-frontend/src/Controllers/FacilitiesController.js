@@ -1,4 +1,4 @@
-import { postFacility } from '../../config/firebase';
+import { postFacility,getAllAvailableFacilities } from '../../config/firebase';
 
 
 
@@ -39,7 +39,14 @@ export class FacilitiesController {
       } 
       
 
-      static async getFacilitySportsCategories(){
 
+      static async getAllAvailableFacilities(){
+        //return all facilties with availability status true
+        try{
+          var facilities = await getAllAvailableFacilities();
+          return {success: true, message: "Successfully retrieved available facilities", data: facilities};
+        }catch(error){
+          return {success: false, message: "Internal Server Error"}
+        }
       }
 }

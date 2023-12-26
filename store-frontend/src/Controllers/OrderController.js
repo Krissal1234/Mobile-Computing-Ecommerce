@@ -8,7 +8,8 @@ export class OrderController {
     //usersBasket = [
 //     {
 //         itemId: "equipment123",
-//          pricePerHour: 2,
+//         pricePerHour: 2,
+//         imagePath: path/to/image 
 //         rentalPeriod: {
 //             start: "2023-07-01",
 //             end: "2023-07-05"
@@ -31,6 +32,7 @@ export class OrderController {
         if(!usersBasket || usersBasket.length == 0){
             return {success: false, message: "The basket is empty"};
         }
+        //
 
         let totalPrice = 0;
 
@@ -40,7 +42,9 @@ export class OrderController {
             const startTime = new Date(rental_period.start);
             const endTime = new Date(rental_period.end);
             const durationHours = (endTime - startTime) / 3600000; // Convert milliseconds to hours
-            totalPrice += durationHours * price_per_hour;
+            const price = durationHours * price_per_hour;
+            item.itemDurationPrice = price;
+            totalPrice += price;
         });
         //Adding user data to order
         const user ={
@@ -67,7 +71,10 @@ export class OrderController {
         }
     }catch(error){
         console.error(error);
-        return {success:false, message: "Internal server error"}    }
+        return {success:false, message: "Internal server error"}  
+    }
 
     }
+
+
 }
