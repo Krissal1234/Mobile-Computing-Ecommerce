@@ -49,20 +49,21 @@ export class EquipmentController {
         }
       }
 
-      static async filteredEquipmentBySport(){
+      static async filteredEquipmentBySport(filter){
         //return all equipment with availability status true
         try{
-          var equipment = await filterEquipmentBySport();
+          
+          var equipment = await filterEquipmentBySport({fiter:filter});
           return {success: true, message: "Successfully retrieved available equipment", data:equipment};
         }catch(error){
           return {success: false, message: "Internal Server Error"}
         }
       }
       
-      static async filteredEquipmentBySport(){
+      static async filteredEquipmentBySport(filter){
         //return all equipment with availability status true
         try{
-          var equipment = await filterEquipmentBySport();
+          var equipment = await filterEquipmentBySport({filter:filter});
           return {success: true, message: "Successfully retrieved available equipment", data:equipment};
         }catch(error){
           return {success: false, message: "Internal Server Error"}
