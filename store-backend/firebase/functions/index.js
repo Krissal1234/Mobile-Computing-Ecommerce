@@ -250,7 +250,6 @@ exports.postOrder = functions.https.onCall(async (data,context) => {
     return { success: false, message: 'Error processing order', error: error };
   });
 });
-
 exports.getAllAvailableEquipment = functions.https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
@@ -263,7 +262,7 @@ exports.getAllAvailableEquipment = functions.https.onCall(async (data,context) =
     const availableItems = [];
     snapshot.forEach(doc => availableItems.push({ id: doc.id, ...doc.data() }));
 
-      return {success: true, message: "Successfully retrieved equipment data", data:availableItems};
+      return {success: true, message: "Successfully retrieved equipment data", availableItems};
     }catch(error){
       console.error("Error getting equipment",error);
       return {success:false, message: "Internal server error"}
@@ -275,10 +274,14 @@ exports.getAllAvailableFacilities = functions.https.onCall(async (data,context) 
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
     try{
-      const snapshot = await db.collection('facilities').get();
-      //To append the document id  
-      const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      return {success: true, message: "Successfully retrieved facilities", data:items};
+      const snapshot = await db.collection('facilities')
+      .where('availableStatus', '==', true)
+      .get();
+
+    const availableItems = [];
+    snapshot.forEach(doc => availableItems.push({ id: doc.id, ...doc.data() }));
+
+      return {success: true, message: "Successfully retrieved facilities", availableItems};
     }catch(error){
       console.error("Error getting facilities",error);
       return {success:false, message: "Internal server error"}
