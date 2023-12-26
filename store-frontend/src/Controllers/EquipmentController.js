@@ -39,7 +39,7 @@ export class EquipmentController {
          }
        }
 
-      static async getAllAvailableEquipemnt(){
+      static async getAllAvailableEquipment(){
         //return all equipment with availability status true
         try{
           var equipment = await getAllAvailableEquipment();

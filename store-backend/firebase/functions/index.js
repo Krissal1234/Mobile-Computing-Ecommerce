@@ -257,7 +257,7 @@ exports.getAllAvailableEquipment = functions.https.onCall(async (data,context) =
   }
     try{
       const snapshot = await db.collection('equipment')
-      .where('availabileStatus', '==', true)
+      .where('availableStatus', '==', true)
       .get();
 
     const availableItems = [];
@@ -276,7 +276,7 @@ exports.getAllAvailableFacilities = functions.https.onCall(async (data,context) 
   }
     try{
       const snapshot = await db.collection('facilities')
-      .where('availabileStatus', '==', true)
+      .where('availableStatus', '==', true)
       .get();
 
     const availableItems = [];
