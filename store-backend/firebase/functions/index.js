@@ -263,7 +263,7 @@ exports.getAllAvailableEquipment = functions.https.onCall(async (data,context) =
     const availableItems = [];
     snapshot.forEach(doc => availableItems.push({ id: doc.id, ...doc.data() }));
 
-      return {success: true, message: "Successfully retrieved equipment data", availableItems};
+      return {success: true, message: "Successfully retrieved equipment data", data:availableItems};
     }catch(error){
       console.error("Error getting equipment",error);
       return {success:false, message: "Internal server error"}
@@ -278,7 +278,7 @@ exports.getAllAvailableFacilities = functions.https.onCall(async (data,context) 
       const snapshot = await db.collection('facilities').get();
       //To append the document id  
       const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      return {success: true, message: "Successfully retrieved facilities", items};
+      return {success: true, message: "Successfully retrieved facilities", data:items};
     }catch(error){
       console.error("Error getting facilities",error);
       return {success:false, message: "Internal server error"}
@@ -286,6 +286,10 @@ exports.getAllAvailableFacilities = functions.https.onCall(async (data,context) 
 });
 
 exports.filterFacilitiesBySport = functions.https.onCall(async (data,context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
+  
   try {
     // Get the filter value from the request query parameters
     const filter = data.filter; 

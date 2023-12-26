@@ -24,7 +24,6 @@ export const getUserFunc = httpsCallable(functions, 'getUser');
 export const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
 });
-
 export const login = signInWithEmailAndPassword;
 export const postEquipment = httpsCallable(functions,'postEquipment');
 export const postFacility = httpsCallable(functions, 'postFacility');
@@ -34,3 +33,5 @@ export const getFacilityById = httpsCallable(functions,'getFacilityById');
 export const postOrder = httpsCallable(functions, 'postOrder');
 export const getAllAvailableEquipment = httpsCallable(functions, 'getAllAvailableEquipment');
 export const getAllAvailableFacilities = httpsCallable(functions, 'getAllAvailableFacilities');
+export const filterEquipmentBySport = httpsCallable(functions, 'filterEquipmentBySports');
+export const filterFacilitiesBySport = httpsCallable(functions, 'filterFacilitiesBySport');

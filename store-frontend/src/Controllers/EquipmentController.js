@@ -1,4 +1,4 @@
-import { postEquipment, getAllAvailableEquipment} from '../../config/firebase';
+import { postEquipment, getAllAvailableEquipment, filterEquipmentBySport,filterFacilitiesBySport } from '../../config/firebase';
 
 
 export class EquipmentController {
@@ -44,6 +44,26 @@ export class EquipmentController {
         try{
           var equipment = await getAllAvailableEquipment();
           return {success: true, message: "Successfully retrieved available equipment", data: equipment};
+        }catch(error){
+          return {success: false, message: "Internal Server Error"}
+        }
+      }
+
+      static async filteredEquipmentBySport(){
+        //return all equipment with availability status true
+        try{
+          var equipment = await filterEquipmentBySport();
+          return {success: true, message: "Successfully retrieved available equipment", data:equipment};
+        }catch(error){
+          return {success: false, message: "Internal Server Error"}
+        }
+      }
+      
+      static async filteredEquipmentBySport(){
+        //return all equipment with availability status true
+        try{
+          var equipment = await filterEquipmentBySport();
+          return {success: true, message: "Successfully retrieved available equipment", data:equipment};
         }catch(error){
           return {success: false, message: "Internal Server Error"}
         }
