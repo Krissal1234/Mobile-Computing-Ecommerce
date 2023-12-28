@@ -5,10 +5,11 @@ import styles from 'store-frontend/src/Views/styles';
 import homeStyles from './styles';
 import { UserContext } from '../../Contexts/UserContext';
 
+
+
 export default function Home({ navigation }) {
   const { setAccountType } = useContext(UserContext);
   const {setShowFilter} = useContext(UserContext);
-  const {user} = useContext(UserContext);
 
   const handleRentClick = async () => {
     setAccountType('Renter');

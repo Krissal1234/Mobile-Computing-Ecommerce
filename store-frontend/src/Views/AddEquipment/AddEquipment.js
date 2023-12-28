@@ -28,7 +28,6 @@ const AddEquipment = () => {
   const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
   const {user} = useContext(UserContext);
   const navigation = useNavigation();
-  const [sportCategories, setSportCategories] = useState([]);
   const [condition, setCondition] = useState('');
   const [isConditionDropdownVisible, setIsConditionDropdownVisible] = useState(false);
   const deliveryOptions = ['pickup', 'delivery']; //TODO: show capitals in UI but pass it to the firebase function in lowercase to keep lowercase standard. 
@@ -38,19 +37,19 @@ const AddEquipment = () => {
   const [loadingSports, setLoadingSports] = useState(true);
   const [selectedSport, setSelectedSport] = useState('');
   const [isSportsDropdownVisible, setIsSportsDropdownVisible] = useState(false);
-
+  const { sportCategories } = useContext(UserContext);
 
 
   useEffect(() => {
     const fetchSports = async () => {
       try {
         setLoadingSports(true);
-        const response = await ListingsController.getAllSports();
-  
-        if (response && response.success && Array.isArray(response.data)) {
-          setSports(["No Filter", ...response.data]);
+        // const response = await ListingsController.getAllSports();
+        
+        if (Array.isArray(sportCategories)) {
+          setSports(["No Filter", ...sportCategories]);
         } else {
-          console.log("Unexpected response structure:", response);
+          console.log("Unexpected response structure:", sportCategories);
           // Handle the case where the response is not as expected
           setSports(["No Category"]);
         }

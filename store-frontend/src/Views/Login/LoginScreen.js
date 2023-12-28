@@ -10,10 +10,8 @@ import { ListingsController } from '../../Controllers/ListingsController';
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
   const { user, setUser } = useContext(UserContext);
-
-  const { sportCategories, setSportCategories } = useContext(UserContext);
+  const {setSportCategories } = useContext(UserContext);
 
   const onFooterLinkPress = () => {
     navigation.navigate('Registration');
@@ -22,12 +20,14 @@ export default function LoginScreen({ navigation }) {
   const onLoginPress = async () => {
     console.log('clicked login');
     const login = await LoginController.loginUser(email, password);
+    //Setting sport categories global variable to minimise overhead
     const response = await ListingsController.getAllSports();
-    if(response.data.success){
-      setSportCategories(response.data.data);
+    if(response.success){
+      setSportCategories(response.data);
+    }else{
+      console.log(response.message);
     }
-    console.log("sport cats", sportCategories);
-
+    
     console.log(login.message);
     if (login.success) {
         //Setting uid global variable
