@@ -6,7 +6,6 @@ import { Calendar, DateObject } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native'; 
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 
-
 const EquipmentDetails = ({ route }) => {
   const { equipment } = route.params;
   const [pickup, setPickup] = useState(true);
