@@ -9,30 +9,17 @@ export class OrderController {
 //     {
 //         itemId: "equipment123",
 //         pricePerHour: 2,
-//         imagePath: path/to/image 
 //         rentalPeriod: {
 //             start: "2023-07-01",
 //             end: "2023-07-05"
 //         },
-//         // Additional details...
 //     },
-//     {
-//         itemId: "facility456",
-//          pricePerHour: 1,
-//         rentalPeriod: {
-//             start: "2023-07-03T08:00",
-//             end: "2023-07-03T18:00"
-//         },
-//         // Additional details...
-//     }
-//     // ... more items ...
 // ];
     static async createOrder(usersBasket,user){
         //usersBasket {
         if(!usersBasket || usersBasket.length == 0){
             return {success: false, message: "The basket is empty"};
         }
-        //
 
         let totalPrice = 0;
 
@@ -43,7 +30,6 @@ export class OrderController {
             const endTime = new Date(rental_period.end);
             const durationHours = (endTime - startTime) / 3600000; // Convert milliseconds to hours
             const price = durationHours * price_per_hour;
-            item.itemDurationPrice = price;
             totalPrice += price;
         });
         //Adding user data to order
@@ -55,7 +41,7 @@ export class OrderController {
 
         const orderDetails = {
             totalPrice,
-            items: usersBasket,
+            item: usersBasket,
             user: user,
             status: "processing" //This will change to paid/finished, once paypal payment succeeds
         }
