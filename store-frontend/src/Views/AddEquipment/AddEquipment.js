@@ -28,21 +28,27 @@ const AddEquipment = () => {
   const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
   const {user} = useContext(UserContext);
   const navigation = useNavigation();
-  const sportCategories = [];
+  const [sportCategories, setSportCategories] = useState([]);
+
   const [condition, setCondition] = useState('');
   const [isConditionDropdownVisible, setIsConditionDropdownVisible] = useState(false);
-
-
   
+  const deliveryOptions = ['pickup', 'delivery']; //TODO: show capitals in UI but pass it to the firebase function in lowercase to keep lowercase standard. 
+  const availableOptions = ['Yes', 'No']; //TODO: Change this to yes or no for frontend, but then you will pass true or false to the firebase function
+  const conditionOptions = ['New', 'Used', 'Refurbished'];
 
 
   useEffect(async () => {
-      async function fetchSportCategories() {
-        sportCategories =  await ListingsController.getAllSports();
-       
+    const fetchSportCategories = async () => {
+      try {
+        const fetchedCategories = await ListingsController.getAllSports();
+        setSportCategories(fetchedCategories.data || []);
+      } catch (error) {
+        console.error('Error fetching sport categories:', error);
       }
-      fetchData();
-    console.log("sports", sportCategories);
+    };
+
+    fetchSportCategories();
     console.log('Selected Images:', images);
   }, [images]);
 
@@ -71,6 +77,9 @@ const AddEquipment = () => {
   
 
   const handleAddEquipment = async () => {
+
+    const availableStatus = availableOptions === 'Yes'; 
+
     const newEquipment = {
       title,
       description,
@@ -82,7 +91,6 @@ const AddEquipment = () => {
       images,
       pickupLocation: deliveryType === 'delivery' ? null : pickupLocation,
     };
-
     console.log('New Equipment:', newEquipment);
 
    //This will input the equipment into the database.
@@ -91,9 +99,6 @@ const AddEquipment = () => {
      //TODO: Display a success message or error message based on what the above function returns (you can check what it returns by going into the function)
   };
 
-  const deliveryOptions = ['pickup', 'delivery']; //TODO: show capitals in UI but pass it to the firebase function in lowercase to keep lowercase standard. 
-  const availableOptions = ['Yes', 'No']; //TODO: Change this to yes or no for frontend, but then you will pass true or false to the firebase function
-  const conditionOptions = ['New', 'Used', 'Refurbished'];
 
   const toggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
