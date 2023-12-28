@@ -119,6 +119,7 @@ const Core = () => {
 
   const { showFilter} = useContext(UserContext);
   const [isDropdownExpanded, setIsDropdownExpanded] = useState(false);
+
   const [sports, setSports] = useState([]);
   const [loadingSports, setLoadingSports] = useState(true);
 
@@ -134,13 +135,13 @@ const Core = () => {
   useEffect(() => {
     const fetchSports = async () => {
       try {
-        setLoadingSports(true); // Start loading
+        setLoadingSports(true);
         const sportsData = await ListingsController.getAllSports();
-        setSports(sportsData);
+        setSports(["No Filter", ...sportsData.data]);
       } catch (error) {
         console.error(error);
       } finally {
-        setLoadingSports(false); // Finish loading
+        setLoadingSports(false);
       }
     };
 
@@ -148,8 +149,8 @@ const Core = () => {
   }, []);
 
   const renderSportItem = ({ item }) => (
-    <TouchableOpacity onPress={() => selectSport(item.name)}>
-      <Text style={styles.dropdownItem}>{item.name}</Text>
+    <TouchableOpacity onPress={() => selectSport(item)}>
+      <Text style={styles.dropdownItem}>{item}</Text>
     </TouchableOpacity>
   );
 
@@ -194,7 +195,7 @@ const Core = () => {
       
       </BlurView>
         
-      {isDropdownExpanded && !loadingSports && ( // Ensure data is loaded
+      {isDropdownExpanded && !loadingSports && (
         <BlurView
           style={styles.fullScreenDropdown}
           intensity={8}
