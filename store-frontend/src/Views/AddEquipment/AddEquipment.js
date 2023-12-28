@@ -29,7 +29,6 @@ const AddEquipment = () => {
   const {user} = useContext(UserContext);
   const navigation = useNavigation();
   const [sportCategories, setSportCategories] = useState([]);
-
   const [condition, setCondition] = useState('');
   const [isConditionDropdownVisible, setIsConditionDropdownVisible] = useState(false);
   const deliveryOptions = ['pickup', 'delivery']; //TODO: show capitals in UI but pass it to the firebase function in lowercase to keep lowercase standard. 

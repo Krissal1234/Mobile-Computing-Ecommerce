@@ -300,7 +300,7 @@ exports.filterFacilitiesBySport = functions.https.onCall(async (data,context) =>
     const facilitiesRef = db.collection('facilities');
 
     // Apply the filter to the query !!Adjust FieldName!!
-    const querySnapshot = await facilitiesRef.where('sportCategory', '==', data).get();
+    const querySnapshot = await facilitiesRef.where('sportCategory', '==', data).where('availableStatus', '==', true).get();
 
     const filteredData = [];
     querySnapshot.forEach(doc => filteredData.push({ id: doc.id, ...doc.data() }));
@@ -316,7 +316,7 @@ exports.filterEquipmentBySport = functions.https.onCall(async (data,context) => 
   try {
 
     const snapshot = await db.collection('equipment')
-    .where('sportCategory', '==', data)
+    .where('sportCategory', '==', data).where('availableStatus', '==', true)
     .get();
 
     const filteredData = [];
@@ -465,15 +465,19 @@ exports.getPastOrders = functions.https.onCall(async (data,context) => {
     try{
     
       const { itemId } = data;
-      let price = 0;
       let destinationAccountId = "";
     
-      if (itemId == 1) {
-          price = 1000;
-          destinationAccountId = "acct_1NzaId9SCquKWTyl";
-      }
-    
-      
+      const querySnapshot = await db.collection("equipment")
+                                  .where("equipmentUid", "==", itemId)
+                                  .get();
+
+    if (querySnapshot.empty) {
+        throw new functions.https.HttpsError('not-found', 'No equipment with the given ID exists in the database.');
+    }
+
+    const equipmentDoc = querySnapshot.docs[0];
+    const equipmentData = equipmentDoc.data();
+    const price = equipmentData.price * 100;
     
       const customer = await stripe.customers.create();
       const ephemeralKey = await stripe.ephemeralKeys.create(

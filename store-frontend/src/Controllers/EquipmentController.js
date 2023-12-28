@@ -42,8 +42,13 @@ export class EquipmentController {
       static async getAllAvailableEquipment(){
         //return all equipment with availability status true
         try{
-          var equipment = await getAllAvailableEquipment();
-          return {success: true, message: "Successfully retrieved available equipment", data: equipment};
+          var response = await getAllAvailableEquipment();
+          if(response.data.success){
+            return {success: true, message: "Successfully retrieved available equipment", data: response.data.data};
+          }else{
+            return{success: false, message: "Failed to retrieve available equipment"+ response.data.message}
+          }
+          
         }catch(error){
           return {success: false, message: "Internal Server Error"}
         }
@@ -52,14 +57,15 @@ export class EquipmentController {
       static async filterEquipmentBySport(filter){ 
         //return all equipment with availability status true
         try{
-          console.log("Hello?");
           var response = await filterEquipmentBySport(filter);
           
           if(response.data.success){
             return {success: true, message: "Successfully retrieved available equipment", data:response.data.data};
           }
-        
-          console.log(equipment.data.message);
+          else{
+            return{success: false, message: "Failed to retrieve available equipment" + response.data.message}
+          }
+          
           
         }catch(error){
           return {success: false, message: error}
