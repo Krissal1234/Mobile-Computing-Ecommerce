@@ -4,6 +4,9 @@ const e = require("express");
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 const { user } = require("firebase-functions/v1/auth");
+
+const stripe = require('stripe')('sk_test_51LoBCWGC9MhpkKozXeOQoG0UPShJdolQg9mXSa9w799aFFX0uCvv9Xf2rFjaC0xhhBCtxrGV5Qia2dozYnHZzbaL00DFxT0TIE');
+
 admin.initializeApp(functions.config().firebase)
 
 const db = admin.firestore();
@@ -337,3 +340,34 @@ exports.filterEquipmentBySport = functions.https.onCall(async (data,contex) => {
       return {success:false, message: "Internal server error"}
     }
 })
+
+exports.getPaymentSheet = functions.https.onCall(async (data, context) => {
+  try {
+    // Create a new Stripe express account
+    const account = await stripe.accounts.create({
+      type: 'express',
+    });
+
+    const accountId = account.id;
+
+    // Create an account link for the onboarding process
+    const accountLink = await stripe.accountLinks.create({
+      account: accountId,
+      refresh_url: 'https://example.com/reauth',
+      return_url: 'https://example.com/return',
+      type: 'account_onboarding',
+    });
+
+    return {
+      success: true,
+      accountLink: accountLink.url,
+    };
+
+  } catch (error) {
+    console.error('Error creating Stripe account:', error);
+    return {
+      success: false,
+      message: 'Internal Server Error',
+    };
+  }
+});
