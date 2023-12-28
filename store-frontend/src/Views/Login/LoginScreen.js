@@ -24,7 +24,6 @@ export default function LoginScreen({ navigation }) {
   const onLoginPress = async () => {
     console.log('clicked login');
     const login = await LoginController.loginUser(email, password);
-    console.log(data.message);
 
     console.log(login.message);
     if (login.success) {

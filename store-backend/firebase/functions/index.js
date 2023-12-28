@@ -4,6 +4,9 @@ const e = require("express");
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 const { user } = require("firebase-functions/v1/auth");
+
+const stripe = require('stripe')('sk_test_51LoBCWGC9MhpkKozXeOQoG0UPShJdolQg9mXSa9w799aFFX0uCvv9Xf2rFjaC0xhhBCtxrGV5Qia2dozYnHZzbaL00DFxT0TIE');
+
 admin.initializeApp(functions.config().firebase)
 
 const db = admin.firestore();
@@ -247,6 +250,7 @@ exports.postOrder = functions.https.onCall(async (data,context) => {
   });
 });
 
+
 exports.getAllAvailableEquipment = functions.https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
@@ -259,7 +263,7 @@ exports.getAllAvailableEquipment = functions.https.onCall(async (data,context) =
     const availableItems = [];
     snapshot.forEach(doc => availableItems.push({ id: doc.id, ...doc.data() }));
 
-      return {success: true, message: "Successfully retrieved equipment data", availableItems};
+      return {success: true, message: "Successfully retrieved equipment data", data: availableItems};
     }catch(error){
       console.error("Error getting equipment",error);
       return {success:false, message: "Internal server error"}
@@ -278,7 +282,7 @@ exports.getAllAvailableFacilities = functions.https.onCall(async (data,context) 
     const availableItems = [];
     snapshot.forEach(doc => availableItems.push({ id: doc.id, ...doc.data() }));
 
-      return {success: true, message: "Successfully retrieved facilities", availableItems};
+      return {success: true, message: "Successfully retrieved facilities", data: availableItems};
     }catch(error){
       console.error("Error getting facilities",error);
       return {success:false, message: "Internal server error"}
@@ -333,7 +337,50 @@ exports.filterEquipmentBySport = functions.https.onCall(async (data,contex) => {
       console.error("Error filtering equipment",error);
       return {success:false, message: "Internal server error"}
     }
-})
+});
+
+exports.getAllListedSports = functions.https.onCall(async (data,contex) => {
+
+try{
+  const sports = await db.collection('sports').get();
+  return {success: true, message: "Successfully retrieved listed sports", data: sports};
+}catch(error){
+  console.error("Error getting equipment",error);
+  return {success:false, message: "Internal server error"}
+}
+
+});
+
+exports.getPaymentSheet = functions.https.onCall(async (data, context) => {
+  try {
+    // Create a new Stripe express account
+    const account = await stripe.accounts.create({
+      type: 'express',
+    });
+
+    const accountId = account.id;
+
+    // Create an account link for the onboarding process
+    const accountLink = await stripe.accountLinks.create({
+      account: accountId,
+      refresh_url: 'https://example.com/reauth',
+      return_url: 'https://example.com/return',
+      type: 'account_onboarding',
+    });
+
+    return {
+      success: true,
+      accountLink: accountLink.url,
+    };
+
+  } catch (error) {
+    console.error('Error creating Stripe account:', error);
+    return {
+      success: false,
+      message: 'Internal Server Error',
+    };
+  }
+});
 
 exports.getCurrentOrders = functions.https.onCall(async (data,context) => {
   if (!context.auth) {

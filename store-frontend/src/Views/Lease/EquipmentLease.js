@@ -58,8 +58,8 @@ const EquipmentLease = () => {
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator initialRouteName="LeasingEquipment">
-        <Stack.Screen name="Leasing Equipment" component={LeasingEquipment} />
-        <Stack.Screen name="EquipmentDetails" component={EquipmentDetails} />
+        <Stack.Screen name="Leasing Equipment" component={LeasingEquipment} options={{ headerShown: false }}/>
+        <Stack.Screen name="EquipmentDetails" component={EquipmentDetails}  options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
