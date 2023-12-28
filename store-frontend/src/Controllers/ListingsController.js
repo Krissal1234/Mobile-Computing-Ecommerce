@@ -1,4 +1,4 @@
-import { getListingsByUserUid,getAllListedSports,getPaymentSheet } from '../../config/firebase';
+import { getListingsByUserUid,getAllListedSports,getPaymentSheet, createPaymentSheet } from '../../config/firebase';
 
 export class ListingsController {
 
@@ -50,6 +50,16 @@ export class ListingsController {
       console.log(response)
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  static async _createPaymentSheet(){
+    try{
+      const response = await createPaymentSheet({itemId: 1});
+      return (response)
+    }
+    catch (error) {
+      return (error)
     }
   }
 }
