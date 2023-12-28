@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, Modal, FlatList } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, Modal, FlatList,Platform  } from 'react-native';
 import { Card, Button } from 'react-native-paper';
-import ImagePicker from 'react-native-image-picker';
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,7 +8,7 @@ import { EquipmentController } from '../../Controllers/EquipmentController';
 import { UserContext } from '../../Contexts/UserContext';
 import { ListingsController } from '../../Controllers/ListingsController';
 import { useContext } from 'react';
-import { launchImageLibrary } from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 
 import addEquipmentStyles from './styles';
 
@@ -28,7 +27,6 @@ const AddEquipment = () => {
   const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
   const {user} = useContext(UserContext);
   const navigation = useNavigation();
-  const [sportCategories, setSportCategories] = useState([]);
   const [condition, setCondition] = useState('');
   const [isConditionDropdownVisible, setIsConditionDropdownVisible] = useState(false);
   const deliveryOptions = ['pickup', 'delivery']; //TODO: show capitals in UI but pass it to the firebase function in lowercase to keep lowercase standard. 
@@ -38,19 +36,19 @@ const AddEquipment = () => {
   const [loadingSports, setLoadingSports] = useState(true);
   const [selectedSport, setSelectedSport] = useState('');
   const [isSportsDropdownVisible, setIsSportsDropdownVisible] = useState(false);
-
+  const { sportCategories } = useContext(UserContext);
 
 
   useEffect(() => {
     const fetchSports = async () => {
       try {
         setLoadingSports(true);
-        const response = await ListingsController.getAllSports();
-  
-        if (response && response.success && Array.isArray(response.data)) {
-          setSports(["No Filter", ...response.data]);
+        // const response = await ListingsController.getAllSports();
+        
+        if (Array.isArray(sportCategories)) {
+          setSports(["No Filter", ...sportCategories]);
         } else {
-          console.log("Unexpected response structure:", response);
+          console.log("Unexpected response structure:", sportCategories);
           // Handle the case where the response is not as expected
           setSports(["No Category"]);
         }
@@ -76,27 +74,25 @@ const AddEquipment = () => {
     </TouchableOpacity>
   );
 
-  const handleChoosePhoto = () => {
-    const options = {
-      mediaType: 'photo',
-      selectionLimit: 0, // Set to 0 for multiple image selection
-      // Add other options as needed
-    };
+  const handleChoosePhoto = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need camera roll permissions to make this work!');
+      return;
+    }
   
-    launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.errorCode) {
-        console.log('ImagePicker Error: ', response.errorMessage);
-      } else {
-        const selectedImages = response.assets.map(asset => ({
-          uri: asset.uri,
-          type: asset.type,
-          name: asset.fileName
-        }));
-        setImages([...images, ...selectedImages]);
-      }
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
     });
+  
+    if (!result.canceled && result.assets) {
+      const selectedUri = result.assets[0].uri; // Updated to use assets array
+      console.log(selectedUri);
+      setImages([...images, selectedUri]);
+    }
   };
   
 
