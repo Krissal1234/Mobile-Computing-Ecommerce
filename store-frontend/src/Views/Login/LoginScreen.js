@@ -6,6 +6,7 @@ import LoginController from '../../Controllers/LoginController';
 import { colors } from 'store-frontend/src/Views/colors.js';
 import { UserContext } from '../../Contexts/UserContext';
 import { EquipmentController } from '../../Controllers/EquipmentController';
+import { ListingsController } from '../../Controllers/ListingsController';
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,7 +25,8 @@ export default function LoginScreen({ navigation }) {
   const onLoginPress = async () => {
     console.log('clicked login');
     const login = await LoginController.loginUser(email, password);
-
+    const sports = await ListingsController.getAllSports();
+    console.log(sports.data);
     console.log(login.message);
     if (login.success) {
         //Setting uid global variable

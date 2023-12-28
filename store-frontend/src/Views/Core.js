@@ -1,6 +1,6 @@
-import { View, Text ,SafeAreaView,Image,TouchableOpacity,ScrollView, StatusBar} from 'react-native'
+import { View, Text ,SafeAreaView,Image,TouchableOpacity,FlatList } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState,useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {BlurView} from 'expo-blur';
@@ -25,6 +25,7 @@ import EquipmentLease from './Lease/EquipmentLease';
 import PitchesLease from './Lease/PitchesLease';
 import addEquipmentFillIcon from '../../assets/add_report_black.png';
 import addEquipmentTransparentIcon from '../../assets/add_report.png';
+import { ListingsController } from '../Controllers/ListingsController';
 
 const Tab = createBottomTabNavigator();
 
@@ -119,6 +120,8 @@ const Core = () => {
 
   const { showFilter} = useContext(UserContext);
   const [isDropdownExpanded, setIsDropdownExpanded] = useState(false);
+  const [sports, setSports] = useState([]);
+  const [loadingSports, setLoadingSports] = useState(true);
 
   const toggleDropdown = () => {
     setIsDropdownExpanded(!isDropdownExpanded);
@@ -129,6 +132,28 @@ const Core = () => {
     toggleDropdown();
   };
 
+  useEffect(() => {
+    const fetchSports = async () => {
+      try {
+        setLoadingSports(true); // Start loading
+        const sportsData = await ListingsController.getAllSports();
+        setSports(sportsData);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingSports(false); // Finish loading
+      }
+    };
+
+    fetchSports();
+  }, []);
+
+  const renderSportItem = ({ item }) => (
+    <TouchableOpacity onPress={() => selectSport(item.name)}>
+      <Text style={styles.dropdownItem}>{item.name}</Text>
+    </TouchableOpacity>
+  );
+
   const { accountType } = useContext(UserContext);
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
@@ -138,16 +163,16 @@ const Core = () => {
     <SafeAreaView style={styles.container}>
 
       <BlurView 
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: insets.top, // Blur only the non-safe area
-                backgroundColor: colors.transDarkBlue
-              }}
-              intensity={8} // Adjust the intensity as needed
-              tint="default"   // 'light', 'dark', or 'default'
+        style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: insets.top, // Blur only the non-safe area
+                  backgroundColor: colors.transDarkBlue
+                }}
+                intensity={8} // Adjust the intensity as needed
+                tint="default"   // 'light', 'dark', or 'default'
       />
 
       <BlurView style={styles.headerContainer}
@@ -159,48 +184,34 @@ const Core = () => {
         </TouchableOpacity>
 
         {showFilter && (
-            <TouchableOpacity onPress={toggleDropdown} style={styles.filterButton}>
-              <Text style={styles.filterText}>{sportFilter}</Text>
-            </TouchableOpacity>
-          )}
-              
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.headerIcon}>
-          <Image source={profileTransparent} style={styles.iconImage} />
-        </TouchableOpacity>
-      </BlurView>
-      
-      {isDropdownExpanded && (
-          <BlurView
-          style={styles.fullScreenDropdown}
-          intensity={8} // You can adjust the intensity of the blur
-          tint="default"   // 'light', 'dark', or 'default'
-          >
-              <ScrollView contentContainerStyle={styles.dropDownScroll}
-              scrollEnabled={true}
-              alwaysBounceVertical={true}
-              showsVerticalScrollIndicator={false}
-              >
-
-                <TouchableOpacity onPress={() => selectSport('No Filter')}>
-                  <Text style={styles.dropdownItem}>No Filter</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => selectSport('Football')}>
-                  <Text style={styles.dropdownItem}>Football</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => selectSport('Basketball')}>
-                  <Text style={styles.dropdownItem}>Basketball</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity onPress={() => selectSport('Tennis')}>
-                  <Text style={styles.dropdownItem}>Tennis</Text>
-                </TouchableOpacity>
-
-                </ScrollView>
-          </BlurView>
+          <TouchableOpacity onPress={toggleDropdown} style={styles.filterButton}>
+          <Text style={styles.filterText}>{sportFilter}</Text>
+          </TouchableOpacity>
         )}
-          {accountType === "Renter" ? <RenterTabs /> : <LeaserTabs />}
+                  
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.headerIcon}>
+              <Image source={profileTransparent} style={styles.iconImage} />
+        </TouchableOpacity>
+      
+      </BlurView>
+        
+      {isDropdownExpanded && !loadingSports && ( // Ensure data is loaded
+        <BlurView
+          style={styles.fullScreenDropdown}
+          intensity={8}
+          tint="default"
+        >
+          <FlatList
+            contentContainerStyle={styles.dropDownScroll}
+            data={sports}
+            renderItem={renderSportItem}
+            keyExtractor={(item, index) => `sport-${index}`}
+          />
+        </BlurView>
+      )}
+            
+      {accountType === "Renter" ? <RenterTabs /> : <LeaserTabs />}
+
     </SafeAreaView>
 
   );

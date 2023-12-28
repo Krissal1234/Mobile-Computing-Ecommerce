@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import { UserContext } from '../../Contexts/UserContext';
+import { ListingsController } from '../../Controllers/ListingsController';
 import { useContext } from 'react';
 import { launchImageLibrary } from 'react-native-image-picker';
 
@@ -27,6 +28,7 @@ const AddEquipment = () => {
   const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
   const {user} = useContext(UserContext);
   const navigation = useNavigation();
+  const sportCategories = [];
   const [condition, setCondition] = useState('');
   const [isConditionDropdownVisible, setIsConditionDropdownVisible] = useState(false);
 
@@ -34,7 +36,13 @@ const AddEquipment = () => {
   
 
 
-  useEffect(() => {
+  useEffect(async () => {
+      async function fetchSportCategories() {
+        sportCategories =  await ListingsController.getAllSports();
+       
+      }
+      fetchData();
+    console.log("sports", sportCategories);
     console.log('Selected Images:', images);
   }, [images]);
 
