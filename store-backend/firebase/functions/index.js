@@ -302,7 +302,7 @@ exports.filterFacilitiesBySport = functions.https.onCall(async (data,context) =>
     const facilitiesRef = db.collection('facilities');
 
     // Apply the filter to the query !!Adjust FieldName!!
-    const querySnapshot = await facilitiesRef.where('sport_category', '==', filter).get();
+    const querySnapshot = await facilitiesRef.where('sportCategory', '==', filter).get();
 
     const filteredData = [];
     querySnapshot.forEach((doc) => {
@@ -325,7 +325,7 @@ exports.filterEquipmentBySport = functions.https.onCall(async (data,contex) => {
     const EquipmentRef = db.collection('equipment');
 
     // Apply the filter to the query //Adjust fieldName
-    const querySnapshot = await EquipmentRef.where('sport_category', '==', filter).get();
+    const querySnapshot = await EquipmentRef.where('sportCategory', '==', filter).get();
 
     const filteredData = [];
     querySnapshot.forEach((doc) => {
@@ -335,7 +335,7 @@ exports.filterEquipmentBySport = functions.https.onCall(async (data,contex) => {
     return {success: true, message: "Successfully filtered equipment", data:filteredData};
     }catch(error){
       console.error("Error filtering equipment",error);
-      return {success:false, message: "Internal server error"}
+      return {success:false, message: "Cannot fetch sport from firebase"}
     }
 });
 
@@ -388,8 +388,8 @@ exports.getCurrentOrders = functions.https.onCall(async (data,context) => {
 if (!context.auth) {
   throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
 }
-try {
 
+try {
   const userUid = data.userUid;
   const currentDate = date.now();
   const equipmentQuery = await db.collection("equipment").where("user.userUid", "==", userUid).where("rental_period.end", "=<", currentDate).get();
