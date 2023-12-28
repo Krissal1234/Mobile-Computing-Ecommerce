@@ -13,20 +13,21 @@ export default function LoginScreen({ navigation }) {
 
   const { user, setUser } = useContext(UserContext);
 
+  const { sportCategories, setSportCategories } = useContext(UserContext);
+
   const onFooterLinkPress = () => {
     navigation.navigate('Registration');
   };
 
-  //For testing remove for production
-  // useEffect(() => {
-  //   console.log('User after login:', user);
-  // }, [user]); 
-
   const onLoginPress = async () => {
     console.log('clicked login');
     const login = await LoginController.loginUser(email, password);
-    const sports = await EquipmentController.filterEquipmentBySport("Football");
-    console.log(sports);
+    const response = await ListingsController.getAllSports();
+    if(response.data.success){
+      setSportCategories(response.data.data);
+    }
+    console.log("sport cats", sportCategories);
+
     console.log(login.message);
     if (login.success) {
         //Setting uid global variable

@@ -65,8 +65,6 @@ export class EquipmentController {
           else{
             return{success: false, message: "Failed to retrieve available equipment" + response.data.message}
           }
-          
-          
         }catch(error){
           return {success: false, message: error}
         }
