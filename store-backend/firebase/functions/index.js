@@ -339,14 +339,16 @@ exports.filterEquipmentBySport = functions.https.onCall(async (data,contex) => {
     }
 });
 
-exports.getAllListedSports = functions.https.onCall(async (data,contex) => {
-
-try{
-  const sports = await db.collection('sports').get();
-  return {success: true, message: "Successfully retrieved listed sports", data: sports};
-}catch(error){
-  console.error("Error getting equipment",error);
-  return {success:false, message: "Internal server error"}
-}
-
+exports.getAllListedSports = functions.https.onCall(async (data, context) => {
+  try {
+      const sportsSnapshot = await admin.firestore().collection('sports').get();
+      const sports = [];
+      sportsSnapshot.forEach(doc => {
+          sports.push({ id: doc.id, ...doc.data() });
+      });
+      return { success: true, message: "Successfully retrieved listed sports", data: sports };
+  } catch (error) {
+      console.error("Error getting sports", error);
+      return { success: false, message: "Internal server error" };
+  }
 });
