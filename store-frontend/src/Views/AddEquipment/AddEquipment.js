@@ -8,6 +8,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import { UserContext } from '../../Contexts/UserContext';
 import { useContext } from 'react';
+import addEquipmentStyles from './styles';
+
+
 
 const AddEquipment = () => {
   const [title, setTitle] = useState('');
@@ -16,13 +19,18 @@ const AddEquipment = () => {
   const [sportCategory, setSportCategory] = useState('');
   const [availableStatus, setAvailableStatus] = useState(null);
   const [deliveryType, setDeliveryType] = useState(null);
-  const [condition, setCondition] = useState('');
   const [images, setImages] = useState([]);
   const [pickup_location, setPickupLocation] = useState({ latitude: '', longitude: '' });
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
   const {user} = useContext(UserContext);
   const navigation = useNavigation();
+  const [condition, setCondition] = useState('');
+  const [isConditionDropdownVisible, setIsConditionDropdownVisible] = useState(false);
+
+
+  
+
 
   useEffect(() => {
     console.log('Selected Images:', images);
@@ -68,7 +76,8 @@ const AddEquipment = () => {
   };
 
   const deliveryOptions = ['pickup', 'delivery']; //TODO: show capitals in UI but pass it to the firebase function in lowercase to keep lowercase standard. 
-  const availableOptions = ['true', 'false']; //TODO: Change this to yes or no for frontend, but then you will pass true or false to the firebase function
+  const availableOptions = ['Yes', 'No']; //TODO: Change this to yes or no for frontend, but then you will pass true or false to the firebase function
+  const conditionOptions = ['New', 'Used', 'Refurbished'];
 
   const toggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
@@ -91,43 +100,54 @@ const AddEquipment = () => {
     toggleAvailableDropdown();
   };
 
+  const toggleConditionDropdown = () => {
+    setIsConditionDropdownVisible(!isConditionDropdownVisible);
+  };
+
+  const handleSelectCondition = (item) => {
+    setCondition(item); // Update the condition state with the selected item
+    setIsConditionDropdownVisible(false); // Close the dropdown modal
+  };
+  
+  
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.container}>
-          <Card style={styles.card}>
+    <SafeAreaView style={addEquipmentStyles.container}>
+      <ScrollView contentContainerStyle={addEquipmentStyles.scrollContainer}>
+        <View style={addEquipmentStyles.container}>
+          <Card style={addEquipmentStyles.card}>
             <TouchableOpacity onPress={handleChoosePhoto}>
               {images.length > 0 ? (
                 images.map((image, index) => (
-                  <Image key={index} source={{ uri: image.uri }} style={styles.image} />
+                  <Image key={index} source={{ uri: image.uri }} style={addEquipmentStyles.image} />
                 ))
               ) : (
-                <Text style={styles.choosePhotoText}>Choose Equipment Photos</Text>
+                <Text style={addEquipmentStyles.choosePhotoText}>Choose Equipment Photos</Text>
               )}
             </TouchableOpacity>
 
             {/* Equipment Title */}
-            <Text style={styles.label}>Equipment Title</Text>
+            <Text style={addEquipmentStyles.label}>Equipment Title</Text>
             <TextInput
-              style={styles.input}
+              style={addEquipmentStyles.input}
               placeholder="Enter Equipment Title"
               value={title}
               onChangeText={(text) => setTitle(text)}
             />
 
             {/* Description */}
-            <Text style={styles.label}>Description</Text>
+            <Text style={addEquipmentStyles.label}>Description</Text>
             <TextInput
-              style={styles.input}
+              style={addEquipmentStyles.input}
               placeholder="Enter Description"
               value={description}
               onChangeText={(text) => setDescription(text)}
             />
 
             {/* Price Per Day */}
-            <Text style={styles.label}>Price Per Day</Text>
+            <Text style={addEquipmentStyles.label}>Price Per Hour</Text>
             <TextInput
-              style={styles.input}
+              style={addEquipmentStyles.input}
               placeholder="Price per hour"
               //TODO: Check if the value inputted is an integer, and conver it to an integer
               value={price}
@@ -135,34 +155,34 @@ const AddEquipment = () => {
             />
 
             {/* Sport Category */}
-            <Text style={styles.label}>Sport Category</Text>
+            <Text style={addEquipmentStyles.label}>Sport Category</Text>
             <TextInput
-              style={styles.input}
+              style={addEquipmentStyles.input}
               placeholder="Enter Sport Category"
               value={sportCategory}
               onChangeText={(text) => setSportCategory(text)}
             />
 
             {/* Available */}
-            <Text style={styles.label}>Available</Text>
-            <View style={styles.input}>
-              <TouchableOpacity style={styles.dropdownButton} onPress={toggleAvailableDropdown}>
-                <Text style={styles.dropdownButtonText}>
+            <Text style={addEquipmentStyles.label}>Available</Text>
+            <View style={addEquipmentStyles.input}>
+              <TouchableOpacity style={addEquipmentStyles.dropdownButton} onPress={toggleAvailableDropdown}>
+                <Text style={addEquipmentStyles.dropdownButtonText}>
                   {availableStatus !== null ? availableStatus : 'Select Availability'}
                 </Text>
               </TouchableOpacity>
               {/* Dropdown Modal */}
               <Modal transparent={true} visible={isAvailableDropdownVisible} animationType="slide">
                 <TouchableOpacity
-                  style={styles.dropdownOverlay}
+                  style={addEquipmentStyles.dropdownOverlay}
                   onPress={toggleAvailableDropdown}
                 />
-                <View style={styles.dropdownContainer}>
+                <View style={addEquipmentStyles.dropdownContainer}>
                   <FlatList
                     data={availableOptions}
                     renderItem={({ item }) => (
                       <TouchableOpacity
-                        style={styles.dropdownItem}
+                        style={addEquipmentStyles.dropdownItem}
                         onPress={() => handleSelectAvailable(item)}
                       >
                         <Text>{item}</Text>
@@ -177,25 +197,25 @@ const AddEquipment = () => {
         
 
             {/* Delivery Type */}
-            <Text style={styles.label}>Delivery Type</Text>
-            <View style={styles.input}>
-              <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-                <Text style={styles.dropdownButtonText}>
+            <Text style={addEquipmentStyles.label}>Delivery Type</Text>
+            <View style={addEquipmentStyles.input}>
+              <TouchableOpacity style={addEquipmentStyles.dropdownButton} onPress={toggleDropdown}>
+                <Text style={addEquipmentStyles.dropdownButtonText}>
                   {deliveryType !== null ? deliveryType : 'Select Delivery Type'}
                 </Text>
               </TouchableOpacity>
               {/* Dropdown Modal */}
               <Modal transparent={true} visible={isDropdownVisible} animationType="slide">
                 <TouchableOpacity
-                  style={styles.dropdownOverlay}
+                  style={addEquipmentStyles.dropdownOverlay}
                   onPress={toggleDropdown}
                 />
-                <View style={styles.dropdownContainer}>
+                <View style={addEquipmentStyles.dropdownContainer}>
                   <FlatList
                     data={deliveryOptions}
                     renderItem={({ item }) => (
                       <TouchableOpacity
-                        style={styles.dropdownItem}
+                        style={addEquipmentStyles.dropdownItem}
                         onPress={() => handleSelectItem(item)}
                       >
                         <Text>{item}</Text>
@@ -209,17 +229,17 @@ const AddEquipment = () => {
 
             {deliveryType !== 'delivery' && (
               // Render pickup location input only when not Delivery
-              <View style={styles.mapContainer}>
-                <Text style={styles.label}>Pick Up Location</Text>
+              <View style={addEquipmentStyles.mapContainer}>
+                <Text style={addEquipmentStyles.label}>Pick Up Location</Text>
                 <TextInput
-                  style={styles.mapInput}
+                  style={addEquipmentStyles.mapInput}
                   placeholder="Enter Latitude"
                   keyboardType="numeric"
                   value={pickup_location.latitude}
                   onChangeText={(text) => setPickupLocation({ ...pickup_location, latitude: text })}
                 />
                 <TextInput
-                  style={styles.mapInput}
+                  style={addEquipmentStyles.mapInput}
                   placeholder="Enter Longitude"
                   keyboardType="numeric"
                   value={pickup_location.longitude}
@@ -227,7 +247,7 @@ const AddEquipment = () => {
                 />
 
                 <MapView
-                  style={styles.map}
+                  style={addEquipmentStyles.map}
                   region={{
                     latitude: parseFloat(pickup_location.latitude) || 35.9375,
                     longitude: parseFloat(pickup_location.longitude) || 14.3754,
@@ -250,13 +270,35 @@ const AddEquipment = () => {
               </View>
             )}
             {/* Condition */}
-            <Text style={styles.label}>Condition</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Condition"
-              value={condition}
-              onChangeText={(text) => setCondition(text)}
+      <Text style={addEquipmentStyles.label}>Condition</Text>
+      <View style={addEquipmentStyles.input}>
+        <TouchableOpacity style={addEquipmentStyles.dropdownButton} onPress={toggleConditionDropdown}>
+          <Text style={addEquipmentStyles.dropdownButtonText}>
+            {condition !== '' ? condition : 'Select Condition'}
+          </Text>
+        </TouchableOpacity>
+        {/* Condition Dropdown Modal */}
+        <Modal transparent={true} visible={isConditionDropdownVisible} animationType="slide">
+          <TouchableOpacity
+            style={addEquipmentStyles.dropdownOverlay}
+            onPress={toggleConditionDropdown}
+          />
+          <View style={addEquipmentStyles.dropdownContainer}>
+            <FlatList
+              data={conditionOptions}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={addEquipmentStyles.dropdownItem}
+                  onPress={() => handleSelectCondition(item)}
+                >
+                  <Text>{item}</Text>
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item) => item}
             />
+          </View>
+        </Modal>
+      </View>
 
             <Button mode="contained" onPress={handleAddEquipment}>
               Add Equipment
@@ -268,89 +310,6 @@ const AddEquipment = () => {
   );
 };
 
-const styles = {
-  container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: '#fff',
-  },
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'space-between',
-    paddingBottom: 30,
-  },
-  card: {
-    padding: 15,
-    marginBottom: 10,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#A2383A',
-  },
-  label: {
-    color: '#A2383A',
-    marginBottom: 5,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  input: {
-    marginBottom: 10,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-  },
-  image: {
-    width: '100%',
-    height: 200,
-    marginBottom: 10,
-    borderRadius: 10,
-  },
-  choosePhotoText: {
-    textAlign: 'center',
-    color: '#A2383A',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  mapContainer: {
-    marginTop: 10,
-  },
-  mapInput: {
-    marginBottom: 10,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-  },
-  map: {
-    height: 200,
-    marginTop: 10,
-  },
-  dropdownButton: {
-    backgroundColor: '#eee',
-    padding: 10,
-    borderRadius: 5,
-  },
-  dropdownButtonText: {
-    color: '#333',
-  },
-  dropdownOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  dropdownContainer: {
-    position: 'absolute',
-    top: 140,
-    right: 10,
-    backgroundColor: '#fff',
-    elevation: 5,
-    borderRadius: 5,
-    padding: 10,
-  },
-  dropdownItem: {
-    padding: 10,
-  },
-};
+
 
 export default AddEquipment;
