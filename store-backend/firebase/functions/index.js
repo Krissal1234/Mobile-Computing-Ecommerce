@@ -4,6 +4,9 @@ const e = require("express");
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 const { user } = require("firebase-functions/v1/auth");
+
+const stripe = require('stripe')('sk_test_51LoBCWGC9MhpkKozXeOQoG0UPShJdolQg9mXSa9w799aFFX0uCvv9Xf2rFjaC0xhhBCtxrGV5Qia2dozYnHZzbaL00DFxT0TIE');
+
 admin.initializeApp(functions.config().firebase)
 
 const db = admin.firestore();
@@ -195,10 +198,6 @@ exports.getListingsByUserUid = functions.https.onCall(async (data,context) => {
     };
   }
 });
-// exports.getFacilitySportsCategories = functions.https.onCall(async (data,context) => {
-
-
-// });
 
 exports.getFacilityById =functions.https.onCall(async (data,context) => {
 
@@ -250,6 +249,7 @@ exports.postOrder = functions.https.onCall(async (data,context) => {
     return { success: false, message: 'Error processing order', error: error };
   });
 });
+
 
 exports.getAllAvailableEquipment = functions.https.onCall(async (data,context) => {
   if (!context.auth) {
@@ -352,3 +352,116 @@ exports.getAllListedSports = functions.https.onCall(async (data, context) => {
       return { success: false, message: "Internal server error" };
   }
 });
+
+exports.getPaymentSheet = functions.https.onCall(async (data, context) => {
+  try {
+    // Create a new Stripe express account
+    const account = await stripe.accounts.create({
+      type: 'express',
+    });
+
+    const accountId = account.id;
+
+    // Create an account link for the onboarding process
+    const accountLink = await stripe.accountLinks.create({
+      account: accountId,
+      refresh_url: 'https://example.com/reauth',
+      return_url: 'https://example.com/return',
+      type: 'account_onboarding',
+    });
+
+    return {
+      success: true,
+      accountLink: accountLink.url,
+    };
+
+  } catch (error) {
+    console.error('Error creating Stripe account:', error);
+    return {
+      success: false,
+      message: 'Internal Server Error',
+    };
+  }
+});
+
+exports.getCurrentOrders = functions.https.onCall(async (data,context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
+  try {
+
+    const userUid = data.userUid;
+    const currentDate = date.now();
+    const equipmentQuery = await db.collection("equipment").where("user.userUid", "==", userUid).where("rental_period.end", "=<", currentDate).get();
+    const facilitiesQuery = await db.collection("facilities").where("user.userUid", "==", userUid).where("rental_period.end", "=<", currentDate).get();
+   
+    const [equipmentSnapshot, facilitiesSnapshot] = await Promise.all([equipmentQuery, facilitiesQuery]);
+
+    let equipmentList = [];
+    let facilitiesList = [];
+
+    //to append the specific document id
+    equipmentSnapshot.forEach(doc => {
+      equipmentList.push({ id: doc.id, ...doc.data(), type: 'equipment' });
+    });
+
+    facilitiesSnapshot.forEach(doc => {
+      facilitiesList.push({ id: doc.id, ...doc.data(), type: 'facility' });
+    });
+    // Combine both lists
+    const combinedListings = equipmentList.concat(facilitiesList);
+
+    return {
+      success: true,
+      message: 'Current Bookings retrieved successfully for the user',
+      data: combinedListings,
+    };
+    } catch (error) {
+    console.error('Error retrieving listings by user UID:', error);
+    return {
+      success: false,
+      message: 'Internal Server Error',
+    };
+    }
+    });
+
+    exports.getPastOrders = functions.https.onCall(async (data,context) => {
+      if (!context.auth) {
+        throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+      }
+      try {
+    
+        const userUid = data.userUid;
+        const currentDate = date.now();
+        const equipmentQuery = await db.collection("equipment").where("user.userUid", "==", userUid).where("rental_period.end", ">", currentDate).get();
+        const facilitiesQuery = await db.collection("facilities").where("user.userUid", "==", userUid).where("rental_period.end", ">", currentDate).get();
+       
+        const [equipmentSnapshot, facilitiesSnapshot] = await Promise.all([equipmentQuery, facilitiesQuery]);
+    
+        let equipmentList = [];
+        let facilitiesList = [];
+    
+        //to append the specific document id
+        equipmentSnapshot.forEach(doc => {
+          equipmentList.push({ id: doc.id, ...doc.data(), type: 'equipment' });
+        });
+    
+        facilitiesSnapshot.forEach(doc => {
+          facilitiesList.push({ id: doc.id, ...doc.data(), type: 'facility' });
+        });
+        // Combine both lists
+        const combinedListings = equipmentList.concat(facilitiesList);
+    
+        return {
+          success: true,
+          message: 'Current Bookings retrieved successfully for the user',
+          data: combinedListings,
+        };
+        } catch (error) {
+        console.error('Error retrieving listings by user UID:', error);
+        return {
+          success: false,
+          message: 'Internal Server Error',
+        };
+        }
+        });
