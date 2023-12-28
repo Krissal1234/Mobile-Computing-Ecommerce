@@ -39,3 +39,5 @@ export const getAllListedSports = httpsCallable(functions, 'getAllListedSports')
 export const getPaymentSheet = httpsCallable(functions, 'getPaymentSheet');
 export const getCurrentOrders = httpsCallable(functions, 'getCurrentOrders');
 export const getPastOrders = httpsCallable(functions, 'getPastOrders');
+
+export const getPaymentSheet = httpsCallable(functions, 'getPaymentSheet');

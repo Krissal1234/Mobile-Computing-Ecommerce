@@ -1,4 +1,4 @@
-import { getListingsByUserUid,getAllListedSports } from '../../config/firebase';
+import { getListingsByUserUid,getAllListedSports,getPaymentSheet } from '../../config/firebase';
 
 export class ListingsController {
 
@@ -43,6 +43,14 @@ export class ListingsController {
       return { success: false, message: "An error occurred while retrieving sports." };
     }
 
+  }
+  static async _getPaymentSheet(){
+    try {
+      const response = await getPaymentSheet();
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
   
