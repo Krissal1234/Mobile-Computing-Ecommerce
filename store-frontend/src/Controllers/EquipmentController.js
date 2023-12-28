@@ -53,7 +53,7 @@ export class EquipmentController {
         //return all equipment with availability status true
         try{
           
-          var equipment = await filterEquipmentBySport({fiter:filter});
+          var equipment = await filterEquipmentBySport({filter:filter});
           return {success: true, message: "Successfully retrieved available equipment", data:equipment};
         }catch(error){
           return {success: false, message: "Internal Server Error"}
