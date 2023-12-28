@@ -316,11 +316,11 @@ exports.filterFacilitiesBySport = functions.https.onCall(async (data,context) =>
     }
 })
 
-exports.filterEquipmentBySport = functions.https.onCall(async (data,contex) => {
+exports.filterEquipmentBySport = functions.https.onCall(async (data,context) => {
   try {
     // Get the filter value from the request query parameters
     const filter = data.filter; 
-
+    console.log(filter);
     // Reference to Firestore collection of Equipment 
     const EquipmentRef = db.collection('equipment');
 
@@ -328,6 +328,7 @@ exports.filterEquipmentBySport = functions.https.onCall(async (data,contex) => {
     const querySnapshot = await EquipmentRef.where('sportCategory', '==', filter).get();
 
     const filteredData = [];
+
     querySnapshot.forEach((doc) => {
       filteredData.push(doc.data());
     });
