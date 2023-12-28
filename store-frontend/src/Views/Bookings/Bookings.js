@@ -1,13 +1,24 @@
 import { View, Text, Image, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BookingsCard from '../../Components/BookingsCard'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import BookingDetails from './BookingDetails'
+import { ListingsController } from '../../Controllers/ListingsController'
 
 const Bookings = ({navigation}) => {
 
   const [isPastBookings, setIsPastBookings] = useState(true)
   const [isShowingDetails, setIsShowingDetails] = useState(false)
+  
+  useEffect(() => {
+
+    getAllSports();
+    async function getAllSports(){
+      let a = await ListingsController._getPaymentSheet();
+      console.log(a)
+    }
+  }, [])
+
   return (
 
     <>

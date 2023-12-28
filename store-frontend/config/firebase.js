@@ -36,3 +36,4 @@ export const getAllAvailableFacilities = httpsCallable(functions, 'getAllAvailab
 export const filterEquipmentBySport = httpsCallable(functions, 'filterEquipmentBySports');
 export const filterFacilitiesBySport = httpsCallable(functions, 'filterFacilitiesBySport');
 export const getAllListedSports = httpsCallable(functions, 'getAllListedSports');
+export const getPaymentSheet = httpsCallable(functions, 'getPaymentSheet');
