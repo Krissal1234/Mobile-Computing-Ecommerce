@@ -465,3 +465,51 @@ exports.getPastOrders = functions.https.onCall(async (data,context) => {
     };
     }
     });
+
+    exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
+
+      if (!context.auth) {
+        throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+    }
+    
+    try{
+    
+      const { itemId } = data;
+      let price = 0;
+      let destinationAccountId = "";
+    
+      if (itemId == 1) {
+          price = 1000;
+          destinationAccountId = "acct_1NzaId9SCquKWTyl";
+      }
+    
+      
+    
+      const customer = await stripe.customers.create();
+      const ephemeralKey = await stripe.ephemeralKeys.create(
+          { customer: customer.id },
+          { apiVersion: '2023-08-16' }
+      );
+      const paymentIntent = await stripe.paymentIntents.create({
+          amount: price,
+          currency: 'eur',
+          customer: customer.id,
+          automatic_payment_methods: { enabled: true },
+          application_fee_amount: 123,
+          transfer_data: { destination: destinationAccountId },
+      });
+    
+      return {
+          paymentIntent: paymentIntent.client_secret,
+          ephemeralKey: ephemeralKey.secret,
+          customer: customer.id,
+          publishableKey: "pk_test_51LoBCWGC9MhpkKozMAo0UEkGa8FS5TEx8ExG6T702Z8HCA7BvkLRe9jvKHZn26XTJobo4eSgAhVcRQIdAJSJVYAk0077oMzWuL"
+      };
+    
+    }
+    catch (error) {
+      return {
+        error: error
+      }
+    }
+    });
