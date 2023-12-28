@@ -49,4 +49,14 @@ export class FacilitiesController {
           return {success: false, message: "Internal Server Error"}
         }
       }
+
+      static async filteredFacilitiesBySport(filter){
+        //return all equipment with availability status true
+        try{
+          var equipment = await filterFacilityBySport({fiter:filter});
+          return {success: true, message: "Successfully retrieved available equipment", data:equipment};
+        }catch(error){
+          return {success: false, message: "Internal Server Error"}
+        }
+      }
 }
