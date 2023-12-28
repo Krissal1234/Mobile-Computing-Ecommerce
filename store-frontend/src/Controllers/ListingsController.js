@@ -27,13 +27,19 @@ export class ListingsController {
     try{
       const response = await getAllListedSports()
         if(response.data.success){
-          return {success: true, message: "Successfully returned sports", data: response.data.data}
+          const sports = response.data.data;
+          const sportCategories = [];
+          for (let i = 0; i < sports.length; i++) {
+            sportCategories.push(sports[i].sport);
+          }
+
+          return {success: true, message: "Successfully returned sports", data: sportCategories}
         }else{
           console.error(response.data.message);
           return {success: false, message: "Something went wrong"}
         }
     } catch (error) {
-      console.error('Error retrieving listings:', error);
+      console.error('Error retrieving sports:', error);
       return { success: false, message: "An error occurred while retrieving sports." };
     }
 

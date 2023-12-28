@@ -22,6 +22,7 @@ import profileFill from '../../assets/profile_fill_black.png'
 import homeTransparent from '../../assets/home_button.png'
 import homeFill from '../../assets/home_button_fill.png'
 import EquipmentLease from './Lease/EquipmentLease';
+import PitchesLease from './Lease/PitchesLease';
 import addEquipmentFillIcon from '../../assets/add_report_black.png';
 import addEquipmentTransparentIcon from '../../assets/add_report.png';
 import { ListingsController } from '../Controllers/ListingsController';
@@ -101,7 +102,7 @@ function LeaserTabs() {
         />
         <Tab.Screen
           name="Pitches"
-          component={EquipmentLease}
+          component={PitchesLease}
           options={{ headerShown: false }}
         />
         <Tab.Screen
@@ -119,6 +120,7 @@ const Core = () => {
 
   const { showFilter} = useContext(UserContext);
   const [isDropdownExpanded, setIsDropdownExpanded] = useState(false);
+
   const [sports, setSports] = useState([]);
   const [loadingSports, setLoadingSports] = useState(true);
 
@@ -134,13 +136,13 @@ const Core = () => {
   useEffect(() => {
     const fetchSports = async () => {
       try {
-        setLoadingSports(true); // Start loading
+        setLoadingSports(true);
         const sportsData = await ListingsController.getAllSports();
-        setSports(sportsData);
+        setSports(["No Filter", ...sportsData.data]);
       } catch (error) {
         console.error(error);
       } finally {
-        setLoadingSports(false); // Finish loading
+        setLoadingSports(false);
       }
     };
 
@@ -148,8 +150,8 @@ const Core = () => {
   }, []);
 
   const renderSportItem = ({ item }) => (
-    <TouchableOpacity onPress={() => selectSport(item.name)}>
-      <Text style={styles.dropdownItem}>{item.name}</Text>
+    <TouchableOpacity onPress={() => selectSport(item)}>
+      <Text style={styles.dropdownItem}>{item}</Text>
     </TouchableOpacity>
   );
 
@@ -194,7 +196,7 @@ const Core = () => {
       
       </BlurView>
         
-      {isDropdownExpanded && !loadingSports && ( // Ensure data is loaded
+      {isDropdownExpanded && !loadingSports && (
         <BlurView
           style={styles.fullScreenDropdown}
           intensity={8}
