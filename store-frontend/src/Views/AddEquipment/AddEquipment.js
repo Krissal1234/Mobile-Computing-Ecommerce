@@ -8,6 +8,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import { UserContext } from '../../Contexts/UserContext';
 import { useContext } from 'react';
+import { launchImageLibrary } from 'react-native-image-picker';
+
 import addEquipmentStyles from './styles';
 
 
@@ -37,22 +39,28 @@ const AddEquipment = () => {
   }, [images]);
 
   const handleChoosePhoto = () => {
-    ImagePicker.showImagePicker(
-      {
-        title: 'Select Equipment Images',
-        cancelButtonTitle: 'Cancel',
-        takePhotoButtonTitle: 'Take Photo',
-        chooseFromLibraryButtonTitle: 'Choose from Library',
-        mediaType: 'photo',
-        multiple: true,
-      },
-      (response) => {
-        if (!response.didCancel && !response.error) {
-          setImages([...images, response]);
-        }
+    const options = {
+      mediaType: 'photo',
+      selectionLimit: 0, // Set to 0 for multiple image selection
+      // Add other options as needed
+    };
+  
+    launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorCode) {
+        console.log('ImagePicker Error: ', response.errorMessage);
+      } else {
+        const selectedImages = response.assets.map(asset => ({
+          uri: asset.uri,
+          type: asset.type,
+          name: asset.fileName
+        }));
+        setImages([...images, ...selectedImages]);
       }
-    );
+    });
   };
+  
 
   const handleAddEquipment = async () => {
     const newEquipment = {
