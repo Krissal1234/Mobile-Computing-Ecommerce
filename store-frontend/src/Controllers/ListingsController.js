@@ -55,7 +55,7 @@ export class ListingsController {
 
   static async _createPaymentSheet(){
     try{
-      const response = await createPaymentSheet({itemId: 1});
+      const response = await createPaymentSheet({itemId: '5awfBqaPBN42THWF6tJR'});
       return (response)
     }
     catch (error) {
@@ -63,4 +63,3 @@ export class ListingsController {
     }
   }
 }
-  
