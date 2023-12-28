@@ -36,10 +36,8 @@ const AddEquipment = () => {
 
   useEffect(async () => {
       async function fetchSportCategories() {
-        sports =  await ListingsController.getAllSports();
-        for (let i = 0; i < sports.length; i++) {
-          sportCategories.push(sports[i].sport);
-        }
+        sportCategories =  await ListingsController.getAllSports();
+       
       }
       fetchData();
     console.log("sports", sportCategories);
