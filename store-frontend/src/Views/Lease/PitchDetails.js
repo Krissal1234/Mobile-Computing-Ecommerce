@@ -84,7 +84,82 @@ const PitchDetails = ({ route }) => {
 };
 
 const styles = {
-  // ... same styles as before
-};
+    container: {
+      flex: 1,
+      padding: 10,
+      backgroundColor: '#132945',
+       // Set your desired background color
+    },
+    card: {
+      padding: 15,
+      marginBottom: 10,
+      backgroundColor: '#fff',
+      borderRadius: 10,
+      borderWidth: 2,
+      borderColor: '#A2383A',
+    },
+    image: {
+      width: '80%',
+      height: 200,
+      borderRadius: 10,
+      borderWidth: 2,
+      borderColor: '#A2383A',
+      marginBottom: 10,
+      alignSelf: 'center',
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginBottom: 5,
+      color: '#333',
+    },
+    description: {
+      color: '#555',
+      textAlign: 'center',
+    },
+    price: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginBottom: 10,
+    },
+    subtitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 10,
+    },
+    switchContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    switchText: {
+      marginRight: 10,
+    },
+    map: {
+      height: 200,
+      borderRadius: 10,
+      borderWidth: 2,
+      borderColor: '#A2383A',
+    },
+    input: {
+      height: 40,
+      borderColor: 'gray',
+      borderWidth: 1,
+      marginBottom: 10,
+      padding: 10,
+    },
+    dateTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 10,
+      textAlign: 'center',
+    },
+    backButton: {
+     marginBottom: 10, 
+     paddingLeft:20,
+    },
+  };
 
+  
 export default PitchDetails;

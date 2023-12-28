@@ -295,19 +295,15 @@ exports.filterFacilitiesBySport = functions.https.onCall(async (data,context) =>
   }
   
   try {
-    // Get the filter value from the request query parameters
-    const filter = data.filter; 
 
     // Reference to your Firestore collection
     const facilitiesRef = db.collection('facilities');
 
     // Apply the filter to the query !!Adjust FieldName!!
-    const querySnapshot = await facilitiesRef.where('sportCategory', '==', filter).get();
+    const querySnapshot = await facilitiesRef.where('sportCategory', '==', data).where('availableStatus', '==', true).get();
 
     const filteredData = [];
-    querySnapshot.forEach((doc) => {
-      filteredData.push(doc.data());
-    });
+    querySnapshot.forEach(doc => filteredData.push({ id: doc.id, ...doc.data() }));
 
     return {success: true, message: "Successfully filtered Facilities", data:filteredData};
     }catch(error){
@@ -316,21 +312,15 @@ exports.filterFacilitiesBySport = functions.https.onCall(async (data,context) =>
     }
 })
 
-exports.filterEquipmentBySport = functions.https.onCall(async (data,contex) => {
+exports.filterEquipmentBySport = functions.https.onCall(async (data,context) => {
   try {
-    // Get the filter value from the request query parameters
-    const filter = data.filter; 
 
-    // Reference to Firestore collection of Equipment 
-    const EquipmentRef = db.collection('equipment');
-
-    // Apply the filter to the query //Adjust fieldName
-    const querySnapshot = await EquipmentRef.where('sportCategory', '==', filter).get();
+    const snapshot = await db.collection('equipment')
+    .where('sportCategory', '==', data).where('availableStatus', '==', true)
+    .get();
 
     const filteredData = [];
-    querySnapshot.forEach((doc) => {
-      filteredData.push(doc.data());
-    });
+    snapshot.forEach(doc => filteredData.push({ id: doc.id, ...doc.data() }));
 
     return {success: true, message: "Successfully filtered equipment", data:filteredData};
     }catch(error){

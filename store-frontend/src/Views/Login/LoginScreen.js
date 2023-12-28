@@ -25,8 +25,8 @@ export default function LoginScreen({ navigation }) {
   const onLoginPress = async () => {
     console.log('clicked login');
     const login = await LoginController.loginUser(email, password);
-    const sports = await ListingsController.getAllSports();
-    console.log(sports.data);
+    const sports = await EquipmentController.filterEquipmentBySport("Football");
+    console.log(sports);
     console.log(login.message);
     if (login.success) {
         //Setting uid global variable

@@ -42,22 +42,33 @@ export class EquipmentController {
       static async getAllAvailableEquipment(){
         //return all equipment with availability status true
         try{
-          var equipment = await getAllAvailableEquipment();
-          return {success: true, message: "Successfully retrieved available equipment", data: equipment};
+          var response = await getAllAvailableEquipment();
+          if(response.data.success){
+            return {success: true, message: "Successfully retrieved available equipment", data: response.data.data};
+          }else{
+            return{success: false, message: "Failed to retrieve available equipment"+ response.data.message}
+          }
+          
         }catch(error){
           return {success: false, message: "Internal Server Error"}
         }
       }
 
-      static async filteredEquipmentBySport(sport){
+      static async filterEquipmentBySport(filter){ 
         //return all equipment with availability status true
         try{
+          var response = await filterEquipmentBySport(filter);
           
-          var equipment = await filterEquipmentBySport({filter:sport}).data;
-          console.log(equipment.message);
-          return {success: true, message: "Successfully retrieved available equipment", data:equipment};
+          if(response.data.success){
+            return {success: true, message: "Successfully retrieved available equipment", data:response.data.data};
+          }
+          else{
+            return{success: false, message: "Failed to retrieve available equipment" + response.data.message}
+          }
+          
+          
         }catch(error){
-          return {success: false, message: "Internal Server Error"}
+          return {success: false, message: error}
         }
       }
 }

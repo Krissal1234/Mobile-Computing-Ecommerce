@@ -1,4 +1,4 @@
-import { postFacility,getAllAvailableFacilities } from '../../config/firebase';
+import { postFacility,getAllAvailableFacilities,filterFacilitiesBySport } from '../../config/firebase';
 
 
 
@@ -43,18 +43,27 @@ export class FacilitiesController {
       static async getAllAvailableFacilities(){
         //return all facilties with availability status true
         try{
-          var facilities = await getAllAvailableFacilities();
-          return {success: true, message: "Successfully retrieved available facilities", data: facilities};
+          var response = await getAllAvailableFacilities();
+          if(response.data.success){
+            return {success: true, message: "Successfully retrieved available facilities", data: response.data.data};
+          }
+          else{
+            return {success: false, message: "Failed to retrieve available facilities"+ response.data.message};
+          }
         }catch(error){
           return {success: false, message: "Internal Server Error"}
         }
       }
 
-      static async filteredFacilitiesBySport(filter){
+      static async filteredFacilitiesBySport(sport){
         //return all equipment with availability status true
         try{
-          var equipment = await filterFacilityBySport({fiter:filter});
-          return {success: true, message: "Successfully retrieved available equipment", data:equipment};
+          var response = await filterFacilitiesBySport(sport);
+          if(response.data.success){
+          return {success: true, message: "Successfully retrieved available equipment", data:response.data.data};
+          }else{
+            return {success: false, message: "Failed to retrieve filtered equipment"+ response.data.message};
+          }
         }catch(error){
           return {success: false, message: "Internal Server Error"}
         }
