@@ -300,7 +300,7 @@ exports.filterFacilitiesBySport = functions.https.onCall(async (data,context) =>
     const facilitiesRef = db.collection('facilities');
 
     // Apply the filter to the query !!Adjust FieldName!!
-    const querySnapshot = await facilitiesRef.where('sportCategory', '==', data).get();
+    const querySnapshot = await facilitiesRef.where('sportCategory', '==', data).where('availableStatus', '==', true).get();
 
     const filteredData = [];
     querySnapshot.forEach(doc => filteredData.push({ id: doc.id, ...doc.data() }));
@@ -316,7 +316,7 @@ exports.filterEquipmentBySport = functions.https.onCall(async (data,context) => 
   try {
 
     const snapshot = await db.collection('equipment')
-    .where('sportCategory', '==', data)
+    .where('sportCategory', '==', data).where('availableStatus', '==', true)
     .get();
 
     const filteredData = [];
