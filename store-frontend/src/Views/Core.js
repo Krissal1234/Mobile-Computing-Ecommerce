@@ -44,8 +44,6 @@ function RenterTabs() {
               iconName = focused ? equipmentFillIcon : equipmentTransparentIcon;
             } else if (route.name === 'Bookings') {
               iconName = focused ? bookingsFillIcon : bookingsTransparentIcon;
-            } else if (route.name === 'Basket') {
-              iconName = focused ? basketFillIcon : basketTransparentIcon;
             }
             return <Image source={iconName} style={styles.footerIcons} />;
           },
@@ -68,12 +66,7 @@ function RenterTabs() {
           name="Bookings"
           component={Bookings}
           options={{ headerShown: false }}
-        />
-        <Tab.Screen
-          name="Basket"
-          component={Basket}
-          options={{ headerShown: false }}
-        />              
+        />           
       </Tab.Navigator>
     );
   }

@@ -166,10 +166,10 @@ export default StyleSheet.create({
         alignSelf:'center',
         paddingVertical:height*0.015,
     },
-    verticalScrollView: {
+    verticalFlatList: {
         width: width,
     },
-    horizontalScrollView: {
+    horizontalFlatList: {
         marginVertical:height*0.05,
     },
     itemPreview:{
