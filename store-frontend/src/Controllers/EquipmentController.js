@@ -49,12 +49,18 @@ export class EquipmentController {
         }
       }
 
-      static async filteredEquipmentBySport(filter){
+      static async filteredEquipmentBySport(sport){
         //return all equipment with availability status true
         try{
           
-          var equipment = await filterEquipmentBySport({filter:filter});
-          return {success: true, message: "Successfully retrieved available equipment", data:equipment};
+          var response = await filterEquipmentBySport({filter:sport});
+          if(response.data.success){
+            console.log("TESTESTSTES");
+            return {success: true, message: "Successfully retrieved available equipment", data:response.data.data};
+          }
+        
+          console.log(equipment.data.message);
+          
         }catch(error){
           return {success: false, message: "Internal Server Error"}
         }

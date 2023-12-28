@@ -302,7 +302,7 @@ exports.filterFacilitiesBySport = functions.https.onCall(async (data,context) =>
     const facilitiesRef = db.collection('facilities');
 
     // Apply the filter to the query !!Adjust FieldName!!
-    const querySnapshot = await facilitiesRef.where('sport_category', '==', filter).get();
+    const querySnapshot = await facilitiesRef.where('sportCategory', '==', filter).get();
 
     const filteredData = [];
     querySnapshot.forEach((doc) => {
@@ -316,18 +316,19 @@ exports.filterFacilitiesBySport = functions.https.onCall(async (data,context) =>
     }
 })
 
-exports.filterEquipmentBySport = functions.https.onCall(async (data,contex) => {
+exports.filterEquipmentBySport = functions.https.onCall(async (data,context) => {
   try {
     // Get the filter value from the request query parameters
     const filter = data.filter; 
-
+    console.log(filter);
     // Reference to Firestore collection of Equipment 
     const EquipmentRef = db.collection('equipment');
 
     // Apply the filter to the query //Adjust fieldName
-    const querySnapshot = await EquipmentRef.where('sport_category', '==', filter).get();
+    const querySnapshot = await EquipmentRef.where('sportCategory', '==', filter).get();
 
     const filteredData = [];
+
     querySnapshot.forEach((doc) => {
       filteredData.push(doc.data());
     });
@@ -335,7 +336,7 @@ exports.filterEquipmentBySport = functions.https.onCall(async (data,contex) => {
     return {success: true, message: "Successfully filtered equipment", data:filteredData};
     }catch(error){
       console.error("Error filtering equipment",error);
-      return {success:false, message: "Internal server error"}
+      return {success:false, message: "Cannot fetch sport from firebase"}
     }
 });
 
@@ -388,8 +389,8 @@ exports.getCurrentOrders = functions.https.onCall(async (data,context) => {
 if (!context.auth) {
   throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
 }
-try {
 
+try {
   const userUid = data.userUid;
   const currentDate = date.now();
   const equipmentQuery = await db.collection("equipment").where("user.userUid", "==", userUid).where("rental_period.end", "=<", currentDate).get();
@@ -463,5 +464,53 @@ exports.getPastOrders = functions.https.onCall(async (data,context) => {
       success: false,
       message: 'Internal Server Error',
     };
+    }
+    });
+
+    exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
+
+      if (!context.auth) {
+        throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+    }
+    
+    try{
+    
+      const { itemId } = data;
+      let price = 0;
+      let destinationAccountId = "";
+    
+      if (itemId == 1) {
+          price = 1000;
+          destinationAccountId = "acct_1NzaId9SCquKWTyl";
+      }
+    
+      
+    
+      const customer = await stripe.customers.create();
+      const ephemeralKey = await stripe.ephemeralKeys.create(
+          { customer: customer.id },
+          { apiVersion: '2023-08-16' }
+      );
+      const paymentIntent = await stripe.paymentIntents.create({
+          amount: price,
+          currency: 'eur',
+          customer: customer.id,
+          automatic_payment_methods: { enabled: true },
+          application_fee_amount: 123,
+          transfer_data: { destination: destinationAccountId },
+      });
+    
+      return {
+          paymentIntent: paymentIntent.client_secret,
+          ephemeralKey: ephemeralKey.secret,
+          customer: customer.id,
+          publishableKey: "pk_test_51LoBCWGC9MhpkKozMAo0UEkGa8FS5TEx8ExG6T702Z8HCA7BvkLRe9jvKHZn26XTJobo4eSgAhVcRQIdAJSJVYAk0077oMzWuL"
+      };
+    
+    }
+    catch (error) {
+      return {
+        error: error
+      }
     }
     });
