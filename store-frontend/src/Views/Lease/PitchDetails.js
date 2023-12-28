@@ -4,7 +4,7 @@ import { Card, Button } from 'react-native-paper';
 import { Calendar } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import DateTimePicker from '@react-native-community/datetimepicker';
+//import DateTimePicker from '@react-native-community/datetimepicker';
 
 const PitchDetails = ({ route }) => {
   const { pitch } = route.params;
@@ -81,7 +81,7 @@ const PitchDetails = ({ route }) => {
             <TouchableOpacity onPress={() => setShowStartTimePicker(true)} style={styles.timeDisplay}>
               <Text>{startHour.toLocaleTimeString()}</Text>
             </TouchableOpacity>
-            {showStartTimePicker && (
+            {/*showStartTimePicker && (
               <DateTimePicker
                 value={startHour}
                 mode="time"
@@ -89,7 +89,7 @@ const PitchDetails = ({ route }) => {
                 display="default"
                 onChange={onChangeStartHour}
               />
-            )}
+            )*/}
           </View>
 
           <View style={styles.timePicker}>
@@ -97,7 +97,7 @@ const PitchDetails = ({ route }) => {
             <TouchableOpacity onPress={() => setShowEndTimePicker(true)} style={styles.timeDisplay}>
               <Text>{endHour.toLocaleTimeString()}</Text>
             </TouchableOpacity>
-            {showEndTimePicker && (
+            {/*showEndTimePicker && (
               <DateTimePicker
                 value={endHour}
                 mode="time"
@@ -105,7 +105,7 @@ const PitchDetails = ({ route }) => {
                 display="default"
                 onChange={onChangeEndHour}
               />
-            )}
+            )*/}
           </View>
         </View>
       </Card>
