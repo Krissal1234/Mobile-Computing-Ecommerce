@@ -23,7 +23,7 @@ const AddEquipment = () => {
   const [availableStatus, setAvailableStatus] = useState(null);
   const [deliveryType, setDeliveryType] = useState(null);
   const [images, setImages] = useState([]);
-  const [pickup_location, setPickupLocation] = useState({ latitude: '', longitude: '' });
+  const [pickupLocation, setPickupLocation] = useState({ latitude: '', longitude: '' });
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
   const {user} = useContext(UserContext);
@@ -80,7 +80,7 @@ const AddEquipment = () => {
       deliveryType,
       condition,
       images,
-      pickupLocation: deliveryType === 'delivery' ? null : pickup_location,
+      pickupLocation: deliveryType === 'delivery' ? null : pickupLocation,
     };
 
     console.log('New Equipment:', newEquipment);
@@ -251,22 +251,22 @@ const AddEquipment = () => {
                   style={addEquipmentStyles.mapInput}
                   placeholder="Enter Latitude"
                   keyboardType="numeric"
-                  value={pickup_location.latitude}
-                  onChangeText={(text) => setPickupLocation({ ...pickup_location, latitude: text })}
+                  value={pickupLocation.latitude}
+                  onChangeText={(text) => setPickupLocation({ ...pickupLocation, latitude: text })}
                 />
                 <TextInput
                   style={addEquipmentStyles.mapInput}
                   placeholder="Enter Longitude"
                   keyboardType="numeric"
-                  value={pickup_location.longitude}
-                  onChangeText={(text) => setPickupLocation({ ...pickup_location, longitude: text })}
+                  value={pickupLocation.longitude}
+                  onChangeText={(text) => setPickupLocation({ ...pickupLocation, longitude: text })}
                 />
 
                 <MapView
                   style={addEquipmentStyles.map}
                   region={{
-                    latitude: parseFloat(pickup_location.latitude) || 35.9375,
-                    longitude: parseFloat(pickup_location.longitude) || 14.3754,
+                    latitude: parseFloat(pickupLocation.latitude) || 35.9375,
+                    longitude: parseFloat(pickupLocation.longitude) || 14.3754,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                   }}
@@ -277,8 +277,8 @@ const AddEquipment = () => {
                 >
                   <Marker
                     coordinate={{
-                      latitude: parseFloat(pickup_location.latitude) || 35.9375,
-                      longitude: parseFloat(pickup_location.longitude) || 14.3754,
+                      latitude: parseFloat(pickupLocation.latitude) || 35.9375,
+                      longitude: parseFloat(pickupLocation.longitude) || 14.3754,
                     }}
                     title="Selected Location"
                   />

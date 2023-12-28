@@ -385,6 +385,47 @@ exports.getPaymentSheet = functions.https.onCall(async (data, context) => {
 });
 
 exports.getCurrentOrders = functions.https.onCall(async (data,context) => {
+if (!context.auth) {
+  throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+}
+try {
+
+  const userUid = data.userUid;
+  const currentDate = date.now();
+  const equipmentQuery = await db.collection("equipment").where("user.userUid", "==", userUid).where("rental_period.end", "=<", currentDate).get();
+  const facilitiesQuery = await db.collection("facilities").where("user.userUid", "==", userUid).where("rental_period.end", "=<", currentDate).get();
+  
+  const [equipmentSnapshot, facilitiesSnapshot] = await Promise.all([equipmentQuery, facilitiesQuery]);
+
+  let equipmentList = [];
+  let facilitiesList = [];
+
+  //to append the specific document id
+  equipmentSnapshot.forEach(doc => {
+    equipmentList.push({ id: doc.id, ...doc.data(), type: 'equipment' });
+  });
+
+  facilitiesSnapshot.forEach(doc => {
+    facilitiesList.push({ id: doc.id, ...doc.data(), type: 'facility' });
+  });
+  // Combine both lists
+  const combinedListings = equipmentList.concat(facilitiesList);
+
+  return {
+    success: true,
+    message: 'Current Bookings retrieved successfully for the user',
+    data: combinedListings,
+  };
+  } catch (error) {
+  console.error('Error retrieving listings by user UID:', error);
+  return {
+    success: false,
+    message: 'Internal Server Error',
+  };
+  }
+});
+
+exports.getPastOrders = functions.https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -392,9 +433,9 @@ exports.getCurrentOrders = functions.https.onCall(async (data,context) => {
 
     const userUid = data.userUid;
     const currentDate = date.now();
-    const equipmentQuery = await db.collection("equipment").where("user.userUid", "==", userUid).where("rental_period.end", "=<", currentDate).get();
-    const facilitiesQuery = await db.collection("facilities").where("user.userUid", "==", userUid).where("rental_period.end", "=<", currentDate).get();
-   
+    const equipmentQuery = await db.collection("equipment").where("user.userUid", "==", userUid).where("rental_period.end", ">", currentDate).get();
+    const facilitiesQuery = await db.collection("facilities").where("user.userUid", "==", userUid).where("rental_period.end", ">", currentDate).get();
+    
     const [equipmentSnapshot, facilitiesSnapshot] = await Promise.all([equipmentQuery, facilitiesQuery]);
 
     let equipmentList = [];
@@ -424,44 +465,3 @@ exports.getCurrentOrders = functions.https.onCall(async (data,context) => {
     };
     }
     });
-
-    exports.getPastOrders = functions.https.onCall(async (data,context) => {
-      if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
-      }
-      try {
-    
-        const userUid = data.userUid;
-        const currentDate = date.now();
-        const equipmentQuery = await db.collection("equipment").where("user.userUid", "==", userUid).where("rental_period.end", ">", currentDate).get();
-        const facilitiesQuery = await db.collection("facilities").where("user.userUid", "==", userUid).where("rental_period.end", ">", currentDate).get();
-       
-        const [equipmentSnapshot, facilitiesSnapshot] = await Promise.all([equipmentQuery, facilitiesQuery]);
-    
-        let equipmentList = [];
-        let facilitiesList = [];
-    
-        //to append the specific document id
-        equipmentSnapshot.forEach(doc => {
-          equipmentList.push({ id: doc.id, ...doc.data(), type: 'equipment' });
-        });
-    
-        facilitiesSnapshot.forEach(doc => {
-          facilitiesList.push({ id: doc.id, ...doc.data(), type: 'facility' });
-        });
-        // Combine both lists
-        const combinedListings = equipmentList.concat(facilitiesList);
-    
-        return {
-          success: true,
-          message: 'Current Bookings retrieved successfully for the user',
-          data: combinedListings,
-        };
-        } catch (error) {
-        console.error('Error retrieving listings by user UID:', error);
-        return {
-          success: false,
-          message: 'Internal Server Error',
-        };
-        }
-        });
