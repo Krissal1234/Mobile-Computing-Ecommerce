@@ -32,19 +32,47 @@ const AddEquipment = () => {
   const [condition, setCondition] = useState('');
   const [isConditionDropdownVisible, setIsConditionDropdownVisible] = useState(false);
 
+  const [sports, setSports] = useState([]);
+  const [loadingSports, setLoadingSports] = useState(true);
+  const [selectedSport, setSelectedSport] = useState('');
+  const [isSportsDropdownVisible, setIsSportsDropdownVisible] = useState(false);
 
+
+
+  useEffect(() => {
+    const fetchSports = async () => {
+      try {
+        setLoadingSports(true);
+        const response = await ListingsController.getAllSports();
   
-
-
-  useEffect(async () => {
-      async function fetchSportCategories() {
-        sportCategories =  await ListingsController.getAllSports();
-       
+        if (response && response.success && Array.isArray(response.data)) {
+          setSports(["No Filter", ...response.data]);
+        } else {
+          console.log("Unexpected response structure:", response);
+          // Handle the case where the response is not as expected
+          setSports(["No Category"]);
+        }
+      } catch (error) {
+        console.error("Error fetching sports:", error);
+        setSports(["No Categoires"]); // Set a default or empty array in case of error
+      } finally {
+        setLoadingSports(false);
       }
-      fetchData();
-    console.log("sports", sportCategories);
-    console.log('Selected Images:', images);
-  }, [images]);
+    };
+  
+    fetchSports();
+  }, []);
+  
+  const selectSport = (item) => {
+    setSelectedSport(item);
+    setIsSportsDropdownVisible(false);
+  };
+
+  const renderSportItem = ({ item }) => (
+    <TouchableOpacity onPress={() => selectSport(item)}>
+      <Text style={addEquipmentStyles.dropdownItem}>{item}</Text>
+    </TouchableOpacity>
+  );
 
   const handleChoosePhoto = () => {
     const options = {
@@ -170,14 +198,37 @@ const AddEquipment = () => {
               onChangeText={(text) => setPrice(text)}
             />
 
-            {/* Sport Category */}
-            <Text style={addEquipmentStyles.label}>Sport Category</Text>
-            <TextInput
-              style={addEquipmentStyles.input}
-              placeholder="Enter Sport Category"
-              value={sportCategory}
-              onChangeText={(text) => setSportCategory(text)}
+             {/* Sport Category Dropdown */}
+        <Text style={addEquipmentStyles.label}>Sport Category</Text>
+        <View style={addEquipmentStyles.input}>
+        <TouchableOpacity 
+          style={addEquipmentStyles.dropdownButton}
+          onPress={() => setIsSportsDropdownVisible(true)}
+        >
+          <Text style={addEquipmentStyles.dropdownButtonText}>
+            {selectedSport || 'Select Sport Category'}
+          </Text>
+        </TouchableOpacity>
+
+        {/* Dropdown Modal for Sports */}
+        <Modal
+          transparent={true}
+          visible={isSportsDropdownVisible}
+          animationType="slide"
+        >
+          <TouchableOpacity
+            style={addEquipmentStyles.dropdownOverlay}
+            onPress={() => setIsSportsDropdownVisible(false)}
+          />
+          <View style={addEquipmentStyles.dropdownContainer}>
+            <FlatList
+              data={sports}
+              renderItem={renderSportItem}
+              keyExtractor={(item) => item}
             />
+          </View>
+        </Modal>
+        </View>
 
             {/* Available */}
             <Text style={addEquipmentStyles.label}>Available</Text>
