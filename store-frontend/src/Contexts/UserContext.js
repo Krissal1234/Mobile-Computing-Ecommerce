@@ -5,14 +5,17 @@ export const UserContext = createContext({
   accountType: null,
   showFilter: false,
   sportFilter:'Set Sport Filter',
+  sportCategories: null,
   setUser: () => {},
   setAccountType: () => {},
   setShowFilter: () => {},
   setSportFilter: () => {},
+  setSportCategoreies: () => {},
 });
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [sportCategories, setSportCategories] = useState(null);
   const [accountType, setAccountType] = useState(null);
   const [showFilter, setShowFilter] = useState(false);
   const [sportFilter,setSportFilter] = useState('Set Sport Filter');
@@ -20,6 +23,8 @@ export const UserProvider = ({ children }) => {
   const userProviderValue = useMemo(() => ({
     user,
     setUser,
+    sportCategories,
+    setSportCategories,
     accountType,
     setAccountType,
     showFilter,
