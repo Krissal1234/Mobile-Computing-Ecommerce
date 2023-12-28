@@ -188,6 +188,8 @@ export default StyleSheet.create({
         marginHorizontal:width*0.05,
 
     },
-    
+    testStyle:{
+        marginHorizontal:width*0.1,
+    },
 
 })
