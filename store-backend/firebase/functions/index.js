@@ -467,9 +467,7 @@ exports.getPastOrders = functions.https.onCall(async (data,context) => {
       const { itemId } = data;
       let destinationAccountId = "";
     
-      const querySnapshot = await db.collection("equipment")
-                                  .where("equipmentUid", "==", itemId)
-                                  .get();
+    const querySnapshot = await db.collection('equipment').doc(itemId).get();
 
     if (querySnapshot.empty) {
         throw new functions.https.HttpsError('not-found', 'No equipment with the given ID exists in the database.');
