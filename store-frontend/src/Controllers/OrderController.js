@@ -1,12 +1,12 @@
 
-import { postOrder } from '../../../store-backend/firebase/functions';
+import { postOrder, getEquipmentById, getFacilityById } from '../../../store-backend/firebase/functions';
 
 
 export class OrderController {
-
     //expected parameter:
-    //usersBasket = [
+    //usersBasket =
 //     {
+//         category: facility or equipment
 //         itemId: "equipment123",
 //         pricePerHour: 2,
 //         rentalPeriod: {
@@ -14,7 +14,6 @@ export class OrderController {
 //             end: "2023-07-05"
 //         },
 //     },
-// ];
     static async createOrder(usersBasket,user){
         //usersBasket {
         if(!usersBasket || usersBasket.length == 0){
@@ -32,22 +31,32 @@ export class OrderController {
             const price = durationHours * price_per_hour;
             totalPrice += price;
         });
-        //Adding user data to order
+
+    try{
+    //Adding user data to order
         const user ={
             userUid: user.user.uid, 
             email: user.user.email, 
             username: user.user.displayName
-          };
+            };
+
+        const renter =[];
+        if(usersBasket.category == 'equipment'){
+            const itemFromDb = await getEquipmentById(usersBasket.itemId);
+            renter = itemFromDb.data.data.owner;
+        }else if(usersBasket.category == 'facility'){
+            const itemFromDb = await getFacilityById(usersBasket.itemId);
+            renter = itemFromDb.data.data.owner;
+        }
 
         const orderDetails = {
             totalPrice,
+            renter,
             item: usersBasket,
             user: user,
             status: "processing" //This will change to paid/finished, once paypal payment succeeds
         }
 
-
-    try{
         const response = await postOrder(orderDetails);
         if(response.data.success){
             return {success: true, message: response.data.message, data: response.data.data}
@@ -59,8 +68,5 @@ export class OrderController {
         console.error(error);
         return {success:false, message: "Internal server error"}  
     }
-
-    }
-
-
+}
 }

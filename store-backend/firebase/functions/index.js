@@ -202,7 +202,7 @@ exports.getListingsByUserUid = functions.https.onCall(async (data,context) => {
 exports.getFacilityById =functions.https.onCall(async (data,context) => {
 
 try{
-    const facility = await db.collection('facilities').doc(data.itemId).get();
+    const facility = await db.collection('facilities').doc(data).get();
     if(!facility.exists){
       return {success: false, message: "Facility not found"};
     }else{
@@ -218,7 +218,7 @@ try{
 exports.getEquipmentById= functions.https.onCall(async (data,context) => {
 
   try{
-    const equipment = await db.collection('equipment').doc(data.itemId).get();
+    const equipment = await db.collection('equipment').doc(data).get();
     if(!equipment.exists){
       return {success: false, message: "Equipment not found"};
     }else{
@@ -228,7 +228,6 @@ exports.getEquipmentById= functions.https.onCall(async (data,context) => {
     console.error("Error getting equipment", error);
     return {success:false, message: "Internal server error, check firebase logs"};
 }
-
 });
 
 exports.postOrder = functions.https.onCall(async (data,context) => {

@@ -4,14 +4,14 @@ import { postEquipment, getAllAvailableEquipment, filterEquipmentBySport,filterF
 export class EquipmentController {
 
     // title: 'Boxing Gloves',
-    //  sport_category: 'Boxing',
+    //  sportCategory: 'Boxing',
     //  condition: 'New',
     //  pricePerHour: 20,
-    //  available_status: 'Available',
+    //  availableStatus: 'Available',
     //  deliveryType: 'pickup',
     //  description: 'High-quality leather boxing gloves',
-    //  pickup_location: '123 Main St',
-    //  images: ['image_url1', 'image_url2'],
+    //  pickupLocation: '123 Main St',
+    //  images: 'image_url2',
     static async PostEquipment(equipmentData,user) {
         const {deliveryType,pickup_location} = equipmentData;
          equipmentData.owner = {
@@ -55,7 +55,7 @@ export class EquipmentController {
       }
 
       static async filterEquipmentBySport(filter){ 
-        //return all equipment with availability status true
+        //return all equipment with availability status true and filter by sport
         try{
           var response = await filterEquipmentBySport(filter);
           
