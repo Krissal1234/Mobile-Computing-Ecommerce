@@ -5,18 +5,14 @@ import { useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {BlurView} from 'expo-blur';
 import {colors} from './colors'
-import Basket from './Basket/Basket';
 import Bookings from './Bookings/Bookings';
 import RentEquipment from './Rent/Equipment';
 import RentPitches from './Rent/Pitches';
-import Icon from 'react-native-ico-material-design';
 import AddEquipment from './AddEquipment/AddEquipment';
 import { UserContext } from '../Contexts/UserContext';
 import styles from './styles';
 import equipmentTransparentIcon from '../../assets/equipment_transparent.png'
 import equipmentFillIcon from '../../assets/equipment_fill_black.png'
-import basketFillIcon from '../../assets/basket_fill_black.png'
-import basketTransparentIcon from '../../assets/basket.png'
 import bookingsFillIcon from '../../assets/bookings_fill_black.png'
 import bookingsTransparentIcon from '../../assets/bookings.png'
 import pitchFillIcon from '../../assets/pitch_fill_black.png'
@@ -25,7 +21,6 @@ import profileTransparent from '../../assets/profile.png'
 import profileFill from '../../assets/profile_fill_black.png'
 import homeTransparent from '../../assets/home_button.png'
 import homeFill from '../../assets/home_button_fill.png'
-import Equipment from './Equipment/Equipment';
 import EquipmentLease from './Lease/EquipmentLease';
 import addEquipmentFillIcon from '../../assets/add_report_black.png';
 import addEquipmentTransparentIcon from '../../assets/add_report.png';
