@@ -1,123 +1,51 @@
-import { View, Text, SafeAreaView,TouchableOpacity, ScrollView,Image } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { View, FlatList, TouchableOpacity, Image } from 'react-native';
 import styles from 'store-frontend/src/Views/styles';
 import { useNavigation } from '@react-navigation/native';
 
 const Equipment = () => {
+  const navigation = useNavigation();
 
-    const navigation=useNavigation();
+  const rent = () => {
+    navigation.navigate('Login');
+  };
 
-    const rent = () => {
-        navigation.navigate('Login');
-      };
+  // Assuming this is your 2D data array
+  // Each sub-array represents a row of items
+  const data = new Array(4).fill(
+    new Array(3).fill({ image: require('store-frontend/assets/logo.png'), onPress: rent })
+  );
+
+  // Render each item in the horizontal FlatList
+  const renderHorizontalItem = ({ item }) => (
+    <TouchableOpacity onPress={item.onPress}>
+      <Image source={item.image} style={styles.itemImg} />
+    </TouchableOpacity>
+  );
+
+  // Render each horizontal FlatList
+  const renderRow = ({ item }) => (
+    <FlatList
+      data={item}
+      renderItem={renderHorizontalItem}
+      keyExtractor={(item, index) => index.toString()}
+      horizontal
+      style={styles.horizontalFlatList}
+      showsHorizontalScrollIndicator={false}
+    />
+  );
 
   return (
     <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.verticalScrollView}>
-
-            <ScrollView horizontal contentContainerStyle={styles.horizontalScrollView}
-                        showsHorizontalScrollIndicator={false}
-            >
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-            </ScrollView>   
-
-            <ScrollView horizontal contentContainerStyle={styles.horizontalScrollView}
-                        showsHorizontalScrollIndicator={false}
-            >
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-            </ScrollView> 
-
-            <ScrollView horizontal contentContainerStyle={styles.horizontalScrollView}
-                        showsHorizontalScrollIndicator={false}
-            >
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-            </ScrollView> 
-
-            <ScrollView horizontal contentContainerStyle={styles.horizontalScrollView}
-                        showsHorizontalScrollIndicator={false}
-            >
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-                <TouchableOpacity
-                    onPress={rent}>
-                    <Image source={require('store-frontend/assets/logo.png')} style={styles.itemImg} />
-                </TouchableOpacity> 
-
-            </ScrollView> 
-
-        </ScrollView>
+      <FlatList
+        contentContainerStyle={styles.verticalFlatList}
+        data={data}
+        renderItem={renderRow}
+        keyExtractor={(item, index) => `row-${index}`}
+        horizontal={false}
+      />
     </View>
-);
-}
+  );
+};
 
-export default Equipment
+export default Equipment;
