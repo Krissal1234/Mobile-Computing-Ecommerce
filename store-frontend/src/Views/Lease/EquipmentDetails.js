@@ -58,7 +58,7 @@ const EquipmentDetails = ({ route }) => {
       </TouchableOpacity>
 
       <Card style={styles.card}>
-        <Image source={{ uri: equipment.image }} style={styles.detailsimage} />
+        <Image source={{ uri: equipment.image }} style={styles.detailsImage} />
         <Text style={styles.title}>{equipment.title}</Text>
         <Text style={styles.description}>{equipment.description1}</Text>
         <Text style={styles.description}>{equipment.description2}</Text>
@@ -159,7 +159,7 @@ const EquipmentDetails = ({ route }) => {
       
 
 
-      <Button mode="contained" onPress={handleLeaseNow}>
+      <Button style={styles.button} mode="contained" onPress={handleLeaseNow}>
         Lease Now
       </Button>
     </ScrollView>

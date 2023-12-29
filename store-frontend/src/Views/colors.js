@@ -12,4 +12,5 @@ export const colors ={
     lightBlue:'#00CBFF',
     transparentDarkBlue:'rgba(0,27,54,0.8)',
     red: '#BD0205',
+    darkRed: 'rgba(162, 56, 58, 0.8)',
 }
