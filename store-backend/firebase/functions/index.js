@@ -206,7 +206,7 @@ try{
     if(!facility.exists){
       return {success: false, message: "Facility not found"};
     }else{
-      return {success: true, message: "Facility found", data: facility};
+      return {success: true, message: "Facility found", data: facility.data()};
     }
 }catch(error){
     console.error("Error getting facility", error);
@@ -222,7 +222,7 @@ exports.getEquipmentById= functions.https.onCall(async (data,context) => {
     if(!equipment.exists){
       return {success: false, message: "Equipment not found"};
     }else{
-      return {success: true, message: "Equipment found", data: equipment};
+      return {success: true, message: "Equipment found", data: equipment.data()};
     }
 }catch(error){
     console.error("Error getting equipment", error);

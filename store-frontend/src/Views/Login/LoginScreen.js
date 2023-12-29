@@ -7,6 +7,7 @@ import { colors } from 'store-frontend/src/Views/colors.js';
 import { UserContext } from '../../Contexts/UserContext';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import { ListingsController } from '../../Controllers/ListingsController';
+import { getEquipmentById } from '../../../config/firebase';
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,7 +22,9 @@ export default function LoginScreen({ navigation }) {
     console.log('clicked login');
     const login = await LoginController.loginUser(email, password);
     //Setting sport categories global variable to minimise overhead
+
     const response = await ListingsController.getAllSports();
+
     if(response.success){
       setSportCategories(response.data);
     }else{
