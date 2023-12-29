@@ -5,6 +5,9 @@ import MapView, { Marker } from 'react-native-maps';
 import { Calendar, DateObject } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native'; 
 import Icon from 'react-native-vector-icons/FontAwesome'; 
+import styles from 'store-frontend/src/Views/styles';
+
+
 
 const EquipmentDetails = ({ route }) => {
   const { equipment } = route.params;
@@ -55,7 +58,7 @@ const EquipmentDetails = ({ route }) => {
       </TouchableOpacity>
 
       <Card style={styles.card}>
-        <Image source={{ uri: equipment.image }} style={styles.image} />
+        <Image source={{ uri: equipment.image }} style={styles.detailsimage} />
         <Text style={styles.title}>{equipment.title}</Text>
         <Text style={styles.description}>{equipment.description1}</Text>
         <Text style={styles.description}>{equipment.description2}</Text>
@@ -120,7 +123,7 @@ const EquipmentDetails = ({ route }) => {
           </MapView>
           <Text style={styles.subtitle}>Pinpoint Pickup Location:</Text>
           <TextInput
-            style={styles.input}
+            style={styles.detailsinput}
             placeholder="Enter pickup address"
             value={`${pickupLocation.latitude}, ${pickupLocation.longitude}`}
             editable={false} // Make the input non-editable for pickup
@@ -143,7 +146,7 @@ const EquipmentDetails = ({ route }) => {
           </MapView>
           <Text style={styles.subtitle}>Pinpoint Delivery Location:</Text>
           <TextInput
-            style={styles.input}
+            style={styles.detailsinput}
             placeholder="Enter delivery address"
             value={`${pickupLocation.latitude}, ${pickupLocation.longitude}`}
             editable={false} // Make the input non-editable for delivery
@@ -163,82 +166,5 @@ const EquipmentDetails = ({ route }) => {
   );
 };
 
-const styles = {
-  container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: '#132945',
-     // Set your desired background color
-  },
-  card: {
-    padding: 15,
-    marginBottom: 10,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#A2383A',
-  },
-  image: {
-    width: '80%',
-    height: 200,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#A2383A',
-    marginBottom: 10,
-    alignSelf: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 5,
-    color: '#333',
-  },
-  description: {
-    color: '#555',
-    textAlign: 'center',
-  },
-  price: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  switchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  switchText: {
-    marginRight: 10,
-  },
-  map: {
-    height: 200,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#A2383A',
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    padding: 10,
-  },
-  dateTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  backButton: {
-   marginBottom: 10, 
-   paddingLeft:20,
-  },
-};
 
 export default EquipmentDetails;
