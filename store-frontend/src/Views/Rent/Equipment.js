@@ -4,7 +4,6 @@ import styles from 'store-frontend/src/Views/styles';
 import { useNavigation } from '@react-navigation/native';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import { ListingsController } from '../../Controllers/ListingsController';
-import { getEquipmentById } from '../../../config/firebase';
 
 const Equipment = () => {
   const navigation = useNavigation();
@@ -40,17 +39,12 @@ const Equipment = () => {
     fetchSportsAndEquipment();
   }, []);
   
-  
-
-  const rent = () => {
-    navigation.navigate('Login');
-  };
-
-  const renderEquipmentItem = ({ item }) => (
-    <TouchableOpacity onPress={() => rent(item)}>
-      <Text style = {styles.testStyle}>{item.title}</Text>
+  const renderEquipmentItem = ({ item }) =>(
+    <TouchableOpacity onPress={() => navigation.navigate('EquipmentDetails', { equipmentId: item.id })}>
+      <Text style={styles.testStyle}>{item.title}</Text>
     </TouchableOpacity>
   );
+  
 
   const renderEquipmentRow = ({ item }) => (
     <View style={styles.rowContainer}>
