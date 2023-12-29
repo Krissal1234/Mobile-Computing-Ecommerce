@@ -53,6 +53,9 @@ import { UserContext, UserProvider } from "./src/Contexts/UserContext";
 import Core from './src/Views/Core';
 import LeaseEquipment from './src/Views/Lease/EquipmentLease.js';
 import RegisterScreen from "./src/Views/RegisterScreen/RegisterScreen";
+import Equipment from "./src/Views/Rent/Equipment";
+import EquipmentDetails from "./src/Views/Rent/EquipmentDetails";
+
 
 import Test from "./src/Views/Rent/Equipment";
 
@@ -86,6 +89,8 @@ export default function App() {
           <Stack.Screen name="Login" component={LoginScreen}/>
           <Stack.Screen name="Registration" component={RegisterScreen}/>
           <Stack.Screen name="Core" component={Core} />
+          <Stack.Screen name="Equipment" component={Equipment} />
+          <Stack.Screen name="EquipmentDetails" component={EquipmentDetails} />
 
           <Stack.Screen name="Test" component={Test} />
         </Stack.Navigator>
