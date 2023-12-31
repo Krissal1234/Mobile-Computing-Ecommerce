@@ -1,4 +1,4 @@
-import { StatusBar, StyleSheet,Plat } from 'react-native';
+import { StatusBar, StyleSheet} from 'react-native';
 import {colors} from './colors'
 import { Dimensions } from 'react-native';
 
@@ -136,7 +136,7 @@ export default StyleSheet.create({
         alignItems:'center',
         paddingHorizontal:width*0.01,
         paddingVertical: height*0.01,
-        borderWidth: width*0.01,
+        borderWidth: 1,
         borderColor: colors.semiTransWhite,
     },
     filterText: {
@@ -154,7 +154,7 @@ export default StyleSheet.create({
         zIndex: 1000,
         justifyContent: 'start',
         alignItems: 'center',
-      },
+    },
     dropDownScroll:{
         paddingTop:height*0.06,
     },
@@ -191,68 +191,69 @@ export default StyleSheet.create({
         marginHorizontal:width*0.1,
     },
 
-      card: {
-        padding: width*0.05,
-        marginBottom: height*0.02,
-        backgroundColor: colors.white,
-        borderRadius: height*0.035,
-        borderWidth: width*0.005,
-        borderColor: colors.red,
-      },
-      detailsImage: {
-        width: width* 0.80,
-        height: height* 0.25,
-        borderRadius: height*0.035,
-        borderWidth: width*0.005,
-        borderColor: colors.red,
-        marginBottom: height*0.02,
-        alignSelf: 'center',
-      },
-      title: {
-        fontSize: width*0.05,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: height*0.01,
-        color: colors.black,
-      },
-      description: {
-        color: colors.black,
-        textAlign: 'center',
-      },
-      price: {
-        fontSize: width*0.05,
-        fontWeight: 'bold',
-        textAlign: 'center',
-      },
-      subtitle: {
-        fontSize: width*0.05,
-        fontWeight: 'bold',
-        marginBottom: height*0.01,
-      },
-      switchContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-      },
-      switchText: {
-        marginRight: height*0.02,
-      },
-      map: {
-        height: height*0.30,
-        borderRadius: height*0.035,
-        borderWidth: width*0.005,
-        borderColor: colors.red,
-      },
-      
-      dateTitle: {
-        fontSize: width*0.05,
-        fontWeight: 'bold',
-        marginBottom: height*0.01,
-        textAlign: 'center',
-      },
-      backButton: {
-       marginBottom: height*0.01, 
-       paddingLeft: width*0.05,
-      },
+    card: {
+      padding: width*0.05,
+      marginHorizontal:width*0.1,
+      marginBottom: height*0.02,
+      backgroundColor: colors.white,
+      borderRadius: height*0.035,
+      borderWidth: 3,
+      borderColor: colors.red,
+      overflow:'hidden',
+    },
+    detailsImage: {
+      width: width* 0.70,
+      height: height* 0.25,
+      borderRadius: height*0.035,
+      borderWidth: 3,
+      borderColor: colors.red,
+      marginBottom: height*0.02,
+      alignSelf: 'center',
+    },
+    title: {
+      fontSize: width*0.05,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginBottom: height*0.01,
+      color: colors.black,
+    },
+    description: {
+      color: colors.black,
+      textAlign: 'center',
+    },
+    price: {
+      fontSize: width*0.05,
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    subtitle: {
+      fontSize: width*0.05,
+      fontWeight: 'bold',
+      marginBottom: height*0.01,
+    },
+    switchContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    switchText: {
+      marginRight: height*0.02,
+    },
+    map: {
+      height: height*0.30,
+      borderRadius: height*0.035,
+      borderWidth: width*0.005,
+      borderColor: colors.red,
+    },
+    dateTitle: {
+      fontSize: width*0.05,
+      fontWeight: 'bold',
+      marginBottom: height*0.01,
+      textAlign: 'center',
+    },
+    backButton: {
+      marginBottom: height*0.01, 
+      paddingLeft: width*0.05,
+    },
 
       
     

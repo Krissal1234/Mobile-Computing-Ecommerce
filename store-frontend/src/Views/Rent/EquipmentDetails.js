@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import styles from '../styles';
 
 const EquipmentDetail = ({ route, navigation }) => {
   const [equipment, setEquipment] = useState(null);
@@ -37,9 +38,12 @@ const EquipmentDetail = ({ route, navigation }) => {
   }
 
   return (
-    <SafeAreaView>
-      <Text>{equipment.title}</Text>
-      {/* Render other equipment details */}
+    <SafeAreaView style = {styles.container}>
+
+      <View style = {styles.card}>
+        <Text>{equipment.title}</Text>
+      </View>
+
     </SafeAreaView>
   );
 };
