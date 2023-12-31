@@ -26,6 +26,7 @@ import PitchesLease from './Lease/PitchesLease';
 import addEquipmentFillIcon from '../../assets/add_report_black.png';
 import addEquipmentTransparentIcon from '../../assets/add_report.png';
 import { ListingsController } from '../Controllers/ListingsController';
+import ChoiceScreen from './AddEquipment/ChoiceScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -92,7 +93,7 @@ function LeaserTabs() {
       >
         <Tab.Screen
           name="Add Equipment"
-          component={AddEquipment}
+          component={ChoiceScreen}
           options={{ headerShown: false }}
         />
         <Tab.Screen

@@ -4,6 +4,8 @@ import { Card, Button } from 'react-native-paper';
 import { Calendar } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import styles1 from 'store-frontend/src/Views/styles';
+
 //import DateTimePicker from '@react-native-community/datetimepicker';
 
 const PitchDetails = ({ route }) => {
@@ -108,11 +110,14 @@ const PitchDetails = ({ route }) => {
             )*/}
           </View>
         </View>
-      </Card>
+      </Card>      
 
-      <Button mode="contained" onPress={handleLeaseNow} style={styles.leaseButton}>
-        Lease Now
-      </Button>
+      <TouchableOpacity
+          style={styles1.button}
+          onPress={handleLeaseNow}>
+          <Text style={styles1.buttonTitle}>Lease Now</Text>
+      </TouchableOpacity>
+
     </ScrollView>
   );
 };

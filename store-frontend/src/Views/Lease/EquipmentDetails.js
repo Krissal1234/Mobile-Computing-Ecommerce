@@ -156,12 +156,12 @@ const EquipmentDetails = ({ route }) => {
     </Card>
 
 
-      
+      <TouchableOpacity
+          style={styles.button}
+          onPress={handleLeaseNow}>
+          <Text style={styles.buttonTitle}>Lease Now</Text>
+      </TouchableOpacity>
 
-
-      <Button style={styles.button} mode="contained" onPress={handleLeaseNow}>
-        Lease Now
-      </Button>
     </ScrollView>
   );
 };

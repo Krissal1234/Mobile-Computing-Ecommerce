@@ -55,6 +55,9 @@ import LeaseEquipment from './src/Views/Lease/EquipmentLease.js';
 import RegisterScreen from "./src/Views/RegisterScreen/RegisterScreen";
 import Equipment from "./src/Views/Rent/Equipment";
 import EquipmentDetails from "./src/Views/Rent/EquipmentDetails";
+import ChoiceScreen from './src/Views/AddEquipment/ChoiceScreen';
+import AddEquipment from './src/Views/AddEquipment/AddEquipment'; // Your AddEquipment screen
+import AddPitch from './src/Views/AddEquipment/AddPitch'; // Your AddPitch screen
 
 
 import Test from "./src/Views/Rent/Equipment";
@@ -93,8 +96,14 @@ export default function App() {
           <Stack.Screen name="EquipmentDetails" component={EquipmentDetails} />
 
           <Stack.Screen name="Test" component={Test} />
+
+          <Stack.Screen name="ChoiceScreen" component={ChoiceScreen} />
+        <Stack.Screen name="AddEquipment" component={AddEquipment} />
+        <Stack.Screen name="AddPitch" component={AddPitch} />
         </Stack.Navigator>
       </NavigationContainer>
+
+      
     </UserProvider>
   );
 }
