@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, TouchableOpacity, Image, Text } from 'react-native';
 import styles from 'store-frontend/src/Views/styles';
-import { useNavigation } from '@react-navigation/native';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import { ListingsController } from '../../Controllers/ListingsController';
+import { createStackNavigator } from '@react-navigation/stack';
+import EquipmentDetails from './EquipmentDetails';
 
-const Equipment = () => {
-  const navigation = useNavigation();
+
+const Stack = createStackNavigator();
+
+const Equipment = ({navigation}) => {
   const [sportsEquipment, setSportsEquipment] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -82,4 +85,16 @@ const Equipment = () => {
   );
 };
 
-export default Equipment;
+const EquipmentStack = () => {
+  return (
+    <Stack.Navigator initialRouteName="Equipment"  
+      screenOptions={{ headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Equipment" component={Equipment} />
+      <Stack.Screen name="EquipmentDetails" component={EquipmentDetails} />
+    </Stack.Navigator>
+  );
+};
+
+export default EquipmentStack;

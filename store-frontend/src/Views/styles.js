@@ -190,16 +190,18 @@ export default StyleSheet.create({
     testStyle:{
         marginHorizontal:width*0.1,
     },
-
     card: {
-      padding: width*0.05,
-      marginHorizontal:width*0.1,
-      marginBottom: height*0.02,
-      backgroundColor: colors.white,
-      borderRadius: height*0.035,
-      borderWidth: 3,
-      borderColor: colors.red,
-      overflow:'hidden',
+        minHeight : height*0.085,
+        padding: width*0.05,
+        marginHorizontal:width*0.1,
+        marginVertical: height*0.01,
+        backgroundColor: colors.white,
+        borderRadius: height*0.035,
+        borderWidth: 3,
+        borderColor: colors.red,
+        overflow:'hidden',
+        alignContent:'center',
+        justifyContent:'center',
     },
     detailsImage: {
       width: width* 0.70,
@@ -214,17 +216,25 @@ export default StyleSheet.create({
       fontSize: width*0.05,
       fontWeight: 'bold',
       textAlign: 'center',
-      marginBottom: height*0.01,
       color: colors.black,
+    },
+    descriptionContainer:{
+        alignItems:'center',
     },
     description: {
       color: colors.black,
       textAlign: 'center',
+      width: width*0.7,
+      marginTop:height*0.01,
+    },
+    priceContainer:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center',
     },
     price: {
       fontSize: width*0.05,
       fontWeight: 'bold',
-      textAlign: 'center',
     },
     subtitle: {
       fontSize: width*0.05,
@@ -253,6 +263,19 @@ export default StyleSheet.create({
     backButton: {
       marginBottom: height*0.01, 
       paddingLeft: width*0.05,
+    },
+    calendarTheme:{
+        calendarBackground:colors.white,
+        textSectionTitleColor: colors.black,
+        todayTextColor: colors.red,
+        dayTextColor: colors.black,
+        arrowColor: colors.lightBlue,
+        disabledArrowColor: colors.mutedBlue,
+        monthTextColor: colors.black,
+        indicatorColor: colors.black,
+        textDayFontWeight: 'bold',
+        textMonthFontWeight: 'bold',
+        textDayHeaderFontWeight: 'bold',
     },
 
       
