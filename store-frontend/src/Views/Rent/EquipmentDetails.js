@@ -5,15 +5,30 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from '../styles';
 import { Calendar } from 'react-native-calendars';
 import { colors } from '../colors';
+import downward_cevron from '../../../assets/downward_cevron.png'
+import upward_cevron from '../../../assets/upward_cevron.png'
 
 const EquipmentDetails = ({ route}) => {
   const [equipment, setEquipment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [startTimeExpanded, setStartTimeExpanded] = useState(false);
+  const [endTimeExpanded, setEndTimeExpanded] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [minDate, setMinDate] = useState(new Date().toISOString().split('T')[0]);
 
+  function toggleStartTime (){
+    if(checkOpen() || startTimeExpanded){setStartTimeExpanded(!startTimeExpanded)}
+  }
+
+  function toggleEndTime (){
+    if(checkOpen() || endTimeExpanded){setEndTimeExpanded(!endTimeExpanded)}
+  }
+
+  function checkOpen(){
+    return startTimeExpanded || endTimeExpanded ? false : true
+  }
 
   const onDayPress = (day) => {
     if (!startDate) {
@@ -88,7 +103,7 @@ const EquipmentDetails = ({ route}) => {
   }
 
   const deliveryType = equipment.deliveryType.charAt(0).toUpperCase() + equipment.deliveryType.slice(1);//sets delivery type with uppercase first letter
-
+  const collectionType = deliveryType=='pickup' ? 'Drop-Off' : 'Retrieval';
   return (
     <ScrollView style = {styles.container}>
 
@@ -121,18 +136,38 @@ const EquipmentDetails = ({ route}) => {
         <Text style = {styles.title}>Handover Type : {deliveryType}</Text>
       </View>
 
+      {/* Calendar */}
       <View style = {styles.card}>
-      <Calendar
-        onDayPress={onDayPress}
-        markedDates={getMarkedDates()}
-        markingType={'period'}
-        theme={styles.calendarTheme}
-        minDate={minDate}
-      />
-      <Text>Selected Start Date: {startDate}</Text>
-      <Text>Selected End Date: {endDate}</Text>
-
+        <Calendar
+          onDayPress={onDayPress}
+          markedDates={getMarkedDates()}
+          markingType={'period'}
+          theme={styles.calendarTheme}
+          minDate={minDate}
+        />
       </View>
+
+      {/* Start Time*/}
+      <TouchableOpacity style = {styles.card} onPress = {toggleStartTime}>
+        <Text style = {styles.title}>Set {deliveryType} Time</Text>
+        {!startTimeExpanded && (
+          <Image source ={downward_cevron} ></Image>
+        )}
+        {startTimeExpanded && (
+          <Image source ={upward_cevron} ></Image>
+        )}
+      </TouchableOpacity>
+
+      {/* End Time*/}
+      <TouchableOpacity style = {styles.card} onPress = {toggleEndTime}>
+        <Text style = {styles.title}>Set {collectionType} Time</Text>
+        {!endTimeExpanded && (
+          <Image source ={downward_cevron} ></Image>
+        )}
+        {endTimeExpanded && (
+          <Image source ={upward_cevron} ></Image>
+        )}
+      </TouchableOpacity>
 
     </ScrollView>
   );
