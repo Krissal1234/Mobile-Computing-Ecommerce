@@ -8,7 +8,14 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         padding: 10,
-        backgroundColor: '#fff',
+        backgroundColor: colors.darkBlue,
+        ...Platform.select({
+            ios: {  
+            },
+            android: {
+                paddingTop:StatusBar.currentHeight,
+            },
+          }),
       },
       scrollContainer: {
         flexGrow: 1,

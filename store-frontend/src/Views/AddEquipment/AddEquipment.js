@@ -9,6 +9,8 @@ import { UserContext } from '../../Contexts/UserContext';
 import { ListingsController } from '../../Controllers/ListingsController';
 import { useContext } from 'react';
 import * as ImagePicker from 'expo-image-picker';
+import Icon from 'react-native-vector-icons/FontAwesome'; 
+import styles from 'store-frontend/src/Views/styles';
 
 import addEquipmentStyles from './styles';
 
@@ -37,6 +39,10 @@ const AddEquipment = () => {
   const [selectedSport, setSelectedSport] = useState('');
   const [isSportsDropdownVisible, setIsSportsDropdownVisible] = useState(false);
   const { sportCategories } = useContext(UserContext);
+
+  const handleBack = () => {
+    navigation.goBack();
+  };
 
 
   useEffect(() => {
@@ -91,7 +97,7 @@ const AddEquipment = () => {
     if (!result.canceled && result.assets) {
       const selectedUri = result.assets[0].uri; // Updated to use assets array
       console.log(selectedUri);
-      setImages([...images, selectedUri]);
+      setImages([selectedUri]);
     }
   };
   
@@ -153,14 +159,22 @@ const AddEquipment = () => {
   
 
   return (
+   
     <SafeAreaView style={addEquipmentStyles.container}>
       <ScrollView contentContainerStyle={addEquipmentStyles.scrollContainer}>
         <View style={addEquipmentStyles.container}>
+
+          {/* Back Button */}
+          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+            <Icon name="arrow-left" size={40} color="white" />
+            </TouchableOpacity>
+
+
           <Card style={addEquipmentStyles.card}>
             <TouchableOpacity onPress={handleChoosePhoto}>
               {images.length > 0 ? (
                 images.map((image, index) => (
-                  <Image key={index} source={{ uri: image.uri }} style={addEquipmentStyles.image} />
+                  <Image key={index} source={{ uri: image}} style={addEquipmentStyles.image} />
                 ))
               ) : (
                 <Text style={addEquipmentStyles.choosePhotoText}>Choose Equipment Photos</Text>
@@ -186,11 +200,11 @@ const AddEquipment = () => {
             />
 
             {/* Price Per Day */}
-            <Text style={addEquipmentStyles.label}>Price Per Hour</Text>
+            <Text style={addEquipmentStyles.label}>Price Per Day</Text>
             <TextInput
               style={addEquipmentStyles.input}
-              placeholder="Price per hour"
-              //TODO: Check if the value inputted is an integer, and conver it to an integer
+              placeholder="Enter Price"
+              keyboardType="numeric"
               value={price}
               onChangeText={(text) => setPrice(text)}
             />
@@ -364,9 +378,11 @@ const AddEquipment = () => {
         </Modal>
       </View>
 
-            <Button mode="contained" onPress={handleAddEquipment}>
-              Add Equipment
-            </Button>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleAddEquipment}>
+              <Text style={styles.buttonTitle}>Add Equipment</Text>
+          </TouchableOpacity>
           </Card>
         </View>
       </ScrollView>

@@ -56,6 +56,7 @@ import RegisterScreen from "./src/Views/RegisterScreen/RegisterScreen";
 import Equipment from "./src/Views/Rent/Equipment";
 
 
+
 import Test from "./src/Views/Rent/Equipment";
 
 // const firebaseConfig = {
@@ -91,8 +92,12 @@ export default function App() {
           <Stack.Screen name="Equipment" component={Equipment} />
 
           <Stack.Screen name="Test" component={Test} />
+
+          
         </Stack.Navigator>
       </NavigationContainer>
+
+      
     </UserProvider>
   );
 }
