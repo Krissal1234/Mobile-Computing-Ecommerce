@@ -149,24 +149,31 @@ const EquipmentDetails = ({ route}) => {
 
       {/* Start Time*/}
       <TouchableOpacity style = {styles.card} onPress = {toggleStartTime}>
-        <Text style = {styles.title}>Set {deliveryType} Time</Text>
-        {!startTimeExpanded && (
-          <Image source ={downward_cevron} ></Image>
-        )}
-        {startTimeExpanded && (
-          <Image source ={upward_cevron} ></Image>
-        )}
+
+        <View style = {styles.timeContainer}>
+          <Text style = {styles.title}>Set {deliveryType} Time</Text>
+          {!startTimeExpanded && (
+            <Image source ={downward_cevron} style ={styles.cevron}></Image>
+          )}
+          {startTimeExpanded && (
+            <Image source ={upward_cevron} style ={styles.cevron}></Image>
+          )}
+        </View>
+
       </TouchableOpacity>
 
       {/* End Time*/}
       <TouchableOpacity style = {styles.card} onPress = {toggleEndTime}>
-        <Text style = {styles.title}>Set {collectionType} Time</Text>
-        {!endTimeExpanded && (
-          <Image source ={downward_cevron} ></Image>
-        )}
-        {endTimeExpanded && (
-          <Image source ={upward_cevron} ></Image>
-        )}
+
+        <View style = {styles.timeContainer}>
+          <Text style = {styles.title}>Set {collectionType} Time</Text>
+          {!endTimeExpanded && (
+            <Image source ={downward_cevron} style ={styles.cevron}></Image>
+          )}
+          {endTimeExpanded && (
+            <Image source ={upward_cevron} style ={styles.cevron}></Image>
+          )}
+        </View>
       </TouchableOpacity>
 
     </ScrollView>

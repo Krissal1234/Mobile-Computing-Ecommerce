@@ -277,6 +277,16 @@ export default StyleSheet.create({
         textMonthFontWeight: 'bold',
         textDayHeaderFontWeight: 'bold',
     },
+    cevron :{
+        width:width*0.08,
+        resizeMode:'contain',
+        marginLeft:width*0.04,
+    },
+    timeContainer:{
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center',
+    },
 
       
     
