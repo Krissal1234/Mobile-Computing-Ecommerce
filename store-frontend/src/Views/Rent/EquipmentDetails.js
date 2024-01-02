@@ -1,33 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView } from 'react-native';
 import { EquipmentController } from '../../Controllers/EquipmentController';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from '../styles';
 import { Calendar } from 'react-native-calendars';
 import { colors } from '../colors';
 import downward_cevron from '../../../assets/downward_cevron.png'
 import upward_cevron from '../../../assets/upward_cevron.png'
+import { Picker } from '@react-native-picker/picker';
 
 const EquipmentDetails = ({ route}) => {
   const [equipment, setEquipment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [startTimeExpanded, setStartTimeExpanded] = useState(false);
-  const [endTimeExpanded, setEndTimeExpanded] = useState(false);
+  const [startTimeDropdown, setStartTimeDropdown] = useState(false);
+  const [endTimeDropdown, setEndTimeDropdown] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [minDate, setMinDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedStartTime, setSelectedStartTime] = useState("12:00");
+  const [selectedEndTime, setSelectedEndTime] = useState("12:00");
 
   function toggleStartTime (){
-    if(checkOpen() || startTimeExpanded){setStartTimeExpanded(!startTimeExpanded)}
+    setStartTimeDropdown(!startTimeDropdown)
   }
 
   function toggleEndTime (){
-    if(checkOpen() || endTimeExpanded){setEndTimeExpanded(!endTimeExpanded)}
-  }
-
-  function checkOpen(){
-    return startTimeExpanded || endTimeExpanded ? false : true
+    setEndTimeDropdown(!endTimeDropdown)
   }
 
   const onDayPress = (day) => {
@@ -102,6 +100,25 @@ const EquipmentDetails = ({ route}) => {
     );
   }
 
+  const times = [];
+  for (let i = 6; i <= 24; i++) {
+    times.push(`${i < 10 ? '0' + i : i}:00`); // array of times from "06:00" to "24:00"
+  }
+
+  const renderTimePicker = (timesArray, selectedTime, setSelectedTime) => {
+    return (
+      <Picker
+        selectedValue={selectedTime}
+        onValueChange={(itemValue) => setSelectedTime(itemValue)}
+        style={styles.timeDropdown}
+      >
+        {timesArray.map((time, index) => (
+          <Picker.Item label={time} value={time} key={index} />
+        ))}
+      </Picker>
+    );
+  };
+
   const deliveryType = equipment.deliveryType.charAt(0).toUpperCase() + equipment.deliveryType.slice(1);//sets delivery type with uppercase first letter
   const collectionType = deliveryType=='pickup' ? 'Drop-Off' : 'Retrieval';
   return (
@@ -147,33 +164,29 @@ const EquipmentDetails = ({ route}) => {
         />
       </View>
 
-      {/* Start Time*/}
-      <TouchableOpacity style = {styles.card} onPress = {toggleStartTime}>
-
-        <View style = {styles.timeContainer}>
-          <Text style = {styles.title}>Set {deliveryType} Time</Text>
-          {!startTimeExpanded && (
-            <Image source ={downward_cevron} style ={styles.cevron}></Image>
-          )}
-          {startTimeExpanded && (
-            <Image source ={upward_cevron} style ={styles.cevron}></Image>
-          )}
+      {/* Start Time Section */}
+      <TouchableOpacity style={styles.card} onPress={toggleStartTime} activeOpacity={1}>
+        <View style={styles.timeContainer}>
+          
+          <Text style={styles.title}>{deliveryType} Time: {selectedStartTime}</Text>
+          <Image source={startTimeDropdown ? upward_cevron : downward_cevron} style={styles.cevron} />
+          
         </View>
+
+        {startTimeDropdown && renderTimePicker(times, selectedStartTime, setSelectedStartTime)}
 
       </TouchableOpacity>
 
       {/* End Time*/}
-      <TouchableOpacity style = {styles.card} onPress = {toggleEndTime}>
+      <TouchableOpacity style={styles.card} onPress={toggleEndTime} activeOpacity={1}>
 
-        <View style = {styles.timeContainer}>
-          <Text style = {styles.title}>Set {collectionType} Time</Text>
-          {!endTimeExpanded && (
-            <Image source ={downward_cevron} style ={styles.cevron}></Image>
-          )}
-          {endTimeExpanded && (
-            <Image source ={upward_cevron} style ={styles.cevron}></Image>
-          )}
+        <View style={styles.timeContainer}>
+          <Text style={styles.title}>{collectionType} Time: {selectedEndTime}</Text>
+          <Image source={endTimeDropdown ? upward_cevron : downward_cevron} style={styles.cevron} />
         </View>
+
+        {endTimeDropdown && renderTimePicker(times, selectedEndTime, setSelectedEndTime)}
+
       </TouchableOpacity>
 
     </ScrollView>
