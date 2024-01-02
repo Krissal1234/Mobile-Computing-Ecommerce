@@ -199,6 +199,71 @@ exports.getListingsByUserUid = functions.https.onCall(async (data,context) => {
   }
 });
 
+
+
+exports.getFacilityListingsByUserUID =functions.https.onCall(async (data,context) => {
+if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
+  try {
+
+    const userUid = data.userUid;
+
+
+   
+    const facilityListings = await db.collection("facilities").where("owner.userUid", "==", userUid).get();
+   
+
+    let facilitiesList = [];
+
+    facilityListings.forEach(doc => {
+      facilitiesList.push({ id: doc.id, ...doc.data(), type: 'facility' });
+    });
+    return {
+      success: true,
+      message: 'Facilitiy Listings retrieved successfully for the user',
+      data: facilitiesList,
+    };
+  } catch (error) {
+    console.error('Error retrieving facility listings by user UID:', error);
+    return {
+      success: false,
+      message: 'Internal Server Error',
+    };
+  }
+});
+exports.getEquipmentListingsByUserUID =functions.https.onCall(async (data,context) => {
+if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
+  try {
+
+    const userUid = data.userUid;
+
+
+    const equipmentListings = await db.collection("equipment").where("owner.userUid", "==", userUid).get();
+   
+
+    let equipmentList = [];
+
+    //to append the specific document id
+    equipmentListings.forEach(doc => {
+      equipmentList.push({ id: doc.id, ...doc.data(), type: 'equipment' });
+    });
+
+    return {
+      success: true,
+      message: 'Equipment listings retrieved successfully for the user',
+      data: equipmentList,
+    };
+  } catch (error) {
+    console.error('Error retrieving equipment listings by user UID:', error);
+    return {
+      success: false,
+      message: 'Internal Server Error',
+    };
+  }
+});
 exports.getFacilityById =functions.https.onCall(async (data,context) => {
 
 try{

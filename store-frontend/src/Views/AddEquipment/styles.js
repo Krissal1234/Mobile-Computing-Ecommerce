@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import {colors} from '../colors'
-import { Dimensions } from 'react-native';
+import { StatusBar, Dimensions } from 'react-native';
 
 const{width,height} = Dimensions.get('window');
 

@@ -95,8 +95,6 @@ const AddEquipment = () => {
     });
   
     if (!result.canceled && result.assets) {
-      const selectedUri = result.assets[0].uri; // Updated to use assets array
-      console.log(selectedUri);
       setImages([selectedUri]);
     }
   };

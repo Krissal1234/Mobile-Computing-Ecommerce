@@ -1,4 +1,4 @@
-import { getListingsByUserUid,getAllListedSports,getPaymentSheet, createPaymentSheet } from '../../config/firebase';
+import {getEquipmentListingsByUserUID,getFacilitytListingsByUserUID,getListingsByUserUid,getAllListedSports,getPaymentSheet, createPaymentSheet } from '../../config/firebase';
 
 export class ListingsController {
 
@@ -61,5 +61,30 @@ export class ListingsController {
     catch (error) {
       return (error)
     }
+  }
+  static async getAllEquipmentUserListings(userUid){
+    try{
+      const response = await getEquipmentListingsByUserUID(userUid);
+      return {
+        success: true,
+        message: response.data.message,
+        data:response.data.data,
+      }
+    }catch(error){
+      console.error(error);
+    }
+  }
+  static async getAllFacilityUserListings(userUid){
+    try{
+      const response = await getFacilitytListingsByUserUID(userUid);
+      return {
+        success: true,
+        message: response.data.message,
+        data: response.data.data
+      }
+    }catch(error){
+      console.error(error);
+    }
+
   }
 }
