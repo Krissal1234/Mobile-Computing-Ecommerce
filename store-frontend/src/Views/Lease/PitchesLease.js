@@ -1,11 +1,12 @@
 import { Text, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 import styles from 'store-frontend/src/Views/styles';
-import React from 'react';
+import React, { useEffect, useState} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import PitchList from './PitchList';
 import PitchDetails from './PitchDetails';
 import { View } from 'react-native';
+import { FacilitiesController } from '../../Controllers/FacilitiesController';
 
 const Stack = createStackNavigator();
 
@@ -44,9 +45,24 @@ const dummyPitchData = [
 ];
 
 const LeasingPitches = ({ navigation }) => {
+
+  const [FacilitiesData, setFacilityData] = useState([]); // Step 2: State for equipment data
+
+  useEffect(() => {
+    const fetchAvailableFacilities = async () => {
+      const response = await FacilitiesController.getAllAvailableFacilities();
+      console.log("Available Facilities:", response);
+      if (response && response.success) {
+        setFacilityData(response.data); // Step 3: Update state with fetched data
+      }
+    };
+
+    fetchAvailableFacilities();
+  }, []);
+
   return (
     <View style={styles1.container}>
-      <PitchList data={dummyPitchData} navigation={navigation} />
+      <PitchList data={FacilitiesData} navigation={navigation} />
     </View>
   );
 };

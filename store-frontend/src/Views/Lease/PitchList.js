@@ -10,7 +10,7 @@ const PitchList = ({ data, navigation }) => {
   return (
     <View style={{ flex: 1, padding: 10 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, color: 'white', margin: 5 }}>
-        Pitch Listings:
+        Facilities Listings:
       </Text>
       <FlatList
         data={data}
@@ -22,8 +22,7 @@ const PitchList = ({ data, navigation }) => {
                 <Card.Cover source={{ uri: item.image }} style={{ width: 120, height: 80, borderRadius: 5, borderWidth: 2, borderColor: '#A2383A', marginRight: 10 }} />
                 <View style={{ flex: 1 }}>
                   <Title style={{ fontSize: 16, fontWeight: 'bold' }}>{item.title}</Title>
-                  <Paragraph style={{ marginBottom: 5 }}>{item.description1}</Paragraph>
-                  <Paragraph>{item.description2}</Paragraph>
+                  <Paragraph style={{ marginBottom: 5 }}>{item.description}</Paragraph>
                 </View>
               </Card.Content>
             </Card>
