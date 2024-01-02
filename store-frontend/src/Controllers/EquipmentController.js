@@ -1,6 +1,6 @@
+import { getStateFromPath } from '@react-navigation/native';
 import { postEquipment, getAllAvailableEquipment, filterEquipmentBySport,getEquipmentById } from '../../config/firebase';
-
-
+import { getRef,getFirebaseStorage, uploadImage ,getCloudDownloadURL} from '../../config/firebase';
 export class EquipmentController {
 
   // title: 'Boxing Gloves',
@@ -13,7 +13,7 @@ export class EquipmentController {
   //  pickupLocation: '123 Main St',
   //  images: 'image_url2',
   static async PostEquipment(equipmentData,user) {
-    const {deliveryType,pickup_location} = equipmentData;
+    const {handoverType,pickupLocation, imageReference} = equipmentData;
     equipmentData.owner = {
       userUid: user.user.uid, 
       email: user.user.email, 
@@ -22,12 +22,21 @@ export class EquipmentController {
     
     equipmentData.type = "equipment";
   
-    if (deliveryType === 'pickup') {
-      equipmentData.pickup_location = pickup_location;
+    if (handoverType === 'pickup') {
+      equipmentData.pickupLocation =pickupLocation;
     }
-     
-    try {
+     //Client side image upload to Firebase Cloud Storage
+    const image = await fetch(imageReference);
+    const blob = await image.blob();
+    try{
+    const storageRef =  getFirebaseStorage();
+    const imageRef = getRef(storageRef,`images/${user.user.uid}/${Date.now()}.jpg`);
+    
+    const downloadURL = await uploadImage(imageRef,blob);
+      delete equipmentData.imageReference;
+      equipmentData.image = downloadURL.ref.toString;
       var response = await postEquipment(equipmentData);
+
       if(response.data.success){
         return { success: true, message: 'Equipment inputted successfully'};
       }else{
@@ -86,6 +95,18 @@ export class EquipmentController {
     }
   }
 
-      
+  async uploadImage(imageRef, blob){
+    await uploadImage(imageRef,blob).then((snapshot) => {
+      console.log('Uploaded a blob');
+
+     getCloudDownloadURL(snapshot.ref).then((downloadURL) => {
+        console.log('File available at', downloadURL);
+        return downloadURL;
+
+      });
+    }).catch((error) => {
+      console.error("Error uploading image: ", error);
+    });   
+  }
 
 }

@@ -11,7 +11,6 @@ import { useContext } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import styles from 'store-frontend/src/Views/styles';
-
 import addEquipmentStyles from './styles';
 
 
@@ -20,7 +19,6 @@ const AddEquipment = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [sportCategory, setSportCategory] = useState('');
   const [availableStatus, setAvailableStatus] = useState(null);
   const [deliveryType, setDeliveryType] = useState(null);
   const [images, setImages] = useState([]);
@@ -39,7 +37,7 @@ const AddEquipment = () => {
   const [selectedSport, setSelectedSport] = useState('');
   const [isSportsDropdownVisible, setIsSportsDropdownVisible] = useState(false);
   const { sportCategories } = useContext(UserContext);
-
+  
   const handleBack = () => {
     navigation.goBack();
   };
@@ -71,7 +69,6 @@ const AddEquipment = () => {
   
   const selectSport = (item) => {
     setSelectedSport(item);
-    setSportCategory(item);
     setIsSportsDropdownVisible(false);
   };
 
@@ -96,6 +93,8 @@ const AddEquipment = () => {
     });
   
     if (!result.canceled && result.assets) {
+      const selectedUri = result.assets[0].uri; // Updated to use assets array
+      console.log(selectedUri);
       setImages([selectedUri]);
     }
   };
@@ -109,11 +108,11 @@ const AddEquipment = () => {
       title,
       description,
       price,
-      sportCategory,
+      sportCategory: selectSport,
       availableStatus,
       deliveryType,
       condition,
-      images,
+      imageReference: images,
       pickupLocation: deliveryType === 'delivery' ? null : pickupLocation,
     };
     console.log('New Equipment:', newEquipment);

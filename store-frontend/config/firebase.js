@@ -1,14 +1,16 @@
-import { getApp, initializeApp } from "firebase/app";
+import { firebase, initializeApp } from "firebase/app";
 import { getFunctions, httpsCallable, connectFunctionsEmulator } from 'firebase/functions';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import {getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 //DONT CHANGE
 const firebaseConfig = {
   apiKey: "AIzaSyBpCJtHqad3BnKh9PKURBVHQp7I6ykFCO0",
   authDomain: "sportyrental.firebaseapp.com",
   projectId: "sportyrentals",
+  storageBucket: "gs://sportyrentals.appspot.com",
   messagingSenderId: "79967591982",
   appId: "1:79967591982:android:f7f82758c2bc30443c09bf",
 };
@@ -25,6 +27,10 @@ export const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
 });
 export const login = signInWithEmailAndPassword;
+export const getFirebaseStorage = getStorage;
+export const getRef = ref;
+export const uploadImage = uploadBytes;
+export const getCloudDownloadURL = getDownloadURL;
 export const postEquipment = httpsCallable(functions,'postEquipment');
 export const postFacility = httpsCallable(functions, 'postFacility');
 export const getListingsByUserUid = httpsCallable(functions, 'getListingsByUserUid');
@@ -40,3 +46,6 @@ export const getPaymentSheet = httpsCallable(functions, 'getPaymentSheet');
 export const getCurrentOrders = httpsCallable(functions, 'getCurrentOrders');
 export const getPastOrders = httpsCallable(functions, 'getPastOrders');
 export const createPaymentSheet = httpsCallable(functions, 'createPaymentSheet');  
+export const getFacilitytListingsByUserUID= httpsCallable(functions, 'getFacilityListingsByUserUID');  
+export const getEquipmentListingsByUserUID= httpsCallable(functions, 'getEquipmentListingsByUserUID'); 
+
