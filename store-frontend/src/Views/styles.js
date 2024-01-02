@@ -290,6 +290,18 @@ export default StyleSheet.create({
     timeDropdown:{
         
     },
+    basket:{
+        height:height*0.05,
+        width:width*0.08,
+        resizeMode:'contain',
+        marginLeft:width*0.04,
+    },
+    titleBasket: {
+        fontSize: width*0.08,
+        fontWeight: '450',
+        textAlign: 'center',
+        color: colors.black,
+      },
 
       
     

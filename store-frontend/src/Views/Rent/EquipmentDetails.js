@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView } from 'react-native';
+import React, { useState, useEffect,useRef } from 'react';
+import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView,Animated } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import styles from '../styles';
 import { Calendar } from 'react-native-calendars';
 import { colors } from '../colors';
 import downward_cevron from '../../../assets/downward_cevron.png'
 import upward_cevron from '../../../assets/upward_cevron.png'
-import { Picker } from '@react-native-picker/picker';
+import basket_outline_black from '../../../assets/basket_outline_black.png'
+
 
 const EquipmentDetails = ({ route}) => {
   const [equipment, setEquipment] = useState(null);
@@ -18,15 +20,47 @@ const EquipmentDetails = ({ route}) => {
   const [endDate, setEndDate] = useState('');
   const [minDate, setMinDate] = useState(new Date().toISOString().split('T')[0]);
   const [selectedStartTime, setSelectedStartTime] = useState("12:00");
-  const [selectedEndTime, setSelectedEndTime] = useState("12:00");
+  const [selectedEndTime, setSelectedEndTime] = useState("13:00");
+  const scrollViewRef = useRef();
+  const calendarEnlarge = useRef(new Animated.Value(1)).current;
 
   function toggleStartTime (){
-    setStartTimeDropdown(!startTimeDropdown)
+    if(startDate == ''){
+      scrollToObject(250,calendarEnlarge)
+    }else{
+      setStartTimeDropdown(!startTimeDropdown)
+    }
   }
 
   function toggleEndTime (){
-    setEndTimeDropdown(!endTimeDropdown)
+    if(startDate == ''){
+      scrollToObject(250,calendarEnlarge)
+    }
+    else{
+      setEndTimeDropdown(!endTimeDropdown)
+    }
   }
+
+  function scrollToObject(yPosition,object){
+    scrollViewRef.current.scrollTo({ y: yPosition, animated: true });
+    animateEnlarge(object);
+  };
+
+  const animateEnlarge = (object) => {
+    // Enlarge
+    Animated.timing(object, {
+      toValue: 1.07, // Enlarge scale to 1.1
+      duration: 300,
+      useNativeDriver: true, // Add this line
+    }).start(() => {
+      // Then shrink back down
+      Animated.timing(object, {
+        toValue: 1, // Back to original scale
+        duration: 300,
+        useNativeDriver: true, // Add this line
+      }).start();
+    });
+  };
 
   const onDayPress = (day) => {
     if (!startDate) {
@@ -122,7 +156,7 @@ const EquipmentDetails = ({ route}) => {
   const deliveryType = equipment.deliveryType.charAt(0).toUpperCase() + equipment.deliveryType.slice(1);//sets delivery type with uppercase first letter
   const collectionType = deliveryType=='pickup' ? 'Drop-Off' : 'Retrieval';
   return (
-    <ScrollView style = {styles.container}>
+    <ScrollView style = {styles.container} ref={scrollViewRef}>
 
       {/* Img,Title,Desc */}
       <View style = {styles.card}>
@@ -137,6 +171,11 @@ const EquipmentDetails = ({ route}) => {
           {equipment.description}
           </Text>
         </TouchableOpacity>
+      </View>
+
+      {/* Condition Type */}
+      <View style = {styles.card}>
+        <Text style = {styles.title}>Condition : {equipment.condition}</Text>
       </View>
 
       {/* Price */}
@@ -154,7 +193,8 @@ const EquipmentDetails = ({ route}) => {
       </View>
 
       {/* Calendar */}
-      <View style = {styles.card}>
+      <Animated.View style={[styles.card, {transform: [{scale: calendarEnlarge}]}]}>
+
         <Calendar
           onDayPress={onDayPress}
           markedDates={getMarkedDates()}
@@ -162,7 +202,7 @@ const EquipmentDetails = ({ route}) => {
           theme={styles.calendarTheme}
           minDate={minDate}
         />
-      </View>
+      </Animated.View>
 
       {/* Start Time Section */}
       <TouchableOpacity style={styles.card} onPress={toggleStartTime} activeOpacity={1}>
@@ -187,6 +227,13 @@ const EquipmentDetails = ({ route}) => {
 
         {endTimeDropdown && renderTimePicker(times, selectedEndTime, setSelectedEndTime)}
 
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.card}>
+        <View style={styles.timeContainer}>
+          <Text style={styles.titleBasket}>Buy Now</Text>
+          <Image source={basket_outline_black} style={styles.basket} />
+        </View>
       </TouchableOpacity>
 
     </ScrollView>
