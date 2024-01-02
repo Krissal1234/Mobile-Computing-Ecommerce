@@ -71,6 +71,7 @@ const AddEquipment = () => {
   
   const selectSport = (item) => {
     setSelectedSport(item);
+    setSportCategory(item);
     setIsSportsDropdownVisible(false);
   };
 
