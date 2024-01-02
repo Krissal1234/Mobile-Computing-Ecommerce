@@ -19,11 +19,10 @@ const EquipmentList = ({ data, navigation }) => {
           <TouchableOpacity onPress={() => handleItemPress(item)}>
             <Card style={{ marginVertical: 5, margin: 5, borderWidth: 2, borderColor: '#A2383A' }}>
               <Card.Content style={{ flexDirection: 'row' }}>
-                <Card.Cover source={{ uri: item.image }} style={{ width: 120, height: 80, borderRadius: 5, borderWidth: 2, borderColor: '#A2383A', marginRight: 10 }} />
+                <Card.Cover source={{ uri: item.images }} style={{ width: 120, height: 80, borderRadius: 5, borderWidth: 2, borderColor: '#A2383A', marginRight: 10 }} />
                 <View style={{ flex: 1 }}>
                   <Title style={{ fontSize: 16, fontWeight: 'bold' }}>{item.title}</Title>
-                  <Paragraph style={{ marginBottom: 5 }}>{item.description1}</Paragraph>
-                  <Paragraph>{item.description2}</Paragraph>
+                  <Paragraph style={{ marginBottom: 5 }}>{item.description}</Paragraph>
                 </View>
               </Card.Content>
             </Card>
