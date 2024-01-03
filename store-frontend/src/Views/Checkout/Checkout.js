@@ -21,7 +21,7 @@ const Checkout = () => {
         <View style={{backgroundColor: "white",alignItems: "center", marginVertical: 10, padding: 20, borderRadius: 10}}>
             <Text style={{alignItems: "center"}}>Price: €10.00 Per Hour</Text>
         </View>
-      <Button title='Buy now' onPress={() => openPaymentSheet()}/>
+      <Button title='Buy now(Test)' onPress={() => openPaymentSheet()}/>
     </View>
   )
 }
