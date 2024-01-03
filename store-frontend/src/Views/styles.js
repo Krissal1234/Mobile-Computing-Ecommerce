@@ -172,12 +172,18 @@ export default StyleSheet.create({
         marginVertical:height*0.05,
     },
     itemPreview:{
-        marginHorizontal: width*0.1,
-        paddingHorizontal: width*0.03,
-        paddingVertical: height*0.03,
-        backgroundColor: colors.darkBlue,
+        marginHorizontal: width*0.02,
+        width:width*0.4,
+        height:height*0.19,
+        backgroundColor: colors.white,
         justifyContent:'center',
         alignContent:'center',
+        resizeMode:'contain',
+        borderRadius: height*0.035,
+        borderWidth: 3,
+        borderColor: colors.red,
+        overflow:'hidden',
+        
     },
     itemImg:{
         height:height*0.19,

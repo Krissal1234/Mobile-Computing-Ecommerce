@@ -160,7 +160,7 @@ const EquipmentDetails = ({ route}) => {
 
       {/* Img,Title,Desc */}
       <View style = {styles.card}>
-        <Image source = {{uri: equipment.image}} style = {styles.card}></Image>
+        <Image source = {{uri: equipment.imageReference}} style = {styles.detailsImage}></Image>
         <Text style = {styles.title}>{equipment.title}</Text>
         <TouchableOpacity onPress={toggleExpanded} style={styles.descriptionContainer}>
           <Text
