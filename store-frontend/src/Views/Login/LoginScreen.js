@@ -8,6 +8,7 @@ import { UserContext } from '../../Contexts/UserContext';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import { ListingsController } from '../../Controllers/ListingsController';
 import { getEquipmentById } from '../../../config/firebase';
+import { getEquipmentListingsByUserUID } from '../../../config/firebase';
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

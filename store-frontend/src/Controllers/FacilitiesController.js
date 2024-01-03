@@ -1,5 +1,10 @@
 import { postFacility,getAllAvailableFacilities,filterFacilitiesBySport } from '../../config/firebase';
-
+import {
+  getRef,
+  getFirebaseStorage,
+  uploadImage,
+  getCloudDownloadURL,
+} from "../../config/firebase";
 
 
 
@@ -14,8 +19,7 @@ export class FacilitiesController {
   // location,
    static async postFacility(facilityData, user){
         //Adding owner field
-    
-          //Adding owner to the facility data
+
         facilityData.owner = {
           userUid: user.user.uid, 
           email: user.user.email, 
@@ -24,21 +28,40 @@ export class FacilitiesController {
         facilityData.type = "facility";
         
         try {
+          await this._handleImageUpload(facilityData, user);
+
           var response = await postFacility(facilityData);
           if(response.data.success){
-            console.log('Equipment posted successfully:', response);
-            return { success: true, message: 'Equipment inputted successfully'};
+            console.log('Facility posted successfully:', response);
+            return { success: true, message: 'Facility inputted successfully'};
           }else{
             console.error(response.data.message);
-            return {success: false, message: "Failed to input Equipment"}
+            return {success: false, message: "Failed to input Facility"}
           }
         } catch (error) {
-          console.error('Error posting equiprment:', error);
-          return { success: false, message: "An error occurred when inputting your equipment." };
+          console.error('Error posting Facility:', error);
+          return { success: false, message: "An error occurred when inputting your Facility." };
         }
       } 
       
 
+      static async _handleImageUpload(facilityData, user) {
+        const { imageReference } = facilityData;
+        const image = await fetch(imageReference);
+        const blob = await image.blob();
+    
+        const storageRef = getFirebaseStorage();
+        const imageRef = getRef(
+          storageRef,
+          `images/${user.user.uid}/${Date.now()}.jpg`
+        );
+        const snapshot = await uploadImage(imageRef, blob);
+        const downloadURL = await getCloudDownloadURL(snapshot.ref);
+        console.log("Download URL: ", downloadURL);
+    
+        facilityData.imageReference = downloadURL;
+      }
+    
 
       static async getAllAvailableFacilities(){
         //return all facilties with availability status true

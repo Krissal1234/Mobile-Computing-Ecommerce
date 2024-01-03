@@ -6,7 +6,6 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import { UserContext } from '../../Contexts/UserContext';
-import { ListingsController } from '../../Controllers/ListingsController';
 import { useContext } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
@@ -97,15 +96,14 @@ const AddEquipment = () => {
 
   const handleAddEquipment = async () => {
 
-    const available = availableStatus === 'Yes'; 
-
+ 
     var parsedPrice = parseInt(price);
     const newEquipment = {
       title,
       description,
       price: parsedPrice,
       sportCategory:  selectedSport,
-      availableStatus: available,
+      availableStatus,
       deliveryType,
       condition,
       imageReference: images[0],
@@ -137,7 +135,7 @@ const AddEquipment = () => {
   };
 
   const handleSelectAvailable = (item) => {
-    setAvailableStatus(item);
+    setAvailableStatus(item === "Yes");
     toggleAvailableDropdown();
   };
 

@@ -207,7 +207,7 @@ if (!context.auth) {
   }
   try {
 
-    const userUid = data.userUid;
+    const userUid = data;
 
 
    
@@ -238,7 +238,7 @@ if (!context.auth) {
   }
   try {
 
-    const userUid = data.userUid;
+    const userUid = data;
 
 
     const equipmentListings = await db.collection("equipment").where("owner.userUid", "==", userUid).get();

@@ -6,18 +6,17 @@ import homeStyles from './styles';
 import { UserContext } from '../../Contexts/UserContext';
 
 
-
 export default function Home({ navigation }) {
   const { setAccountType } = useContext(UserContext);
   const {setShowFilter} = useContext(UserContext);
-
+  const { user, setUser } = useContext(UserContext);
   const handleRentClick = async () => {
     setAccountType('Renter');
     setShowFilter(true);
     navigation.navigate('Core');
   };
 
-  const handleLeaseClick = () => {
+  const handleLeaseClick = async () => {
     setAccountType('Leaser');
     navigation.navigate('Core');
   };
