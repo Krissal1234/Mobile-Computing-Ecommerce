@@ -73,12 +73,14 @@ import Test from "./src/Views/Rent/Equipment";
 
 //   }
 // }, []);
+import { Text, View, Button } from "react-native";
+import * as Notifications from "expo-notifications";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   const [loading, setLoading] = useState(true);
-   
+
   return (
     <UserProvider>
       <NavigationContainer>
@@ -90,7 +92,6 @@ export default function App() {
           <Stack.Screen name="Registration" component={RegisterScreen}/>
           <Stack.Screen name="Core" component={Core} />
           <Stack.Screen name="Equipment" component={Equipment} />
-
           <Stack.Screen name="Test" component={Test} />
 
           
