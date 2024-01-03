@@ -70,89 +70,34 @@ const EquipmentDetails = ({ route }) => {
 
 
       <Card style={styles.card}>
-        <Text style={styles.dateTitle}>
-          {selectedStartDate && selectedEndDate
-            ? `${selectedStartDate.dateString} to ${selectedEndDate.dateString}`
-            : 'Select Date Range'}
-        </Text>
-
-        <Calendar
-          onDayPress={(day) => handleDateSelect(day)}
-          markedDates={{
-            [selectedStartDate?.dateString || '']: {
-              selected: true,
-              startingDay: true,
-              color: '#A2383A',
-              textColor: 'white',
-            },
-            [selectedEndDate?.dateString || '']: {
-              selected: true,
-              endingDay: true,
-              color: '#A2383A',
-              textColor: 'white',
-            },
-          }}
-        />
+        <Text style={styles.price}>Sport Category: {equipment.price}</Text>
       </Card>
 
 
-      
-    <Card style={styles.card}>
-      <Text style={styles.subtitle}>Choose Pickup or Delivery:</Text>
-      <View style={styles.switchContainer}>
-        <Text style={styles.switchText}>Delivery</Text>
-        <Switch value={pickup} onValueChange={togglePickup} />
-        <Text style={styles.switchText}>Pickup</Text>
-      </View>
 
-      {pickup ? (
-        <View>
-          <Text style={styles.subtitle}>Pickup Location:</Text>
-          <MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: equipment.latitude,
-              longitude: equipment.longitude,
-              latitudeDelta: 0.1,
-              longitudeDelta: 0.1,
-              
-            }}
-          >
-            <Marker coordinate={pickupLocation} title="Pickup Location" />
-          </MapView>
-          <Text style={styles.subtitle}>Pinpoint Pickup Location:</Text>
-          <TextInput
-            style={styles.detailsinput}
-            placeholder="Enter pickup address"
-            value={`${pickupLocation.latitude}, ${pickupLocation.longitude}`}
-            editable={false} // Make the input non-editable for pickup
-          />
-        </View>
-      ) : (
-        <View>
-          <Text style={styles.subtitle}>Delivery Location:</Text>
-          <MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: equipment.latitude,
-              longitude: equipment.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-            onPress={handleMapPress} // Allow the user to pick a location for delivery
-          >
-            <Marker coordinate={pickupLocation} title="Delivery Location" />
-          </MapView>
-          <Text style={styles.subtitle}>Pinpoint Delivery Location:</Text>
-          <TextInput
-            style={styles.detailsinput}
-            placeholder="Enter delivery address"
-            value={`${pickupLocation.latitude}, ${pickupLocation.longitude}`}
-            editable={false} // Make the input non-editable for delivery
-          />
-        </View>
-      )}
-    </Card>
+      <Card style={styles.card}>
+        <Text style={styles.price}>Available: {equipment.price} Per Day</Text>
+      </Card>
+
+
+      <Card style={styles.card}>
+        <Text style={styles.price}>Delivery Type: {equipment.price} Per Day</Text>
+      </Card>
+
+
+      <Card style={styles.card}>
+        <Text style={styles.price}>Location: {equipment.price} Per Day</Text>
+      </Card>
+
+      <Card style={styles.card}>
+        <Text style={styles.price}>Condition: {equipment.price} Per Day</Text>
+      </Card>
+
+
+
+   
+    
+     
 
 
       <TouchableOpacity
