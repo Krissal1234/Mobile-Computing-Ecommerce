@@ -103,14 +103,14 @@ const AddEquipment = () => {
 
   const handleAddEquipment = async () => {
 
-    const availableStatus = availableOptions === 'Yes'; 
+    const available = availableStatus === 'Yes'; 
 
     const newEquipment = {
       title,
       description,
       price,
       sportCategory:  selectedSport,
-      availableStatus,
+      availableStatus: available,
       deliveryType,
       condition,
       imageReference: images,

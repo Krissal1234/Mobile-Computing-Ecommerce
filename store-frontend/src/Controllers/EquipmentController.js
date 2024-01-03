@@ -31,8 +31,6 @@ export class EquipmentController {
     const storageRef =  getFirebaseStorage();
     const imageRef = getRef(storageRef,`images/${user.user.uid}/${Date.now()}.jpg`);
     
-
-      console.log("HELO?");
       const snapshot = await uploadImage(imageRef, blob);
   
       const downloadURL = await getCloudDownloadURL(snapshot.ref);
@@ -62,7 +60,6 @@ export class EquipmentController {
       }else{
         return{success: false, message: "Failed to retrieve available equipment"+ response.data.message}
       }
-          
     }catch(error){
       return {success: false, message: "Internal Server Error"}
     }
