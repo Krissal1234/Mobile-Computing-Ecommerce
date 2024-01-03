@@ -30,12 +30,13 @@ const AddEquipment = () => {
   const [condition, setCondition] = useState('');
   const [isConditionDropdownVisible, setIsConditionDropdownVisible] = useState(false);
   const deliveryOptions = ['pickup', 'delivery']; //TODO: show capitals in UI but pass it to the firebase function in lowercase to keep lowercase standard. 
-  const availableOptions = ['Yes', 'No']; //TODO: Change this to yes or no for frontend, but then you will pass true or false to the firebase function
+  const availableOptions = ['Yes', 'No']; 
   const conditionOptions = ['New', 'Used', 'Refurbished'];
   const [sports, setSports] = useState([]);
   const [loadingSports, setLoadingSports] = useState(true);
   const [selectedSport, setSelectedSport] = useState('');
   const [isSportsDropdownVisible, setIsSportsDropdownVisible] = useState(false);
+  //Used for select sportCategory drop down
   const { sportCategories } = useContext(UserContext);
   
   const handleBack = () => {
@@ -108,7 +109,7 @@ const AddEquipment = () => {
       title,
       description,
       price,
-      sportCategory: selectSport,
+      sportCategory:  selectedSport,
       availableStatus,
       deliveryType,
       condition,

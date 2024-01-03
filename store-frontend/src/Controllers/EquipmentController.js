@@ -10,8 +10,7 @@ export class EquipmentController {
   //  availableStatus: 'Available',
   //  deliveryType: 'pickup',
   //  description: 'High-quality leather boxing gloves',
-  //  pickupLocation: '123 Main St',
-  //  images: 'image_url2',
+  //  imageReference: 'image_url2',
   static async PostEquipment(equipmentData,user) {
     const {handoverType,pickupLocation, imageReference} = equipmentData;
     equipmentData.owner = {
@@ -32,11 +31,16 @@ export class EquipmentController {
     const storageRef =  getFirebaseStorage();
     const imageRef = getRef(storageRef,`images/${user.user.uid}/${Date.now()}.jpg`);
     
-    const downloadURL = await uploadImage(imageRef,blob);
-      delete equipmentData.imageReference;
-      equipmentData.image = downloadURL.ref.toString;
-      var response = await postEquipment(equipmentData);
 
+      console.log("HELO?");
+      const snapshot = await uploadImage(imageRef, blob);
+  
+      const downloadURL = await getCloudDownloadURL(snapshot.ref);
+      console.log("download url: "+ downloadURL);
+      
+      equipmentData.imageReference =  downloadURL;
+
+      var response = await postEquipment(equipmentData);
       if(response.data.success){
         return { success: true, message: 'Equipment inputted successfully'};
       }else{
@@ -93,20 +97,6 @@ export class EquipmentController {
     }catch(error){
       return {success: false, message: error}
     }
-  }
-
-  async uploadImage(imageRef, blob){
-    await uploadImage(imageRef,blob).then((snapshot) => {
-      console.log('Uploaded a blob');
-
-     getCloudDownloadURL(snapshot.ref).then((downloadURL) => {
-        console.log('File available at', downloadURL);
-        return downloadURL;
-
-      });
-    }).catch((error) => {
-      console.error("Error uploading image: ", error);
-    });   
   }
 
 }
