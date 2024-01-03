@@ -105,10 +105,11 @@ const AddEquipment = () => {
 
     const available = availableStatus === 'Yes'; 
 
+    var parsedPrice = parseInt(price);
     const newEquipment = {
       title,
       description,
-      price,
+      price: parsedPrice,
       sportCategory:  selectedSport,
       availableStatus: available,
       deliveryType,
