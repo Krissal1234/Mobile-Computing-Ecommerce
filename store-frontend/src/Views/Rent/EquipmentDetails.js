@@ -1,5 +1,5 @@
-import React, { useState, useEffect,useRef } from 'react';
-import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView,Animated,Button,Modal} from 'react-native';
+import React, { useState, useEffect,useRef, useContext } from 'react';
+import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView,Animated,Modal } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import styles from '../styles';
@@ -8,6 +8,7 @@ import { colors } from '../colors';
 import downward_cevron from '../../../assets/downward_cevron.png'
 import upward_cevron from '../../../assets/upward_cevron.png'
 import basket_outline_black from '../../../assets/basket_outline_black.png'
+import { UserContext } from '../../Contexts/UserContext';
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 
@@ -35,7 +36,7 @@ const EquipmentDetails = ({ route}) => {
   const [expoPushToken, setExpoPushToken] = useState("");
   const scrollViewRef = useRef();
   const calendarEnlarge = useRef(new Animated.Value(1)).current;
-
+  const {user} = useContext(UserContext);
   function toggleStartTime (){
     if(startDate == ''){
       scrollToObject(250,calendarEnlarge)
@@ -73,6 +74,7 @@ const EquipmentDetails = ({ route}) => {
       }).start();
     });
   };
+
 
   const onDayPress = (day) => {
     if (!startDate) {
@@ -113,6 +115,22 @@ const EquipmentDetails = ({ route}) => {
     }
     return markedDates;
   };
+
+  const handleBuyNow = () => {
+   
+    const newOrder = {
+      category : "equipment",
+      itemId: route.params,
+      pricePerHour: equipment.pricePerHour,
+      rentalPeriod: {
+        start: startDate,
+        end: endDate,
+      }
+   //   deliveryType
+    }
+
+    
+  }
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
