@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect,useRef, useContext } from 'react';
 import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView,Animated } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { EquipmentController } from '../../Controllers/EquipmentController';
@@ -8,6 +8,7 @@ import { colors } from '../colors';
 import downward_cevron from '../../../assets/downward_cevron.png'
 import upward_cevron from '../../../assets/upward_cevron.png'
 import basket_outline_black from '../../../assets/basket_outline_black.png'
+import { UserContext } from '../../Contexts/UserContext';
 
 
 const EquipmentDetails = ({ route}) => {
@@ -23,7 +24,7 @@ const EquipmentDetails = ({ route}) => {
   const [selectedEndTime, setSelectedEndTime] = useState("13:00");
   const scrollViewRef = useRef();
   const calendarEnlarge = useRef(new Animated.Value(1)).current;
-
+  const {user} = useContext(UserContext);
   function toggleStartTime (){
     if(startDate == ''){
       scrollToObject(250,calendarEnlarge)
@@ -101,6 +102,22 @@ const EquipmentDetails = ({ route}) => {
     }
     return markedDates;
   };
+
+  const handleBuyNow = () => {
+   
+    const newOrder = {
+      category : "equipment",
+      itemId: route.params,
+      pricePerHour: equipment.pricePerHour,
+      rentalPeriod: {
+        start: startDate,
+        end: endDate,
+      }
+   //   deliveryType
+    }
+
+    
+  }
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
@@ -229,7 +246,7 @@ const EquipmentDetails = ({ route}) => {
 
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.card}>
+      <TouchableOpacity style={styles.card} onPress={handleBuyNow}>
         <View style={styles.timeContainer}>
           <Text style={styles.titleBasket}>Buy Now</Text>
           <Image source={basket_outline_black} style={styles.basket} />
