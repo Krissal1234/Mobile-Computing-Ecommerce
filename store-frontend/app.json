@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.isaas.storefrontend"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,10 +24,16 @@
         "googleServicesFile": "../store-backend/firebase",
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.isaas.storefrontend"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7ed36875-3351-43f2-abf2-2c489d4f46f1"
+      }
     }
   }
 }

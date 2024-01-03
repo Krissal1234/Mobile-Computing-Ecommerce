@@ -1,5 +1,5 @@
-import React, { useState, useEffect,useRef } from 'react';
-import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView,Animated } from 'react-native';
+import React, { useState, useEffect,useRef, useContext } from 'react';
+import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView,Animated,Modal } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import styles from '../styles';
@@ -8,7 +8,17 @@ import { colors } from '../colors';
 import downward_cevron from '../../../assets/downward_cevron.png'
 import upward_cevron from '../../../assets/upward_cevron.png'
 import basket_outline_black from '../../../assets/basket_outline_black.png'
+import { UserContext } from '../../Contexts/UserContext';
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true, // Show an alert box when a notification is received
+    shouldPlaySound: true, // Play a sound when a notification is received
+    shouldSetBadge: false, // Do not update the app icon badge when a notification is received
+  }),
+});
 
 const EquipmentDetails = ({ route}) => {
   const [equipment, setEquipment] = useState(null);
@@ -19,11 +29,14 @@ const EquipmentDetails = ({ route}) => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [minDate, setMinDate] = useState(new Date().toISOString().split('T')[0]);
+  const [isModalVisible, setModalVisible] = useState(false);
   const [selectedStartTime, setSelectedStartTime] = useState("12:00");
   const [selectedEndTime, setSelectedEndTime] = useState("13:00");
+  const [notification, setNotification] = useState(false);
+  const [expoPushToken, setExpoPushToken] = useState("");
   const scrollViewRef = useRef();
   const calendarEnlarge = useRef(new Animated.Value(1)).current;
-
+  const {user} = useContext(UserContext);
   function toggleStartTime (){
     if(startDate == ''){
       scrollToObject(250,calendarEnlarge)
@@ -61,6 +74,7 @@ const EquipmentDetails = ({ route}) => {
       }).start();
     });
   };
+
 
   const onDayPress = (day) => {
     if (!startDate) {
@@ -102,6 +116,22 @@ const EquipmentDetails = ({ route}) => {
     return markedDates;
   };
 
+  const handleBuyNow = () => {
+   
+    const newOrder = {
+      category : "equipment",
+      itemId: route.params,
+      pricePerHour: equipment.pricePerHour,
+      rentalPeriod: {
+        start: startDate,
+        end: endDate,
+      }
+   //   deliveryType
+    }
+
+    
+  }
+
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
   };
@@ -121,6 +151,29 @@ const EquipmentDetails = ({ route}) => {
     };
     fetchEquipment();
   }, []);
+
+
+  useEffect(() => {
+    // Registers for push notifications and stores the token
+    registerForPushNotificationsAsync().then((token) =>
+    setExpoPushToken(token)
+    );
+
+    // Sets up listeners for notification events
+    const subscription = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        setNotification(notification); // Updates state when a notification is received
+      }
+    );
+
+    // Cleans up listeners on component unmount
+    return () => {
+      subscription.remove();
+      console.log("subs: " + subscription + " removed ");
+
+    };
+  }, []);
+
 
   if (loading) {
     return <ActivityIndicator />; // or some loading screen
@@ -155,6 +208,80 @@ const EquipmentDetails = ({ route}) => {
 
   const deliveryType = equipment.deliveryType.charAt(0).toUpperCase() + equipment.deliveryType.slice(1);//sets delivery type with uppercase first letter
   const collectionType = deliveryType=='pickup' ? 'Drop-Off' : 'Retrieval';
+
+  async function scheduleLocalNotification() {
+    const notificationContent = {
+      title: "Item Rent Request: " +equipment.title,
+      body: "Your request has been received and the owner will be in contact shortly",
+      data: {
+      startDate: startDate,
+      endDate: endDate,
+      startTime: selectedStartTime,
+      endTime: selectedEndTime,
+      totalPrice: equipment.price,
+      }
+    };
+  
+    console.log("Notification Content:", notificationContent);
+    console.log("Local notification scheduled");
+  
+    await Notifications.scheduleNotificationAsync({
+      content: notificationContent,
+      trigger: { seconds: 1}, // Shows the notification after a delay of 2 seconds
+    });
+  
+    console.log("Local notification should have been received");
+  }
+
+  const openModal = async () => {
+    console.log("Button Pressed");
+    setModalVisible(true);
+    await scheduleLocalNotification();
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+   
+  async function registerForPushNotificationsAsync() {
+    let token;
+  
+    if (Platform.OS === "android") {
+      // Configures notification behavior for Android
+      await Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+      });
+    }
+  
+    if (Device.isDevice) {
+      // Check the current permissions status
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+  
+      // If we don't have permission, we ask for it
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") {
+        alert("Failed to get push token for push notification!");
+        return;
+      }
+  
+      // Get the push token
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert("Must use physical device for Push Notifications");
+    }
+  
+    return token;
+  }
+
   return (
     <ScrollView style = {styles.container} ref={scrollViewRef}>
 
@@ -229,14 +356,37 @@ const EquipmentDetails = ({ route}) => {
 
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.card}>
+      {/* Buy Now */}
+      <TouchableOpacity  onPress={openModal} style={styles.card}>
         <View style={styles.timeContainer}>
-          <Text style={styles.titleBasket}>Buy Now</Text>
+          <Text style = {styles.title}>Press to schedule a local notification</Text>
           <Image source={basket_outline_black} style={styles.basket} />
         </View>
       </TouchableOpacity>
 
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={closeModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text>Sporty Rentals</Text>
+                <Text>{notification && notification.request.content.title}{" "}</Text>
+                <Text>Start Date: {notification && notification.request.content.data.startDate}</Text>
+                <Text>Start Time: {notification && notification.request.content.data.startTime}</Text>
+                <Text>End Date: {notification && notification.request.content.data.endDate}</Text>
+                <Text>End Date: {notification && notification.request.content.data.endTime}</Text>
+                <Text>Total Price: {notification && notification.request.content.data.totalPrice}</Text>
+            <TouchableOpacity onPress={closeModal} style={styles.modalCloseButton}>
+              <Text style={styles.modalCloseButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
+    
   );
 };
 
