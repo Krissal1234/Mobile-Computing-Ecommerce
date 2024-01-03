@@ -33,7 +33,6 @@ const AddEquipment = () => {
   const availableOptions = ['Yes', 'No']; 
   const conditionOptions = ['New', 'Used', 'Refurbished'];
   const [sports, setSports] = useState([]);
-  const [loadingSports, setLoadingSports] = useState(true);
   const [selectedSport, setSelectedSport] = useState('');
   const [isSportsDropdownVisible, setIsSportsDropdownVisible] = useState(false);
   //Used for select sportCategory drop down
@@ -47,9 +46,6 @@ const AddEquipment = () => {
   useEffect(() => {
     const fetchSports = async () => {
       try {
-        setLoadingSports(true);
-        // const response = await ListingsController.getAllSports();
-        
         if (Array.isArray(sportCategories)) {
           setSports(["No Filter", ...sportCategories]);
         } else {
@@ -60,9 +56,7 @@ const AddEquipment = () => {
       } catch (error) {
         console.error("Error fetching sports:", error);
         setSports(["No Categoires"]); // Set a default or empty array in case of error
-      } finally {
-        setLoadingSports(false);
-      }
+      } 
     };
   
     fetchSports();
@@ -114,7 +108,7 @@ const AddEquipment = () => {
       availableStatus: available,
       deliveryType,
       condition,
-      imageReference: images,
+      imageReference: images[0],
       pickupLocation: deliveryType === 'delivery' ? null : pickupLocation,
     };
     console.log('New Equipment:', newEquipment);

@@ -13,6 +13,7 @@ export class EquipmentController {
   //  imageReference: 'image_url2',
   static async PostEquipment(equipmentData,user) {
     const {handoverType,pickupLocation, imageReference} = equipmentData;
+
     equipmentData.owner = {
       userUid: user.user.uid, 
       email: user.user.email, 
@@ -22,7 +23,7 @@ export class EquipmentController {
     equipmentData.type = "equipment";
   
     if (handoverType === 'pickup') {
-      equipmentData.pickupLocation =pickupLocation;
+      equipmentData.pickupLocation = pickupLocation;
     }
      //Client side image upload to Firebase Cloud Storage
     const image = await fetch(imageReference);

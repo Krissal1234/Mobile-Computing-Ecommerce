@@ -30,8 +30,6 @@ const AddPitch = () => {
     navigation.goBack();
   };
 
-
-
   useEffect(() => {
     setSports(["No Filter", ...sportCategories]);
   }, [sportCategories]);
@@ -57,13 +55,15 @@ const AddPitch = () => {
   };
 
   const handleAddPitch = async () => {
+    const available = availableStatus === "Yes";
+    const parsedPrice = parseInt(price);
     const newPitch = {
       title,
       description,
-      price,
-      availableStatus,
-      images,
-      pickupLocation,
+      price:parsedPrice,
+      availableStatus: available,
+      imageReference: images,
+      location,
     };
 
     console.log('New Pitch:', newPitch);
