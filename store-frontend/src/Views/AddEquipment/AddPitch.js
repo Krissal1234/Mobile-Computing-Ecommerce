@@ -38,6 +38,20 @@ const AddPitch = () => {
   const { user, sportCategories } = useContext(UserContext);
   const availableOptions = ["Yes", "No"];
   const [sports, setSports] = useState([]);
+  const [selectedSport, setSelectedSport] = useState('');
+  const [isSportsDropdownVisible, setIsSportsDropdownVisible] = useState(false);
+
+
+  const selectSport = (item) => {
+    setSelectedSport(item);
+    setIsSportsDropdownVisible(false);
+  };
+  
+  const renderSportItem = ({ item }) => (
+    <TouchableOpacity onPress={() => selectSport(item)}>
+      <Text style={addEquipmentStyles.dropdownItem}>{item}</Text>
+    </TouchableOpacity>
+  );
 
   const handleBack = () => {
     navigation.goBack();
@@ -74,6 +88,7 @@ const AddPitch = () => {
       title,
       description,
       price: parsedPrice,
+      sportCategory:  selectedSport,
       availableStatus,
       imageReference: images[0],
       location: pickupLocation,
@@ -142,6 +157,38 @@ const AddPitch = () => {
             value={price}
             onChangeText={setPrice}
           />
+    {/* Sport Category Dropdown */}
+    <Text style={addEquipmentStyles.label}>Sport Category</Text>
+            <View style={addEquipmentStyles.input}>
+            <TouchableOpacity 
+              style={addEquipmentStyles.dropdownButton}
+              onPress={() => setIsSportsDropdownVisible(true)}
+            >
+              <Text style={addEquipmentStyles.dropdownButtonText}>
+                {selectedSport || 'Select Sport Category'}
+              </Text>
+            </TouchableOpacity>
+
+            {/* Dropdown Modal for Sports */}
+            <Modal
+              transparent={true}
+              visible={isSportsDropdownVisible}
+              animationType="slide"
+            >
+              <TouchableOpacity
+                style={addEquipmentStyles.dropdownOverlay}
+                onPress={() => setIsSportsDropdownVisible(false)}
+              />
+              <View style={addEquipmentStyles.dropdownContainer}>
+                <FlatList
+                  data={sports}
+                  renderItem={renderSportItem}
+                  keyExtractor={(item) => item}
+                />
+              </View>
+            </Modal>
+            </View>
+              
 
           <Text style={addEquipmentStyles.label}>Available</Text>
           <View style={addEquipmentStyles.input}>
