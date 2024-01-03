@@ -308,8 +308,38 @@ export default StyleSheet.create({
         textAlign: 'center',
         color: colors.black,
       },
-
-      
-    
-
+      modalOpenButton: {
+        backgroundColor: 'blue',
+        borderRadius: 5,
+        padding: 10,
+        elevation: 2,
+      },
+      modalTextStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
+      modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      },
+      modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+      },
+      modalCloseButton: {
+        marginTop: 20,
+        padding: 10,
+        backgroundColor: 'red',
+        borderRadius: 5,
+      },
+      modalCloseButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
 })

@@ -51,7 +51,7 @@ const PitchDetails = ({ route }) => {
       </TouchableOpacity>
 
       <Card style={styles.card}>
-        <Image source={{ uri: pitch.imagePath}} style={styles.detailsImage} />
+        <Image source={{ uri: pitch.imageReference}} style={styles.detailsImage} />
         <Text style={styles.title}>{pitch.title}</Text>
         <Text style={styles.description}>{pitch.description}</Text>
       </Card>
