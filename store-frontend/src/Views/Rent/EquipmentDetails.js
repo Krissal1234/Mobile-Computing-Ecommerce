@@ -9,7 +9,15 @@ import downward_cevron from '../../../assets/downward_cevron.png'
 import upward_cevron from '../../../assets/upward_cevron.png'
 import basket_outline_black from '../../../assets/basket_outline_black.png'
 import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true, // Show an alert box when a notification is received
+    shouldPlaySound: true, // Play a sound when a notification is received
+    shouldSetBadge: false, // Do not update the app icon badge when a notification is received
+  }),
+});
 
 const EquipmentDetails = ({ route}) => {
   const [equipment, setEquipment] = useState(null);
@@ -24,6 +32,7 @@ const EquipmentDetails = ({ route}) => {
   const [selectedStartTime, setSelectedStartTime] = useState("12:00");
   const [selectedEndTime, setSelectedEndTime] = useState("13:00");
   const [notification, setNotification] = useState(false);
+  const [expoPushToken, setExpoPushToken] = useState("");
   const scrollViewRef = useRef();
   const calendarEnlarge = useRef(new Animated.Value(1)).current;
 
@@ -127,10 +136,14 @@ const EquipmentDetails = ({ route}) => {
 
 
   useEffect(() => {
+    // Registers for push notifications and stores the token
+    registerForPushNotificationsAsync().then((token) =>
+    setExpoPushToken(token)
+    );
+
     // Sets up listeners for notification events
     const subscription = Notifications.addNotificationReceivedListener(
       (notification) => {
-        console.log("subs: " + subscription + " / notif: " + notification);
         setNotification(notification); // Updates state when a notification is received
       }
     );
@@ -178,18 +191,10 @@ const EquipmentDetails = ({ route}) => {
   const deliveryType = equipment.deliveryType.charAt(0).toUpperCase() + equipment.deliveryType.slice(1);//sets delivery type with uppercase first letter
   const collectionType = deliveryType=='pickup' ? 'Drop-Off' : 'Retrieval';
 
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true, // Show an alert box when a notification is received
-      shouldPlaySound: true, // Play a sound when a notification is received
-      shouldSetBadge: false, // Do not update the app icon badge when a notification is received
-    }),
-  });
-
   async function scheduleLocalNotification() {
     const notificationContent = {
-      title: equipment.title,
-      body: null,
+      title: "Item Rent Request: " +equipment.title,
+      body: "Your request has been received and the owner will be in contact shortly",
       data: {
       startDate: startDate,
       endDate: endDate,
@@ -220,6 +225,45 @@ const EquipmentDetails = ({ route}) => {
     setModalVisible(false);
   };
    
+  async function registerForPushNotificationsAsync() {
+    let token;
+  
+    if (Platform.OS === "android") {
+      // Configures notification behavior for Android
+      await Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+      });
+    }
+  
+    if (Device.isDevice) {
+      // Check the current permissions status
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+  
+      // If we don't have permission, we ask for it
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") {
+        alert("Failed to get push token for push notification!");
+        return;
+      }
+  
+      // Get the push token
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert("Must use physical device for Push Notifications");
+    }
+  
+    return token;
+  }
+
   return (
     <ScrollView style = {styles.container} ref={scrollViewRef}>
 
@@ -310,8 +354,8 @@ const EquipmentDetails = ({ route}) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text>Reservation Request Sent</Text>
-                <Text>Item: {notification && notification.request.content.title}{" "}</Text>
+            <Text>Sporty Rentals</Text>
+                <Text>{notification && notification.request.content.title}{" "}</Text>
                 <Text>Start Date: {notification && notification.request.content.data.startDate}</Text>
                 <Text>Start Time: {notification && notification.request.content.data.startTime}</Text>
                 <Text>End Date: {notification && notification.request.content.data.endDate}</Text>
