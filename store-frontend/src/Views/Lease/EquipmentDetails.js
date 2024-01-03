@@ -58,7 +58,7 @@ const EquipmentDetails = ({ route }) => {
       </TouchableOpacity>
 
       <Card style={styles.card}>
-        <Image source={{ uri: equipment.images }} style={styles.detailsImage} />
+        <Image source={{ uri: equipment.imageReference }} style={styles.detailsImage} />
         <Text style={styles.title}>{equipment.title}</Text>
         <Text style={styles.description}>{equipment.description}</Text>
       </Card>
