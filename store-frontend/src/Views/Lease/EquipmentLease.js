@@ -1,12 +1,16 @@
 import { Text, TouchableOpacity, SafeAreaView,Image } from 'react-native';
 import styles from 'store-frontend/src/Views/styles';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import EquipmentList from './EquipmentList';
 import EquipmentDetails from './EquipmentDetails';
 import { View } from 'react-native';
 import { EquipmentController } from '../../Controllers/EquipmentController';
+
+import { UserContext } from '../../Contexts/UserContext';
+import { ListingsController } from '../../Controllers/ListingsController';
+
 
 
 
@@ -49,17 +53,21 @@ const dummyEquipmentData = [
 const LeasingEquipment = ({ navigation }) => {
   const [equipmentData, setEquipmentData] = useState([]); // Step 2: State for equipment data
 
+  const { user } = useContext(UserContext);
+  console.log("UserID: ", user.user.uid ); 
+  const userId = user ? user.user.uid  : null; 
+
 
   useEffect(() => {
-    const fetchAvailableEquipment = async () => {
-      const response = await EquipmentController.getAllAvailableEquipment();
+    const fetchAllEquipment = async () => {
+      const response = await ListingsController.getAllEquipmentUserListings(userId);
       console.log("Available Equipment:", response);
       if (response && response.success) {
         setEquipmentData(response.data); // Step 3: Update state with fetched data
       }
     };
 
-    fetchAvailableEquipment();
+    fetchAllEquipment();
   }, []);
 
 
