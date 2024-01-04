@@ -22,27 +22,6 @@ const EquipmentDetails = ({ route }) => {
   const [showCalendar, setShowCalendar] = useState(true); 
   const navigation = useNavigation();
 
-  
-  const togglePickup = () => {
-    setPickup(!pickup);
-  };
-
-  const handleMapPress = (e) => {
-    setPickupLocation(e.nativeEvent.coordinate);
-  };
-
-  const handleDateSelect = (day) => {
-    if (!selectedStartDate || (day.timestamp < selectedStartDate.timestamp && !selectedEndDate)) {
-      setSelectedStartDate(day);
-      setSelectedEndDate(null);
-    } else if (!selectedEndDate || day.timestamp > selectedEndDate.timestamp) {
-      setSelectedEndDate(day);
-    } else {
-      setSelectedStartDate(day);
-      setSelectedEndDate(null);
-    }
-  };
-
   const handleLeaseNow = () => {
     if (selectedStartDate && selectedEndDate) {
       alert(`Leasing Equipment from ${selectedStartDate.dateString} to ${selectedEndDate.dateString}`);
@@ -50,13 +29,24 @@ const EquipmentDetails = ({ route }) => {
       alert('Please select start and end dates');
     }
   };
+  const handleDelete = () => {
+    console.log('Delete');
+// DO IMPLEMENTATION OF DELETE
+  };
 
   return (
     <ScrollView style={styles.container}>
     
-    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Icon name="arrow-left" size={40} color="white" />
-      </TouchableOpacity>
+    <View style={styles.buttonRow}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Icon name="arrow-left" size={40} color="white" />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
+          <Icon name="trash" size={40} color="white" />
+        </TouchableOpacity>
+    </View>
+
 
       <Card style={styles.card}>
         <Image source={{ uri: equipment.imageReference }} style={styles.detailsImage} />
@@ -71,27 +61,48 @@ const EquipmentDetails = ({ route }) => {
 
 
       <Card style={styles.card}>
-        <Text style={styles.price}>Sport Category: {equipment.price}</Text>
+        <Text style={styles.price}>Sport Category: {equipment.sportCategory}</Text>
       </Card>
 
 
 
       <Card style={styles.card}>
-        <Text style={styles.price}>Available: {equipment.price} Per Day</Text>
-      </Card>
+          <Text style={styles.price}>
+            Available: {equipment.availableStatus ? 'Yes' : 'No'}
+          </Text>
+        </Card>
+
+
+        <Card style={styles.card}>
+          <Text style={styles.price}>Delivery Type: {equipment.deliveryType} </Text>
+        </Card>
+
+        {equipment.deliveryType === 'pickup' && (
+          <Card style={styles.card}>
+            <Text style={styles.subtitle}>Pickup Location:</Text>
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: parseFloat(equipment.pickupLocation.latitude),
+                longitude: parseFloat(equipment.pickupLocation.longitude),
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            >
+              <Marker
+                coordinate={{
+                  latitude: parseFloat(equipment.pickupLocation.latitude),
+                  longitude: parseFloat(equipment.pickupLocation.longitude),
+                }}
+                title="Pickup Location"
+              />
+            </MapView>
+          </Card>
+        )}
 
 
       <Card style={styles.card}>
-        <Text style={styles.price}>Delivery Type: {equipment.price} Per Day</Text>
-      </Card>
-
-
-      <Card style={styles.card}>
-        <Text style={styles.price}>Location: {equipment.price} Per Day</Text>
-      </Card>
-
-      <Card style={styles.card}>
-        <Text style={styles.price}>Condition: {equipment.price} Per Day</Text>
+        <Text style={styles.price}>Condition: {equipment.condition}</Text>
       </Card>
 
 
@@ -103,7 +114,7 @@ const EquipmentDetails = ({ route }) => {
       <TouchableOpacity
           style={styles.button}
           onPress={handleLeaseNow}>
-          <Text style={styles.buttonTitle}>Lease Now</Text>
+           <Icon name="pen" size={40} color="white" />
       </TouchableOpacity>
     </ScrollView>
   );

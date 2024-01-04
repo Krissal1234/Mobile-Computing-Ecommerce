@@ -266,6 +266,19 @@ export default StyleSheet.create({
       marginBottom: height*0.01,
       textAlign: 'center',
     },
+
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between', // Or 'flex-start' based on your layout preference
+        alignItems: 'center',
+        // Add other styling as needed, like padding or margin
+      },
+      
+      deleteButton: {
+        marginBottom: height*0.01, 
+        paddingLeft: width*0.07,
+      },
+      
     backButton: {
       marginBottom: height*0.01, 
       paddingLeft: width*0.05,
