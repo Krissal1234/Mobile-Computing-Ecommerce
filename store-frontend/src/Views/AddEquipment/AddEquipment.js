@@ -37,12 +37,24 @@ const AddEquipment = () => {
   //Used for select sportCategory drop down
   const { sportCategories } = useContext(UserContext);
   
+
+  
   const handleBack = () => {
     navigation.goBack();
   };
 
 
   useEffect(() => {
+
+   
+      if (route.params?.equipment) {
+        const { equipment } = route.params;
+        setTitle(equipment.title);
+        setDescription(equipment.description);
+        setPrice(equipment.price.toString());
+        // ... set other states with equipment details
+      }
+
     const fetchSports = async () => {
       try {
         if (Array.isArray(sportCategories)) {
@@ -59,7 +71,7 @@ const AddEquipment = () => {
     };
   
     fetchSports();
-  }, []);
+  }, [route.params?.equipment]);
   
   const selectSport = (item) => {
     setSelectedSport(item);

@@ -22,16 +22,14 @@ const EquipmentDetails = ({ route }) => {
   const [showCalendar, setShowCalendar] = useState(true); 
   const navigation = useNavigation();
 
-  const handleLeaseNow = () => {
-    if (selectedStartDate && selectedEndDate) {
-      alert(`Leasing Equipment from ${selectedStartDate.dateString} to ${selectedEndDate.dateString}`);
-    } else {
-      alert('Please select start and end dates');
-    }
-  };
   const handleDelete = () => {
     console.log('Delete');
 // DO IMPLEMENTATION OF DELETE
+  };
+
+  const handleEdit = () => { 
+    navigation.navigate('AddEquipment', { equipment });
+// DO IMPLEMENTATION OF edit
   };
 
   return (
@@ -113,8 +111,8 @@ const EquipmentDetails = ({ route }) => {
 
       <TouchableOpacity
           style={styles.button}
-          onPress={handleLeaseNow}>
-           <Icon name="pen" size={40} color="white" />
+          onPress={handleEdit}>
+           <Icon name="trash" size={40} color="white" />
       </TouchableOpacity>
     </ScrollView>
   );
