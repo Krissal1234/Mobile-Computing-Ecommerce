@@ -212,20 +212,21 @@ const EquipmentDetails = ({ route}) => {
         />
       );
     }
-
-    // iOS: Use Picker
-    return (
-      <Picker
-        selectedValue={selectedTime}
-        onValueChange={(itemValue) => setSelectedTime(itemValue)}
-        mode='dropdown'
-        style={styles.timeDropdown}
-      >
-        {timesArray.map((time, index) => (
-          <Picker.Item label={time} value={time} key={index} />
-        ))}
-      </Picker>
-    );
+    else{
+      // iOS: Use Picker
+      return (
+        <Picker
+          selectedValue={selectedTime}
+          onValueChange={(itemValue) => setSelectedTime(itemValue)}
+          mode='dropdown'
+          style={styles.timeDropdown}
+        >
+          {timesArray.map((time, index) => (
+            <Picker.Item label={time} value={time} key={index} />
+          ))}
+        </Picker>
+      );
+    }
   };
 
   const deliveryType = equipment.deliveryType.charAt(0).toUpperCase() + equipment.deliveryType.slice(1);//sets delivery type with uppercase first letter
