@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useRef, useContext } from 'react';
-import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView,Animated,Modal } from 'react-native';
+import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView,Animated,Modal,FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import styles from '../styles';
@@ -193,10 +193,32 @@ const EquipmentDetails = ({ route}) => {
   }
 
   const renderTimePicker = (timesArray, selectedTime, setSelectedTime) => {
+    // Android: Use FlatList
+    if (Platform.OS === 'android') {
+      return (
+        <FlatList
+          data={timesArray}
+          nestedScrollEnabled={true}
+          style={styles.timeDropdown}
+          keyExtractor={(item, index) => String(index)}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.timeItem}
+              onPress={() => setSelectedTime(item)}
+            >
+              <Text style={styles.timeItemText}>{item}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      );
+    }
+
+    // iOS: Use Picker
     return (
       <Picker
         selectedValue={selectedTime}
         onValueChange={(itemValue) => setSelectedTime(itemValue)}
+        mode='dropdown'
         style={styles.timeDropdown}
       >
         {timesArray.map((time, index) => (

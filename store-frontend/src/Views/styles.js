@@ -307,7 +307,34 @@ export default StyleSheet.create({
         alignItems:'center',
     },
     timeDropdown:{
-        
+      ...Platform.select({
+        ios: {  
+        },
+        android: {
+          height:height*0.2,
+        },
+      }),
+
+    },
+    timeItem:{
+      ...Platform.select({
+        ios: {  
+        },
+        android: {
+          alignSelf:'center',
+          marginVertical:height*0.01,
+        },
+      }),
+      
+    },
+    timeItemText:{
+      ...Platform.select({
+        ios: {  
+        },
+        android: {
+          fontSize:20,
+        },
+      }),
     },
     basket:{
         height:height*0.05,
