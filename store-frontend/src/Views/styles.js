@@ -22,21 +22,13 @@ export default StyleSheet.create({
           }),
           
     },
-    androidFooterAvoidance:{
-      ...Platform.select({
-        ios: {  
-        },
-        android: {
-          paddingBottom:height*0.1,
-        },
-      }),
-    },
     keyboardContainer:{
         width:width,
         alignItems:'center',
         justifyContent:'center'
 
     },
+    
     logo: {
         height: height*0.3,
         width: width*0.4,
