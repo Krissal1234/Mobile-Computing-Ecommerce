@@ -36,6 +36,10 @@ const AddEquipment = () => {
   const [isSportsDropdownVisible, setIsSportsDropdownVisible] = useState(false);
   //Used for select sportCategory drop down
   const { sportCategories } = useContext(UserContext);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+
   
 
   
@@ -98,6 +102,14 @@ const AddEquipment = () => {
 
   const handleAddEquipment = async () => {
 
+    setErrorMessage('');
+    setSuccessMessage('');
+
+
+  if (!title || !description || !price || !selectedSport || !availableStatus || !deliveryType || !condition || images.length === 0) {
+    setErrorMessage('Please fill in all fields and select an image.');
+    return; 
+  }
  
     var parsedPrice = parseInt(price);
     const newEquipment = {
@@ -115,6 +127,8 @@ const AddEquipment = () => {
 
    //This will input the equipment into the database.
     const response = await EquipmentController.PostEquipment(newEquipment,user); //TODO: find a way to use a laoding screen while you wait for this function to return (Communicate with the rest of UI team becuase it will be needed throughout the project)
+    setSuccessMessage('Equipment added successfully!');
+
     console.log(response.message);
      //TODO: Display a success message or error message based on what the above function returns (you can check what it returns by going into the function)
   };
@@ -371,6 +385,14 @@ const AddEquipment = () => {
           </View>
         </Modal>
       </View>
+
+      {errorMessage.length > 0 && (
+        <Text style={addEquipmentStyles.errorMessage}>{errorMessage}</Text>
+      )}
+
+      {successMessage.length > 0 && (
+        <Text style={addEquipmentStyles.successMessage}>{successMessage}</Text>
+      )}
 
             <TouchableOpacity
               style={styles.button}

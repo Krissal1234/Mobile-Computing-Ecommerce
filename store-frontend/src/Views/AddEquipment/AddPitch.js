@@ -40,6 +40,9 @@ const AddPitch = () => {
   const [sports, setSports] = useState([]);
   const [selectedSport, setSelectedSport] = useState('');
   const [isSportsDropdownVisible, setIsSportsDropdownVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
 
 
   const selectSport = (item) => {
@@ -82,7 +85,16 @@ const AddPitch = () => {
   };
 
   const handleAddPitch = async () => {
-    console.log("availablestatus", availableStatus);
+    setErrorMessage('');
+    setSuccessMessage('');
+
+
+  if (!title || !description || !price || !selectedSport || !availableStatus || images.length === 0) {
+    setErrorMessage('Please fill in all fields and select an image.');
+    return; 
+  }
+
+
     const parsedPrice = parseInt(price);
     const newPitch = {
       title,
@@ -96,6 +108,8 @@ const AddPitch = () => {
 
     console.log("New Pitch:", newPitch);
     const response = await FacilitiesController.postFacility(newPitch, user);
+    setSuccessMessage('Facility added successfully!');
+
     console.log(response)
   };
 
@@ -259,6 +273,14 @@ const AddPitch = () => {
               )}
             </MapView>
           </View>
+
+          {errorMessage.length > 0 && (
+        <Text style={addEquipmentStyles.errorMessage}>{errorMessage}</Text>
+      )}
+
+      {successMessage.length > 0 && (
+        <Text style={addEquipmentStyles.successMessage}>{successMessage}</Text>
+      )}
 
           <TouchableOpacity style={styles.button} onPress={handleAddPitch}>
             <Text style={styles.buttonTitle}>Add Pitch</Text>

@@ -94,5 +94,17 @@ export default StyleSheet.create({
       dropdownItem: {
         padding: 10,
       },
+      errorMessage: {
+        color: 'red',
+        textAlign: 'center',
+        fontSize: 16,
+      },
+      successMessage: {
+        color: 'green',
+        textAlign: 'center',
+        fontSize: 16,
+      },
+      
+      
     })
     
