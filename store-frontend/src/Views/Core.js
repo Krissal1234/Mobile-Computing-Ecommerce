@@ -1,6 +1,6 @@
 import { View, Text ,SafeAreaView,Image,TouchableOpacity,FlatList } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import React, { useContext, useState,useEffect} from 'react'
+import React, { useContext, useState,useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {BlurView} from 'expo-blur';
@@ -211,7 +211,7 @@ const Core = () => {
           />
         </BlurView>
       )}
-      
+            
       {accountType === "Renter" ? <RenterTabs /> : <LeaserTabs />}
 
     </SafeAreaView>

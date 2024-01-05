@@ -92,7 +92,6 @@ const EquipmentDetails = ({ route}) => {
       })();
     }, []);
 
-    
     useEffect(() => {
       // Registers for push notifications and stores the token
       registerForPushNotificationsAsync().then((token) =>
@@ -195,11 +194,18 @@ const EquipmentDetails = ({ route}) => {
 
   // ---------------------------------------------------------------------------------------------------------------------
 
-  //Scroll and Zoom functions
-  
-    function scrollToObject(yPosition,object){
-      scrollViewRef.current.scrollTo({ y: yPosition, animated: true });
-      animateEnlarge(object);
+    // Sets up listeners for notification events
+    const subscription = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        setNotification(notification); // Updates state when a notification is received
+      }
+    );
+
+    // Cleans up listeners on component unmount
+    return () => {
+      subscription.remove();
+    // console.log("subs: " + subscription + " removed ");
+
     };
 
     const animateEnlarge = (object) => {
