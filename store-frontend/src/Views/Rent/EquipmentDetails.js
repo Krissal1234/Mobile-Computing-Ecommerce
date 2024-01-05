@@ -77,6 +77,41 @@ const EquipmentDetails = ({ route}) => {
       };
       fetchEquipment();
     }, []);
+    
+    useEffect(() => {
+      (async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+          return;
+        }
+
+        let currentLocation = await Location.getCurrentPositionAsync({});
+        setLocation(currentLocation);
+        setDeliveryLocation(currentLocation.coords); // Initialize deliveryLocation with the user's current location
+      })();
+    }, []);
+
+    useEffect(() => {
+      // Registers for push notifications and stores the token
+      registerForPushNotificationsAsync().then((token) =>
+      setExpoPushToken(token)
+      );
+
+      // Sets up listeners for notification events
+      const subscription = Notifications.addNotificationReceivedListener(
+        (notification) => {
+          setNotification(notification); // Updates state when a notification is received
+        }
+      );
+
+      // Cleans up listeners on component unmount
+      return () => {
+        subscription.remove();
+        console.log("subs: " + subscription + " removed ");
+
+      };
+    }, []);
 
     if (loading) {
       return <ActivityIndicator />; // or some loading screen
@@ -105,20 +140,6 @@ const EquipmentDetails = ({ route}) => {
   // ---------------------------------------------------------------------------------------------------------------------
 
   // Location functions:
-
-    useEffect(() => {
-      (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-          return;
-        }
-
-        let currentLocation = await Location.getCurrentPositionAsync({});
-        setLocation(currentLocation);
-        setDeliveryLocation(currentLocation.coords); // Initialize deliveryLocation with the user's current location
-      })();
-    }, []);
 
     const handleMapPress = (e) => {
       setDeliveryLocation(e.nativeEvent.coordinate);
@@ -416,27 +437,6 @@ const EquipmentDetails = ({ route}) => {
 
   // Notifications functions
 
-    useEffect(() => {
-      // Registers for push notifications and stores the token
-      registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token)
-      );
-
-      // Sets up listeners for notification events
-      const subscription = Notifications.addNotificationReceivedListener(
-        (notification) => {
-          setNotification(notification); // Updates state when a notification is received
-        }
-      );
-
-      // Cleans up listeners on component unmount
-      return () => {
-        subscription.remove();
-        console.log("subs: " + subscription + " removed ");
-
-      };
-    }, []);
-
     async function scheduleLocalNotification() {
       const notificationContent = {
         title: "Item Rent Request: " +equipment.title,
@@ -516,6 +516,7 @@ const EquipmentDetails = ({ route}) => {
 
   return (
     <ScrollView style = {styles.container} ref={scrollViewRef}>
+    <View style={styles.androidFooterFix}>
 
       {/* Img,Title,Desc */}
       <View style = {styles.card}>
@@ -703,6 +704,7 @@ const EquipmentDetails = ({ route}) => {
           </View>
         </View>
       </Modal>
+    </View>
     </ScrollView>
     
   );

@@ -22,6 +22,15 @@ export default StyleSheet.create({
           }),
           
     },
+    androidFooterFix:{
+      ...Platform.select({
+        ios: {  
+        },
+        android: {
+          paddingBottom:height*0.1,
+        },
+      }),
+    },
     keyboardContainer:{
         width:width,
         alignItems:'center',
