@@ -316,7 +316,6 @@ export default StyleSheet.create({
         alignItems:'center',
     },
     timeDropdown:{
-<<<<<<< Updated upstream
       ...Platform.select({
         ios: {  
         },
@@ -345,11 +344,6 @@ export default StyleSheet.create({
           fontSize:20,
         },
       }),
-=======
-        width: width*0.2,
-        height: height*0.2,
-        fontColor: black,
->>>>>>> Stashed changes
     },
     basket:{
         height:height*0.05,
@@ -361,7 +355,7 @@ export default StyleSheet.create({
         fontSize: width*0.08,
         fontWeight: '450',
         textAlign: 'center',
-        color: 'black',
+        color: colors.black,
       },
       modalOpenButton: {
         backgroundColor: 'blue',
