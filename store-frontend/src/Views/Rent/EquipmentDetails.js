@@ -195,11 +195,32 @@ const EquipmentDetails = ({ route}) => {
 
   // ---------------------------------------------------------------------------------------------------------------------
 
+<<<<<<< Updated upstream
   //Scroll and Zoom functions
   
     function scrollToObject(yPosition,object){
       scrollViewRef.current.scrollTo({ y: yPosition, animated: true });
       animateEnlarge(object);
+=======
+  useEffect(() => {
+    // Registers for push notifications and stores the token
+    registerForPushNotificationsAsync().then((token) =>
+    setExpoPushToken(token)
+    );
+
+    // Sets up listeners for notification events
+    const subscription = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        setNotification(notification); // Updates state when a notification is received
+      }
+    );
+
+    // Cleans up listeners on component unmount
+    return () => {
+      subscription.remove();
+    // console.log("subs: " + subscription + " removed ");
+
+>>>>>>> Stashed changes
     };
 
     const animateEnlarge = (object) => {
