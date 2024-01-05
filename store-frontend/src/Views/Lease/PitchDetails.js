@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from 'store-frontend/src/Views/styles';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../colors';
-
+import * as ImagePicker from 'expo-image-picker';
 
 const PitchDetails = ({ route }) => {
   const { pitch } = route.params;
@@ -19,12 +19,24 @@ const PitchDetails = ({ route }) => {
   const [editableSportCategory, setEditableSportCategory] = useState(pitch.sportCategory);
   const [editableAvailable, setEditableAvailable] = useState(pitch.availableStatus.toString());
 
-  // Dummy function for image selection, replace with your actual image picker logic
-  const selectImage = () => {
-    const newImageUri = 'uri_of_the_newly_selected_image'; // Replace with actual URI
-    setEditableImage(newImageUri);
+  const selectImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need camera roll permissions to make this work!');
+      return;
+    }
+  
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+  
+    if (!result.canceled) {
+      setEditableImage(result.uri);
+    }
   };
-
   const handleEdit = () => {
     if (isEditMode) {
       // TODO: Implement update logic here
@@ -44,9 +56,10 @@ const PitchDetails = ({ route }) => {
   };
 
   const handleDelete = () => {
-    console.log('Delete');
+    console.log('Delete Pitch ID:', pitch.id);
     // TODO: Implement delete logic here
-  };
+};
+
 
   return (
     <ScrollView style={styles.container}>
@@ -62,13 +75,12 @@ const PitchDetails = ({ route }) => {
         </View>
       )}
 
-      <Card style={styles.card}>
-        {isEditMode ? (
-          <Button title="Select Image" onPress={selectImage} />
-        ) : (
-          <Image source={{ uri: editableImage }} style={styles.detailsImage} />
-        )}
+       <Card style={styles.card}>
+        <Image source={{ uri: editableImage }} style={styles.detailsImage} />
 
+        {isEditMode && (
+          <Button title="Change Image" onPress={selectImage} />
+        )}
         {isEditMode ? (
           <TextInput
             value={editableTitle}
@@ -103,8 +115,6 @@ const PitchDetails = ({ route }) => {
         )}
      </Card>
 
-
-
      <Card style={styles.card}>
         {isEditMode ? (
           <TextInput
@@ -130,23 +140,28 @@ const PitchDetails = ({ route }) => {
         </Card>
       
 
-      {/* Edit and Cancel Buttons */}
       {isEditMode && (
         <View style={styles.editModeButtons}>
-          <TouchableOpacity style={styles.button} onPress={handleEdit}>
+          <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
+          <Text style = {styles.title}>Save</Text>
             <Icon name="check" size={40} color={colors.darkBlue}/>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={handleCancel}>
+          <TouchableOpacity style={styles.editButton} onPress={handleCancel}>
+          <Text style = {styles.title}>Cancel</Text>
             <Icon name="times" size={40} color={colors.darkBlue} />
           </TouchableOpacity>
         </View>
       )}
 
       {!isEditMode && (
-        <TouchableOpacity style={styles.button} onPress={() => setIsEditMode(true)}>
-          <Icon name="edit" size={40} color={colors.darkBlue} />
-        </TouchableOpacity>
+        <TouchableOpacity style={styles.card} onPress={() => setIsEditMode(true)}>          
+          <View style={styles.timeContainer}>
+            <Text style = {styles.title}>Edit </Text>
+            <Icon name="edit" size={40} color={colors.darkBlue} />
+         </View>             
+        </TouchableOpacity>               
+      
       )}
     </ScrollView>
   );

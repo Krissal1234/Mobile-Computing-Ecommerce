@@ -386,9 +386,29 @@ export default StyleSheet.create({
         backgroundColor: 'red',
         borderRadius: 5,
       },
+
+      editModeButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly', 
+        alignItems: 'center', 
+        
+      },
+      
       modalCloseButtonText: {
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
       },
+      editButton: {
+        backgroundColor: colors.white,
+        width: width * 0.4, // Smaller width, e.g., 40% of the screen width
+        marginTop: height * 0.02, // Reduced margin-top
+        paddingVertical: height * 0.01, // Smaller padding
+        borderRadius: height * 0.02, // Smaller border-radius
+        borderWidth: width * 0.005, // Smaller border-width
+        borderColor: colors.red,
+        alignItems: "center",
+        justifyContent: 'center'
+    },
+    
 })

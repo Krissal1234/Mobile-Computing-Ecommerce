@@ -29,6 +29,7 @@
     "expo-blur": "~12.4.1",
     "expo-device": "~5.4.0",
     "expo-image-picker": "~14.3.2",
+    "expo-location": "^16.3.0",
     "expo-notifications": "^0.20.1",
     "expo-status-bar": "~1.6.0",
     "expo-web-browser": "~12.3.2",
