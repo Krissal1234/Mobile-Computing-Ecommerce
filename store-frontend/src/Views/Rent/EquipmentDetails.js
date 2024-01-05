@@ -153,24 +153,37 @@ const EquipmentDetails = ({ route}) => {
   }, []);
 
 
-  useEffect(() => {
-    // Registers for push notifications and stores the token
-    registerForPushNotificationsAsync().then((token) =>
-    setExpoPushToken(token)
-    );
-
-    // Sets up listeners for notification events
-    const subscription = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        setNotification(notification); // Updates state when a notification is received
+    const getMarkedDates = () => {
+      let markedDates = {};
+      if (startDate) {
+        markedDates[startDate] = { startingDay: true, color: colors.darkBlue, textColor: colors.white};
       }
-    );
+      if (endDate) {
+        markedDates[endDate] = { endingDay: true, color: colors.darkBlue, textColor: colors.white };
+      }
+      if (startDate && endDate) {
+        let start = new Date(startDate);
+        let end = new Date(endDate);
+        for (let m = new Date(start); m <= end; m.setDate(m.getDate() + 1)) {
+          const dateStr = m.toISOString().split('T')[0];
+          if (markedDates[dateStr]) {
+            markedDates[dateStr] = { ...markedDates[dateStr], color: colors.darkBlue, textColor: colors.white };
+          } else {
+            markedDates[dateStr] = { color: colors.darkBlue, textColor: colors.white };
+          }
+        }
+      }
+      calculateTotalPrice();
+      return markedDates;
+    };
 
-    // Cleans up listeners on component unmount
-    return () => {
-      subscription.remove();
-      console.log("subs: " + subscription + " removed ");
+  // ---------------------------------------------------------------------------------------------------------------------
 
+  //Scroll and Zoom functions
+  
+    function scrollToObject(yPosition,object){
+      scrollViewRef.current.scrollTo({ y: yPosition, animated: true });
+      animateEnlarge(object);
     };
   }, []);
 
