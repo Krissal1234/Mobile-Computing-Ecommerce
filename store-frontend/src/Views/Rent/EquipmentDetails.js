@@ -78,6 +78,42 @@ const EquipmentDetails = ({ route}) => {
       fetchEquipment();
     }, []);
 
+    useEffect(() => {
+      (async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+          return;
+        }
+
+        let currentLocation = await Location.getCurrentPositionAsync({});
+        setLocation(currentLocation);
+        setDeliveryLocation(currentLocation.coords); // Initialize deliveryLocation with the user's current location
+      })();
+    }, []);
+
+    
+    useEffect(() => {
+      // Registers for push notifications and stores the token
+      registerForPushNotificationsAsync().then((token) =>
+      setExpoPushToken(token)
+      );
+
+      // Sets up listeners for notification events
+      const subscription = Notifications.addNotificationReceivedListener(
+        (notification) => {
+          setNotification(notification); // Updates state when a notification is received
+        }
+      );
+
+      // Cleans up listeners on component unmount
+      return () => {
+        subscription.remove();
+        console.log("subs: " + subscription + " removed ");
+
+      };
+    }, []);
+
     if (loading) {
       return <ActivityIndicator />; // or some loading screen
     }
@@ -105,20 +141,6 @@ const EquipmentDetails = ({ route}) => {
   // ---------------------------------------------------------------------------------------------------------------------
 
   // Location functions:
-
-    useEffect(() => {
-      (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-          return;
-        }
-
-        let currentLocation = await Location.getCurrentPositionAsync({});
-        setLocation(currentLocation);
-        setDeliveryLocation(currentLocation.coords); // Initialize deliveryLocation with the user's current location
-      })();
-    }, []);
 
     const handleMapPress = (e) => {
       setDeliveryLocation(e.nativeEvent.coordinate);
@@ -416,27 +438,6 @@ const EquipmentDetails = ({ route}) => {
 
   // Notifications functions
 
-    useEffect(() => {
-      // Registers for push notifications and stores the token
-      registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token)
-      );
-
-      // Sets up listeners for notification events
-      const subscription = Notifications.addNotificationReceivedListener(
-        (notification) => {
-          setNotification(notification); // Updates state when a notification is received
-        }
-      );
-
-      // Cleans up listeners on component unmount
-      return () => {
-        subscription.remove();
-        console.log("subs: " + subscription + " removed ");
-
-      };
-    }, []);
-
     async function scheduleLocalNotification() {
       const notificationContent = {
         title: "Item Rent Request: " +equipment.title,
@@ -516,193 +517,194 @@ const EquipmentDetails = ({ route}) => {
 
   return (
     <ScrollView style = {styles.container} ref={scrollViewRef}>
-
-      {/* Img,Title,Desc */}
-      <View style = {styles.card}>
-        <Image source = {{uri: equipment.imageReference}} style = {styles.detailsImage}></Image>
-        <Text style = {styles.title}>{equipment.title}</Text>
-        <TouchableOpacity onPress={toggleDetailsExpanded} style={styles.descriptionContainer}>
-          <Text
-            numberOfLines={isDetailsExpanded ? null : 2} // null means no limit
-            ellipsizeMode='tail'
-            style={styles.description}
-          >
-          {equipment.description}
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Condition Type */}
-      <View style = {styles.card}>
-        <Text style = {styles.title}>Condition : {equipment.condition}</Text>
-      </View>
-
-      {/* Price Per Hour */}
-      <View style = {styles.card}>
-        <View style = {styles.priceContainer}>
-          <Text style = {styles.title}>Price : </Text>
-          <Text style = {styles.title}>£{equipment.price}</Text>
-          <Text style = {styles.title}>Per Hour</Text>
+      <View style={styles.androidFooterAvoidance}>
+        {/* Img,Title,Desc */}
+        <View style = {styles.card}>
+          <Image source = {{uri: equipment.imageReference}} style = {styles.detailsImage}></Image>
+          <Text style = {styles.title}>{equipment.title}</Text>
+          <TouchableOpacity onPress={toggleDetailsExpanded} style={styles.descriptionContainer}>
+            <Text
+              numberOfLines={isDetailsExpanded ? null : 2} // null means no limit
+              ellipsizeMode='tail'
+              style={styles.description}
+            >
+            {equipment.description}
+            </Text>
+          </TouchableOpacity>
         </View>
-      </View>
 
-      {/* Handover Type */}
-      <View style = {styles.card}>
-        <Text style = {styles.title}>Handover Type : {deliveryType}</Text>
-      </View>
+        {/* Condition Type */}
+        <View style = {styles.card}>
+          <Text style = {styles.title}>Condition : {equipment.condition}</Text>
+        </View>
 
-      {/* Location */}
-        {/* Set Delivery Location */}
-        {equipment.deliveryType === 'delivery' && (
-          <View style={styles.card}>
-            <Text style={styles.subtitle}>Click to Set Delivery Location:</Text>
-            {location ? (
-              <MapView
-                style={styles.map}
-                initialRegion={{
-                  latitude: location.coords.latitude,
-                  longitude: location.coords.longitude,
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
-                }}
-                onPress={handleMapPress} // Set new delivery location on map press
-              >
-                {deliveryLocation && (
-                  <Marker
-                    coordinate={{
-                      latitude: deliveryLocation.latitude,
-                      longitude: deliveryLocation.longitude,
-                    }}
-                    title="Delivery Location"
-                  />
-                )}
-              </MapView>
-            ) : (
-              <Text>{errorMsg || "Loading..."}</Text>
-            )}
+        {/* Price Per Hour */}
+        <View style = {styles.card}>
+          <View style = {styles.priceContainer}>
+            <Text style = {styles.title}>Price : </Text>
+            <Text style = {styles.title}>£{equipment.price}</Text>
+            <Text style = {styles.title}>Per Hour</Text>
           </View>
-        )}
-        {/* Show pickup location */}
-        {equipment.deliveryType === 'pickup' && (
-          <View style={styles.card}>
-            <Text style={styles.subtitle}>Pickup Location:</Text>
-              <MapView
-                style={styles.map}
-                initialRegion={{
-                  latitude: parseFloat(equipment.pickupLocation.latitude),
-                  longitude: parseFloat(equipment.pickupLocation.longitude),
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
-                }}
-              >
-                <Marker
-                  coordinate={{
+        </View>
+
+        {/* Handover Type */}
+        <View style = {styles.card}>
+          <Text style = {styles.title}>Handover Type : {deliveryType}</Text>
+        </View>
+
+        {/* Location */}
+          {/* Set Delivery Location */}
+          {equipment.deliveryType === 'delivery' && (
+            <View style={styles.card}>
+              <Text style={styles.subtitle}>Click to Set Delivery Location:</Text>
+              {location ? (
+                <MapView
+                  style={styles.map}
+                  initialRegion={{
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                  }}
+                  onPress={handleMapPress} // Set new delivery location on map press
+                >
+                  {deliveryLocation && (
+                    <Marker
+                      coordinate={{
+                        latitude: deliveryLocation.latitude,
+                        longitude: deliveryLocation.longitude,
+                      }}
+                      title="Delivery Location"
+                    />
+                  )}
+                </MapView>
+              ) : (
+                <Text>{errorMsg || "Loading..."}</Text>
+              )}
+            </View>
+          )}
+          {/* Show pickup location */}
+          {equipment.deliveryType === 'pickup' && (
+            <View style={styles.card}>
+              <Text style={styles.subtitle}>Pickup Location:</Text>
+                <MapView
+                  style={styles.map}
+                  initialRegion={{
                     latitude: parseFloat(equipment.pickupLocation.latitude),
                     longitude: parseFloat(equipment.pickupLocation.longitude),
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
                   }}
-                  title="Pickup Location"
-                />
-              </MapView>
+                >
+                  <Marker
+                    coordinate={{
+                      latitude: parseFloat(equipment.pickupLocation.latitude),
+                      longitude: parseFloat(equipment.pickupLocation.longitude),
+                    }}
+                    title="Pickup Location"
+                  />
+                </MapView>
+            </View>
+          )}
+        {/*  */}
+
+        {/* Calendar */}
+        <Animated.View style={[styles.card, {transform: [{scale: calendarEnlarge}]}]}>
+          <Text style={styles.title}>Select Dates:</Text>
+          <Calendar
+            onDayPress={onDayPress}
+            markedDates={getMarkedDates()}
+            markingType={'period'}
+            theme={styles.calendarTheme}
+            minDate={minDate}
+          />
+        </Animated.View>
+
+        {/* Start Time Section */}
+        <TouchableOpacity style={styles.card} onPress={toggleStartTime} activeOpacity={1}>
+          <View style={styles.timeContainer}>
+            
+            <Text style={styles.title}>{deliveryType} Time: {selectedStartTime}</Text>
+            <Image source={startTimeDropdown ? upward_cevron : downward_cevron} style={styles.cevron} />
+            
           </View>
-        )}
-      {/*  */}
 
-      {/* Calendar */}
-      <Animated.View style={[styles.card, {transform: [{scale: calendarEnlarge}]}]}>
-        <Text style={styles.title}>Select Dates:</Text>
-        <Calendar
-          onDayPress={onDayPress}
-          markedDates={getMarkedDates()}
-          markingType={'period'}
-          theme={styles.calendarTheme}
-          minDate={minDate}
-        />
-      </Animated.View>
+          {startTimeDropdown && renderStartTimePicker(startTimes, selectedStartTime)}
 
-      {/* Start Time Section */}
-      <TouchableOpacity style={styles.card} onPress={toggleStartTime} activeOpacity={1}>
-        <View style={styles.timeContainer}>
-          
-          <Text style={styles.title}>{deliveryType} Time: {selectedStartTime}</Text>
-          <Image source={startTimeDropdown ? upward_cevron : downward_cevron} style={styles.cevron} />
-          
-        </View>
+        </TouchableOpacity>
 
-        {startTimeDropdown && renderStartTimePicker(startTimes, selectedStartTime)}
+        {/* End Time*/}
+        <TouchableOpacity style={styles.card} onPress={toggleEndTime} activeOpacity={1}>
 
-      </TouchableOpacity>
+          <View style={styles.timeContainer}>
+            <Text style={styles.title}>{collectionType} Time: {selectedEndTime}</Text>
+            <Image source={endTimeDropdown ? upward_cevron : downward_cevron} style={styles.cevron} />
+          </View>
 
-      {/* End Time*/}
-      <TouchableOpacity style={styles.card} onPress={toggleEndTime} activeOpacity={1}>
+          {endTimeDropdown && renderEndTimePicker(endTimes, selectedEndTime)}
 
-        <View style={styles.timeContainer}>
-          <Text style={styles.title}>{collectionType} Time: {selectedEndTime}</Text>
-          <Image source={endTimeDropdown ? upward_cevron : downward_cevron} style={styles.cevron} />
-        </View>
+        </TouchableOpacity>
 
-        {endTimeDropdown && renderEndTimePicker(endTimes, selectedEndTime)}
-
-      </TouchableOpacity>
-
-      {/* Service fee */}
-      <View style = {styles.card}>
-        <View style = {styles.priceContainer}>
-          <Text style = {styles.title}>Service Fee : </Text>
-          <Text style = {styles.title}>£{serviceFee}</Text>
-        </View>
-      </View>
-
-      {/* Total Price */}
-      <View style = {styles.card}>
-        {totalPrice!=null && totalPrice!= 0 ?
-          (
-
-            <View style = {styles.priceContainer}>
-              <Text style = {styles.title}>Total Price : </Text>
-              <Text style = {styles.title}>£{totalPrice}</Text>
-            </View>
-
-          ):
-          (
-
-            <View style = {styles.priceContainer}>
-              <Text style = {styles.title}>Set Date And Time For Price</Text>
-            </View>
-
-          )
-        }
-      
-      </View>
-
-      {/* Buy Now */}
-      <TouchableOpacity  onPress={openModal} style={styles.card}>
-        <View style={styles.timeContainer}>
-          <Text style = {styles.title}>Buy Now</Text>
-          <Image source={basket_outline_black} style={styles.basket} />
-        </View>
-      </TouchableOpacity>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={closeModal}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text>Sporty Rentals</Text>
-                <Text>{notification && notification.request.content.title}{" "}</Text>
-                <Text>Start Date: {notification && notification.request.content.data.startDate}</Text>
-                <Text>Start Time: {notification && notification.request.content.data.startTime}</Text>
-                <Text>End Date: {notification && notification.request.content.data.endDate}</Text>
-                <Text>End Date: {notification && notification.request.content.data.endTime}</Text>
-                <Text>Total Price: {notification && notification.request.content.data.totalPrice}</Text>
-            <TouchableOpacity onPress={closeModal} style={styles.modalCloseButton}>
-              <Text style={styles.modalCloseButtonText}>Close</Text>
-            </TouchableOpacity>
+        {/* Service fee */}
+        <View style = {styles.card}>
+          <View style = {styles.priceContainer}>
+            <Text style = {styles.title}>Service Fee : </Text>
+            <Text style = {styles.title}>£{serviceFee}</Text>
           </View>
         </View>
-      </Modal>
+
+        {/* Total Price */}
+        <View style = {styles.card}>
+          {totalPrice!=null && totalPrice!= 0 ?
+            (
+
+              <View style = {styles.priceContainer}>
+                <Text style = {styles.title}>Total Price : </Text>
+                <Text style = {styles.title}>£{totalPrice}</Text>
+              </View>
+
+            ):
+            (
+
+              <View style = {styles.priceContainer}>
+                <Text style = {styles.title}>Set Date And Time For Price</Text>
+              </View>
+
+            )
+          }
+        
+        </View>
+
+        {/* Buy Now */}
+        <TouchableOpacity  onPress={openModal} style={styles.card}>
+          <View style={styles.timeContainer}>
+            <Text style = {styles.title}>Buy Now</Text>
+            <Image source={basket_outline_black} style={styles.basket} />
+          </View>
+        </TouchableOpacity>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible}
+          onRequestClose={closeModal}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text>Sporty Rentals</Text>
+                  <Text>{notification && notification.request.content.title}{" "}</Text>
+                  <Text>Start Date: {notification && notification.request.content.data.startDate}</Text>
+                  <Text>Start Time: {notification && notification.request.content.data.startTime}</Text>
+                  <Text>End Date: {notification && notification.request.content.data.endDate}</Text>
+                  <Text>End Date: {notification && notification.request.content.data.endTime}</Text>
+                  <Text>Total Price: {notification && notification.request.content.data.totalPrice}</Text>
+              <TouchableOpacity onPress={closeModal} style={styles.modalCloseButton}>
+                <Text style={styles.modalCloseButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </View>
     </ScrollView>
     
   );

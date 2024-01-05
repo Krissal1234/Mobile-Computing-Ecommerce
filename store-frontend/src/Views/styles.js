@@ -17,10 +17,19 @@ export default StyleSheet.create({
             ios: {  
             },
             android: {
-                paddingTop:StatusBar.currentHeight,
+              paddingTop:StatusBar.currentHeight,
             },
           }),
           
+    },
+    androidFooterAvoidance:{
+      ...Platform.select({
+        ios: {  
+        },
+        android: {
+          paddingBottom:height*0.1,
+        },
+      }),
     },
     keyboardContainer:{
         width:width,
