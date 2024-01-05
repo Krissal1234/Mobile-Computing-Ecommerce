@@ -38,7 +38,7 @@ function RenterTabs() {
             let iconName;
             if (route.name === 'Pitches') {
               iconName = focused ? pitchFillIcon : pitchTransparentIcon;
-            } else if (route.name === 'Equipment') {
+            } else if (route.name === 'EquipmentStack') {
               iconName = focused ? equipmentFillIcon : equipmentTransparentIcon;
             } else if (route.name === 'Bookings') {
               iconName = focused ? bookingsFillIcon : bookingsTransparentIcon;
@@ -51,7 +51,7 @@ function RenterTabs() {
         })}
       >
       <Tab.Screen
-          name="Equipment"
+          name="EquipmentStack"
           component={RentEquipment}
           options={{ headerShown: false }}
         />

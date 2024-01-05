@@ -11,6 +11,8 @@ import basket_outline_black from '../../../assets/basket_outline_black.png'
 import { UserContext } from '../../Contexts/UserContext';
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
+import * as Location from 'expo-location';
+import MapView, { Marker } from 'react-native-maps';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -37,17 +39,24 @@ const EquipmentDetails = ({ route}) => {
   const scrollViewRef = useRef();
   const calendarEnlarge = useRef(new Animated.Value(1)).current;
   const {user} = useContext(UserContext);
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [deliveryLocation, setDeliveryLocation] = useState(null);
+  const serviceFee = 2;
+  let totalPrice = 0;
+
   function toggleStartTime (){
     if(startDate == ''){
-      scrollToObject(250,calendarEnlarge)
+      scrollToObject(850,calendarEnlarge)
     }else{
       setStartTimeDropdown(!startTimeDropdown)
+
     }
   }
 
   function toggleEndTime (){
     if(startDate == ''){
-      scrollToObject(250,calendarEnlarge)
+      scrollToObject(850,calendarEnlarge)
     }
     else{
       setEndTimeDropdown(!endTimeDropdown)
@@ -58,6 +67,85 @@ const EquipmentDetails = ({ route}) => {
     scrollViewRef.current.scrollTo({ y: yPosition, animated: true });
     animateEnlarge(object);
   };
+
+  function calculateTotalPrice() {
+    if(startDate && selectedStartTime && selectedEndTime && equipment.price){
+      totalPrice=0;
+      totalPrice = calculateHoursDifference() * equipment.price +serviceFee;
+    }
+  }
+
+  function handleStartTimeSet(time){
+    if(time<selectedEndTime || endDate!=''){
+      setSelectedStartTime(time)
+    }
+    else{
+      setSelectedStartTime(time);
+      // Parse the selected time
+      let [hours, minutes] = time.split(':').map(Number);
+      let date = new Date();
+      date.setHours(hours, minutes);
+
+      // Add one hour
+      date.setHours(date.getHours() + 1);
+
+      // Format the new time back into "HH:00" format
+      let newHours = date.getHours();
+      let formattedNewTime = `${newHours < 10 ? '0' + newHours : newHours}:00`;
+      if(formattedNewTime=='00:00'){
+        formattedNewTime='24:00';
+      }
+      setSelectedEndTime(formattedNewTime)
+    }
+
+  }
+
+  function handleEndTimeSet(time){
+
+    if(selectedStartTime<time || endDate!=''){
+      setSelectedEndTime(time)
+    }
+    else{
+      setSelectedEndTime(time)
+      // Parse the selected time
+      let [hours, minutes] = time.split(':').map(Number);
+      let date = new Date();
+      date.setHours(hours, minutes);
+
+      // minus one hour
+      date.setHours(date.getHours() - 1);
+
+
+      // Format the new time back into "HH:00" format
+      let newHours = date.getHours();
+      let formattedNewTime = `${newHours < 10 ? '0' + newHours : newHours}:00`;
+      setSelectedStartTime(formattedNewTime)
+    }
+
+  }
+
+  function calculateHoursDifference() {
+    let startDateTime;
+    let endDateTime;
+    if(endDate!=''){
+      startDateTime = parseDateTime(startDate, selectedStartTime);
+      endDateTime = parseDateTime(endDate, selectedEndTime);
+    }
+    else{
+      startDateTime = parseDateTime(startDate, selectedStartTime);
+      endDateTime = parseDateTime(startDate, selectedEndTime);
+    }
+
+    const difference = endDateTime - startDateTime;
+    return Math.round(difference / (1000 * 60 * 60)); // Convert milliseconds to hours
+
+  }
+
+  function parseDateTime(date, time) {
+    return new Date(`${date}T${time}`);
+  }
+  
+  
 
   const animateEnlarge = (object) => {
     // Enlarge
@@ -88,6 +176,8 @@ const EquipmentDetails = ({ route}) => {
   };
 
   const resetStartEndDates = () => {
+    setSelectedStartTime('12:00');
+    setSelectedEndTime('13:00');
     setStartDate('');
     setEndDate('');
     setMinDate(new Date().toISOString().split('T')[0]); // Reset minDate to the current date
@@ -113,6 +203,7 @@ const EquipmentDetails = ({ route}) => {
         }
       }
     }
+    calculateTotalPrice();
     return markedDates;
   };
 
@@ -152,6 +243,19 @@ const EquipmentDetails = ({ route}) => {
     fetchEquipment();
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
+      setDeliveryLocation(currentLocation.coords); // Initialize deliveryLocation with the user's current location
+    })();
+  }, []);
 
   useEffect(() => {
     // Registers for push notifications and stores the token
@@ -174,6 +278,9 @@ const EquipmentDetails = ({ route}) => {
     };
   }, []);
 
+  const handleMapPress = (e) => {
+    setDeliveryLocation(e.nativeEvent.coordinate);
+  };
 
   if (loading) {
     return <ActivityIndicator />; // or some loading screen
@@ -187,12 +294,17 @@ const EquipmentDetails = ({ route}) => {
     );
   }
 
-  const times = [];
-  for (let i = 6; i <= 24; i++) {
-    times.push(`${i < 10 ? '0' + i : i}:00`); // array of times from "06:00" to "24:00"
+  const startTimes = [];
+  for (let i = 6; i <= 23; i++) {
+    startTimes.push(`${i < 10 ? '0' + i : i}:00`); // array of times from "06:00" to "24:00"
   }
 
-  const renderTimePicker = (timesArray, selectedTime, setSelectedTime) => {
+  const endTimes = [];
+  for (let i = 7; i <= 24; i++) {
+    endTimes.push(`${i < 10 ? '0' + i : i}:00`); // array of times from "06:00" to "24:00"
+  }
+
+  const renderStartTimePicker = (timesArray, selectedTime) => {
     // Android: Use FlatList
     if (Platform.OS === 'android') {
       return (
@@ -204,7 +316,12 @@ const EquipmentDetails = ({ route}) => {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.timeItem}
-              onPress={() => setSelectedTime(item)}
+              onPress={() => 
+                {
+                  handleStartTimeSet(item);
+                  calculateTotalPrice();
+                }
+              }
             >
               <Text style={styles.timeItemText}>{item}</Text>
             </TouchableOpacity>
@@ -217,7 +334,49 @@ const EquipmentDetails = ({ route}) => {
       return (
         <Picker
           selectedValue={selectedTime}
-          onValueChange={(itemValue) => setSelectedTime(itemValue)}
+          onValueChange={(itemValue) => handleStartTimeSet(itemValue)}
+          mode='dropdown'
+          style={styles.timeDropdown}
+        >
+          {timesArray.map((time, index) => (
+            <Picker.Item label={time} value={time} key={index} />
+          ))}
+        </Picker>
+      );
+    }
+  };
+
+  const renderEndTimePicker = (timesArray, selectedTime, setSelectedTime) => {
+    // Android: Use FlatList
+    if (Platform.OS === 'android') {
+      return (
+        <FlatList
+          data={timesArray}
+          nestedScrollEnabled={true}
+          style={styles.timeDropdown}
+          keyExtractor={(item, index) => String(index)}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.timeItem}
+              onPress={() => 
+                {
+                  handleEndTimeSet(item);
+                  calculateTotalPrice();
+                }
+              }
+            >
+              <Text style={styles.timeItemText}>{item}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      );
+    }
+    else{
+      // iOS: Use Picker
+      return (
+        <Picker
+          selectedValue={selectedTime}
+          onValueChange={(itemValue) => handleEndTimeSet(itemValue)}
           mode='dropdown'
           style={styles.timeDropdown}
         >
@@ -342,9 +501,64 @@ const EquipmentDetails = ({ route}) => {
         <Text style = {styles.title}>Handover Type : {deliveryType}</Text>
       </View>
 
+      {/* Location */}
+      {/* Set Delivery Location */}
+      {equipment.deliveryType === 'delivery' && (
+        <View style={styles.card}>
+          <Text style={styles.subtitle}>Click to Set Delivery Location:</Text>
+          {location ? (
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+              onPress={handleMapPress} // Set new delivery location on map press
+            >
+              {deliveryLocation && (
+                <Marker
+                  coordinate={{
+                    latitude: deliveryLocation.latitude,
+                    longitude: deliveryLocation.longitude,
+                  }}
+                  title="Delivery Location"
+                />
+              )}
+            </MapView>
+          ) : (
+            <Text>{errorMsg || "Loading..."}</Text>
+          )}
+        </View>
+      )}
+      {/* Show pickup location */}
+      {equipment.deliveryType === 'pickup' && (
+        <View style={styles.card}>
+          <Text style={styles.subtitle}>Pickup Location:</Text>
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: parseFloat(equipment.pickupLocation.latitude),
+                longitude: parseFloat(equipment.pickupLocation.longitude),
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            >
+              <Marker
+                coordinate={{
+                  latitude: parseFloat(equipment.pickupLocation.latitude),
+                  longitude: parseFloat(equipment.pickupLocation.longitude),
+                }}
+                title="Pickup Location"
+              />
+            </MapView>
+        </View>
+      )}
+
       {/* Calendar */}
       <Animated.View style={[styles.card, {transform: [{scale: calendarEnlarge}]}]}>
-
+        <Text style={styles.title}>Select Dates:</Text>
         <Calendar
           onDayPress={onDayPress}
           markedDates={getMarkedDates()}
@@ -363,7 +577,7 @@ const EquipmentDetails = ({ route}) => {
           
         </View>
 
-        {startTimeDropdown && renderTimePicker(times, selectedStartTime, setSelectedStartTime)}
+        {startTimeDropdown && renderStartTimePicker(startTimes, selectedStartTime)}
 
       </TouchableOpacity>
 
@@ -375,14 +589,45 @@ const EquipmentDetails = ({ route}) => {
           <Image source={endTimeDropdown ? upward_cevron : downward_cevron} style={styles.cevron} />
         </View>
 
-        {endTimeDropdown && renderTimePicker(times, selectedEndTime, setSelectedEndTime)}
+        {endTimeDropdown && renderEndTimePicker(endTimes, selectedEndTime)}
 
       </TouchableOpacity>
+
+      {/* Service fee */}
+      <View style = {styles.card}>
+        <View style = {styles.priceContainer}>
+          <Text style = {styles.title}>Service Fee : </Text>
+          <Text style = {styles.title}>£{serviceFee}</Text>
+        </View>
+      </View>
+
+      {/* Total Price */}
+      <View style = {styles.card}>
+      {console.log(totalPrice)}
+        {totalPrice!=null && totalPrice!= 0 ?
+          (
+
+            <View style = {styles.priceContainer}>
+              <Text style = {styles.title}>Total Price : </Text>
+              <Text style = {styles.title}>£{totalPrice}</Text>
+            </View>
+
+          ):
+          (
+
+            <View style = {styles.priceContainer}>
+              <Text style = {styles.title}>Set Date And Time For Price</Text>
+            </View>
+
+          )
+        }
+      
+      </View>
 
       {/* Buy Now */}
       <TouchableOpacity  onPress={openModal} style={styles.card}>
         <View style={styles.timeContainer}>
-          <Text style = {styles.title}>Press to schedule a local notification</Text>
+          <Text style = {styles.title}>Buy Now</Text>
           <Image source={basket_outline_black} style={styles.basket} />
         </View>
       </TouchableOpacity>
