@@ -111,6 +111,89 @@ const EquipmentDetails = ({ route}) => {
         } else {
           markedDates[dateStr] = { color: colors.darkBlue, textColor: colors.white };
         }
+        setLoading(false);
+      };
+      fetchEquipment();
+    }, []);
+
+    useEffect(() => {
+      (async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+          return;
+        }
+  
+        let currentLocation = await Location.getCurrentPositionAsync({});
+        setLocation(currentLocation);
+        setDeliveryLocation(currentLocation.coords); // Initialize deliveryLocation with the user's current location
+      })();
+    }, []);
+  
+    useEffect(() => {
+      // Registers for push notifications and stores the token
+      registerForPushNotificationsAsync().then((token) =>
+      setExpoPushToken(token)
+      );
+  
+      // Sets up listeners for notification events
+      const subscription = Notifications.addNotificationReceivedListener(
+        (notification) => {
+          setNotification(notification); // Updates state when a notification is received
+        }
+      );
+  
+      // Cleans up listeners on component unmount
+      return () => {
+        subscription.remove();
+        console.log("subs: " + subscription + " removed ");
+  
+      };
+    }, []);
+
+    if (loading) {
+      return <ActivityIndicator />; // or some loading screen
+    }
+  
+    if (!equipment) {
+      return (
+        <View>
+          <Text>No equipment found.</Text>
+        </View>
+      );
+    }
+
+    //delivery and collection type. Keep below fetch equipment UseEffect
+    const deliveryType = equipment.deliveryType.charAt(0).toUpperCase() + equipment.deliveryType.slice(1);//sets delivery type with uppercase first letter
+    const collectionType = deliveryType=='pickup' ? 'Drop-Off' : 'Retrieval';
+
+  // ---------------------------------------------------------------------------------------------------------------------
+
+  // Expand description
+
+    const toggleDetailsExpanded = () => {
+      setIsDetailsExpanded(!isDetailsExpanded);
+    };
+
+  // ---------------------------------------------------------------------------------------------------------------------
+
+  // Location functions:
+    const handleMapPress = (e) => {
+      setDeliveryLocation(e.nativeEvent.coordinate);
+    };
+
+  // ---------------------------------------------------------------------------------------------------------------------
+
+  //Dates functions
+
+    const onDayPress = (day) => {
+      if (!startDate) {
+        setStartDate(day.dateString);
+        setMinDate(day.dateString);  // Set minDate to the selected start date
+      } else if (!endDate && day.dateString > startDate) {
+        setEndDate(day.dateString);
+      } else {
+        resetStartEndDates();
       }
     }
     return markedDates;
@@ -205,90 +288,224 @@ const EquipmentDetails = ({ route}) => {
     times.push(`${i < 10 ? '0' + i : i}:00`); // array of times from "06:00" to "24:00"
   }
 
-  const renderTimePicker = (timesArray, selectedTime, setSelectedTime) => {
-    // Android: Use FlatList
-    if (Platform.OS === 'android') {
-      return (
-        <FlatList
-          data={timesArray}
-          nestedScrollEnabled={true}
-          style={styles.timeDropdown}
-          keyExtractor={(item, index) => String(index)}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.timeItem}
-              onPress={() => setSelectedTime(item)}
-            >
-              <Text style={styles.timeItemText}>{item}</Text>
-            </TouchableOpacity>
-          )}
-        />
-      );
+    function handleStartTimeSet(time){
+      if(time<selectedEndTime || endDate!=''){
+        setSelectedStartTime(time)
+      }
+      else{
+        setSelectedStartTime(time);
+        // Parse the selected time
+        let [hours, minutes] = time.split(':').map(Number);
+        let date = new Date();
+        date.setHours(hours, minutes);
+  
+        // Add one hour
+        date.setHours(date.getHours() + 1);
+  
+        // Format the new time back into "HH:00" format
+        let newHours = date.getHours();
+        let formattedNewTime = `${newHours < 10 ? '0' + newHours : newHours}:00`;
+        if(formattedNewTime=='00:00'){
+          formattedNewTime='24:00';
+        }
+        setSelectedEndTime(formattedNewTime)
+      }
+  
     }
-    else{
-      // iOS: Use Picker
-      return (
-        <Picker
-          selectedValue={selectedTime}
-          onValueChange={(itemValue) => setSelectedTime(itemValue)}
-          mode='dropdown'
-          style={styles.timeDropdown}
-        >
-          {timesArray.map((time, index) => (
-            <Picker.Item label={time} value={time} key={index} />
-          ))}
-        </Picker>
-      );
+  
+    function handleEndTimeSet(time){
+  
+      if(selectedStartTime<time || endDate!=''){
+        setSelectedEndTime(time)
+      }
+      else{
+        setSelectedEndTime(time)
+        // Parse the selected time
+        let [hours, minutes] = time.split(':').map(Number);
+        let date = new Date();
+        date.setHours(hours, minutes);
+  
+        // minus one hour
+        date.setHours(date.getHours() - 1);
+  
+  
+        // Format the new time back into "HH:00" format
+        let newHours = date.getHours();
+        let formattedNewTime = `${newHours < 10 ? '0' + newHours : newHours}:00`;
+        setSelectedStartTime(formattedNewTime)
+      }
+  
     }
-  };
 
-  const deliveryType = equipment.deliveryType.charAt(0).toUpperCase() + equipment.deliveryType.slice(1);//sets delivery type with uppercase first letter
-  const collectionType = deliveryType=='pickup' ? 'Drop-Off' : 'Retrieval';
-
-  async function scheduleLocalNotification() {
-    const notificationContent = {
-      title: "Item Rent Request: " +equipment.title,
-      body: "Your request has been received and the owner will be in contact shortly",
-      data: {
-      startDate: startDate,
-      endDate: endDate,
-      startTime: selectedStartTime,
-      endTime: selectedEndTime,
-      totalPrice: equipment.price,
+    const startTimes = [];
+    for (let i = 6; i <= 23; i++) {
+      startTimes.push(`${i < 10 ? '0' + i : i}:00`); // array of times from "06:00" to "24:00"
+    }
+  
+    const endTimes = [];
+    for (let i = 7; i <= 24; i++) {
+      endTimes.push(`${i < 10 ? '0' + i : i}:00`); // array of times from "06:00" to "24:00"
+    }
+  
+    const renderStartTimePicker = (timesArray, selectedTime) => {
+      // Android: Use FlatList
+      if (Platform.OS === 'android') {
+        return (
+          <FlatList
+            data={timesArray}
+            nestedScrollEnabled={true}
+            style={styles.timeDropdown}
+            keyExtractor={(item, index) => String(index)}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.timeItem}
+                onPress={() => 
+                  {
+                    handleStartTimeSet(item);
+                    calculateTotalPrice();
+                  }
+                }
+              >
+                <Text style={styles.timeItemText}>{item}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        );
+      }
+      else{
+        // iOS: Use Picker
+        return (
+          <Picker
+            selectedValue={selectedTime}
+            onValueChange={(itemValue) => handleStartTimeSet(itemValue)}
+            mode='dropdown'
+            style={styles.timeDropdown}
+          >
+            {timesArray.map((time, index) => (
+              <Picker.Item label={time} value={time} key={index} />
+            ))}
+          </Picker>
+        );
       }
     };
   
-    console.log("Notification Content:", notificationContent);
-    console.log("Local notification scheduled");
-  
-    await Notifications.scheduleNotificationAsync({
-      content: notificationContent,
-      trigger: { seconds: 1}, // Shows the notification after a delay of 2 seconds
-    });
-  
-    console.log("Local notification should have been received");
-  }
+    const renderEndTimePicker = (timesArray, selectedTime, setSelectedTime) => {
+      // Android: Use FlatList
+      if (Platform.OS === 'android') {
+        return (
+          <FlatList
+            data={timesArray}
+            nestedScrollEnabled={true}
+            style={styles.timeDropdown}
+            keyExtractor={(item, index) => String(index)}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.timeItem}
+                onPress={() => 
+                  {
+                    handleEndTimeSet(item);
+                    calculateTotalPrice();
+                  }
+                }
+              >
+                <Text style={styles.timeItemText}>{item}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        );
+      }
+      else{
+        // iOS: Use Picker
+        return (
+          <Picker
+            selectedValue={selectedTime}
+            onValueChange={(itemValue) => handleEndTimeSet(itemValue)}
+            mode='dropdown'
+            style={styles.timeDropdown}
+          >
+            {timesArray.map((time, index) => (
+              <Picker.Item label={time} value={time} key={index} />
+            ))}
+          </Picker>
+        );
+      }
+    };
 
-  const openModal = async () => {
-    console.log("Button Pressed");
-    setModalVisible(true);
-    await scheduleLocalNotification();
-  };
+  // ---------------------------------------------------------------------------------------------------------------------
 
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-   
-  async function registerForPushNotificationsAsync() {
-    let token;
+  // Set Price Functions
+
+    function calculateTotalPrice() {
+      if(startDate && selectedStartTime && selectedEndTime && equipment.price){
+        totalPrice=0;
+        totalPrice = calculateHoursDifference() * equipment.price +serviceFee;
+      }
+    }
+
+    function calculateHoursDifference() {
+      let startDateTime;
+      let endDateTime;
+      if(endDate!=''){
+        startDateTime = parseDateTime(startDate, selectedStartTime);
+        endDateTime = parseDateTime(endDate, selectedEndTime);
+      }
+      else{
+        startDateTime = parseDateTime(startDate, selectedStartTime);
+        endDateTime = parseDateTime(startDate, selectedEndTime);
+      }
   
-    if (Platform.OS === "android") {
-      // Configures notification behavior for Android
-      await Notifications.setNotificationChannelAsync("default", {
-        name: "default",
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: "#FF231F7C",
+      const difference = endDateTime - startDateTime;
+      return Math.round(difference / (1000 * 60 * 60)); // Convert milliseconds to hours
+  
+    }
+  
+    function parseDateTime(date, time) {
+      return new Date(`${date}T${time}`);
+    }
+
+  // ---------------------------------------------------------------------------------------------------------------------
+
+  // Buy now functions
+  
+    const handleBuyNow = () => {
+    
+      const newOrder = {
+        category : "equipment",
+        itemId: route.params,
+        pricePerHour: equipment.pricePerHour,
+        rentalPeriod: {
+          start: startDate,
+          end: endDate,
+        }
+    //   deliveryType
+      }
+
+      
+    }
+
+  // ---------------------------------------------------------------------------------------------------------------------
+
+  // Notifications functions
+
+    async function scheduleLocalNotification() {
+      const notificationContent = {
+        title: "Item Rent Request: " +equipment.title,
+        body: "Your request has been received and the owner will be in contact shortly",
+        data: {
+        startDate: startDate,
+        endDate: endDate,
+        startTime: selectedStartTime,
+        endTime: selectedEndTime,
+        totalPrice: equipment.price,
+        }
+      };
+    
+      console.log("Notification Content:", notificationContent);
+      console.log("Local notification scheduled");
+    
+      await Notifications.scheduleNotificationAsync({
+        content: notificationContent,
+        trigger: { seconds: 1}, // Shows the notification after a delay of 2 seconds
       });
     }
   
