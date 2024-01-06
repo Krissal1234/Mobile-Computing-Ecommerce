@@ -7,6 +7,8 @@ import styles from 'store-frontend/src/Views/styles';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../colors';
 import * as ImagePicker from 'expo-image-picker';
+import { FacilitiesController } from '../../Controllers/FacilitiesController';
+
 
 const PitchDetails = ({ route }) => {
   const { pitch } = route.params;
@@ -57,8 +59,15 @@ const PitchDetails = ({ route }) => {
 
   const handleDelete = () => {
     console.log('Delete Pitch ID:', pitch.id);
-    // TODO: Implement delete logic here
-};
+    deleteFacility(pitch.id);
+  };
+
+    const deleteFacility = async (facilityId) => {
+      const response = await FacilitiesController.deleteFacility(facilityId);
+      console.log(response);
+      // Handle the response, navigate back, show message, etc.
+    };
+
 
 
   return (

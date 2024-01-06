@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, Button } from 'react-native';
 import { Card } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
@@ -7,6 +7,8 @@ import styles from 'store-frontend/src/Views/styles';
 import { colors } from '../colors';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
+import { EquipmentController } from '../../Controllers/EquipmentController';
+
 
 const EquipmentDetails = ({ route }) => {
   const navigation = useNavigation();
@@ -72,10 +74,17 @@ const EquipmentDetails = ({ route }) => {
     setEditableCondition(equipment.condition);
     setIsEditMode(false);
   };
+
   const handleDelete = () => {
     console.log('Delete Equipment ID:', equipment.id);
-    // TODO: Implement delete logic here
-};
+    deleteEquipment(equipment.id); 
+  };
+
+  const deleteEquipment = async (equipmentId) => {
+    const response = await EquipmentController.deleteEquipment(equipmentId);
+    console.log(response);
+    // Handle the response, navigate back, show message, etc.
+  };
 
 
   return (

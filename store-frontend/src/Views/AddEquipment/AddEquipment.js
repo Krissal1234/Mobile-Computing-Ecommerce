@@ -127,7 +127,6 @@ const AddEquipment = () => {
     setSuccessMessage('Equipment added successfully!');
 
     console.log(response.message);
-     //TODO: Display a success message or error message based on what the above function returns (you can check what it returns by going into the function)
   };
 
 

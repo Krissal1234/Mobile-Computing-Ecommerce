@@ -6,6 +6,10 @@ import styles from 'store-frontend/src/Views/styles';
 import AddEquipment from './AddEquipment.js'; // Your AddEquipment screen
 import AddPitch from './AddPitch.js'; // Your AddPitch screen
 import addEquipmentStyles from './styles';
+import Icon from 'react-native-vector-icons/FontAwesome'; 
+import { colors } from '../colors';
+import { Image } from 'react-native';
+
 
 const Stack = createStackNavigator();
 
@@ -21,6 +25,7 @@ const ChoosingScreen = ({ navigation }) => {
       <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('Add Pitch')}>
+          <Icon name="camera" size={50} color={colors.darkBlue} />
           <Text style={styles.buttonTitle}>Add Facility Lease</Text>
       </TouchableOpacity>
     </View>
