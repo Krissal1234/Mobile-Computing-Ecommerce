@@ -1,39 +1,39 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, FlatList, TouchableOpacity, Image, Text , ActivityIndicator} from 'react-native';
 import styles from 'store-frontend/src/Views/styles';
-import { EquipmentController } from '../../Controllers/EquipmentController';
+import { FacilitiesController } from '../../Controllers/FacilitiesController';
 import { ListingsController } from '../../Controllers/ListingsController';
 import { createStackNavigator } from '@react-navigation/stack';
-import EquipmentDetails from './EquipmentDetails';
+import FacilitiesDetails from './FacilitiesDetails';
 
 const Stack = createStackNavigator();
 
-const Equipment = ({ navigation }) => {
-  const [sportsEquipment, setSportsEquipment] = useState([]);
+const Facilities = ({ navigation }) => {
+  const [facilities, setFacilities] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSportsAndEquipment = async () => {
+    const fetchSportsAndFacilities = async () => {
       setLoading(true);
       try {
 
-        let equipmentResponse = await EquipmentController.getAllAvailableEquipment();
+        let facilitiesResponse = await FacilitiesController.getAllAvailableFacilities();
         
-        if (equipmentResponse.success){
-          console.log(equipmentResponse.data);
-          categorizeEquipment(equipmentResponse.data);
+        if (facilitiesResponse.success){
+          console.log(facilitiesResponse.data);
+          categorizeFacilities(facilitiesResponse.data);
         }
 
 
       } catch (error) {
-        console.error("Error fetching sports or equipment: ", error);
+        console.error("Error fetching sports or facilities: ", error);
       } finally {
         setLoading(false);
       }
     };
 
-    const categorizeEquipment = (equipmentList) => {
-      const categorizedData = equipmentList.reduce((acc, item) => {
+    const categorizeFacilities = (facilitiesList) => {
+      const categorizedData = facilitiesList.reduce((acc, item) => {
         const { sportCategory } = item;
         if (!acc[sportCategory]) {
           acc[sportCategory] = [];
@@ -42,24 +42,24 @@ const Equipment = ({ navigation }) => {
         return acc;
       }, {});
 
-      setSportsEquipment(Object.entries(categorizedData).map(([sport, equipment]) => ({ sport, equipment })));
+      setFacilities(Object.entries(categorizedData).map(([sport, facilities]) => ({ sport, facilities })));
     };
 
-    fetchSportsAndEquipment();
+    fetchSportsAndFacilities();
   }, []);
 
-  const renderEquipmentItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('EquipmentDetails', { equipmentId: item.id })}>
+  const renderFacilitiesItem = ({ item }) => (
+    <TouchableOpacity onPress={() => navigation.navigate('FacilitiesDetails', { facilitiesId: item.id })}>
       <Image source={{ uri: item.imageReference }} style={styles.itemPreview} />
     </TouchableOpacity>
   );
 
-  const renderEquipmentRow = ({ item }) => (
+  const renderFacilitiesRow = ({ item }) => (
     <View style={styles.rowContainer}>
       <Text style={styles.rowTitle}>{item.sport}</Text>
       <FlatList
-        data={item.equipment}
-        renderItem={renderEquipmentItem}
+        data={item.facilities}
+        renderItem={renderFacilitiesItem}
         keyExtractor={(item, index) => `${item.sport}-${index}`}
         horizontal
         style={styles.horizontalFlatList}
@@ -79,8 +79,8 @@ const Equipment = ({ navigation }) => {
     <View style={styles.container}>
       <FlatList
         contentContainerStyle={styles.verticalFlatList}
-        data={sportsEquipment}
-        renderItem={renderEquipmentRow}
+        data={facilities}
+        renderItem={renderFacilitiesRow}
         keyExtractor={(item, index) => `sport-${index}`}
         horizontal={false}
         initialNumToRender={1}
@@ -89,16 +89,16 @@ const Equipment = ({ navigation }) => {
   );
 };
 
-const EquipmentStack = () => {
+const FacilitiesStack = () => {
   return (
-    <Stack.Navigator initialRouteName="Equipment"  
+    <Stack.Navigator initialRouteName="Facilities"  
       screenOptions={{ headerShown: false,
       }}
     >
-      <Stack.Screen name="Equipment" component={Equipment} />
-      <Stack.Screen name="EquipmentDetails" component={EquipmentDetails} />
+      <Stack.Screen name="Facilities" component={Facilities} />
+      <Stack.Screen name="FacilitiesDetails" component={FacilitiesDetails} />
     </Stack.Navigator>
   );
 };
 
-export default EquipmentStack;
+export default FacilitiesStack;

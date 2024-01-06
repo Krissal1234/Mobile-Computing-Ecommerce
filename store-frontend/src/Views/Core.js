@@ -7,7 +7,7 @@ import {BlurView} from 'expo-blur';
 import {colors} from './colors'
 import Bookings from './Bookings/Bookings';
 import RentEquipment from './Rent/Equipment';
-import RentPitches from './Rent/Pitches';
+import RentFacilities from './Rent/Facilities';
 import AddEquipment from './AddEquipment/AddEquipment';
 import { UserContext } from '../Contexts/UserContext';
 import styles from './styles';
@@ -36,7 +36,7 @@ function RenterTabs() {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
-            if (route.name === 'Pitches') {
+            if (route.name === 'Facilities') {
               iconName = focused ? pitchFillIcon : pitchTransparentIcon;
             } else if (route.name === 'EquipmentStack') {
               iconName = focused ? equipmentFillIcon : equipmentTransparentIcon;
@@ -56,8 +56,8 @@ function RenterTabs() {
           options={{ headerShown: false }}
         />
         <Tab.Screen
-          name="Pitches"
-          component={RentPitches}
+          name="Facilities"
+          component={RentFacilities}
           options={{ headerShown: false }}
         />
         <Tab.Screen
@@ -75,7 +75,7 @@ function LeaserTabs() {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
-            if (route.name === 'Pitches') {
+            if (route.name === 'Facilities') {
               iconName = focused ? pitchFillIcon : pitchTransparentIcon;
             } else if (route.name === 'Equipment') {
               iconName = focused ? equipmentFillIcon : equipmentTransparentIcon;
@@ -102,7 +102,7 @@ function LeaserTabs() {
           options={{ headerShown: false }}
         />
         <Tab.Screen
-          name="Pitches"
+          name="Facilities"
           component={PitchesLease}
           options={{ headerShown: false }}
         />
