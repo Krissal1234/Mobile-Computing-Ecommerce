@@ -19,13 +19,20 @@ const ChoosingScreen = ({ navigation }) => {
       <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('Add Equipment')}>
+            <Image
+            source={require('store-frontend/assets/equipment_fill_black.png')}
+            style={{ width: 75, height: 70 }} 
+            />
           <Text style={styles.buttonTitle}>Add Equipment Lease</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('Add Pitch')}>
-          <Icon name="camera" size={50} color={colors.darkBlue} />
+          <Image
+            source={require('store-frontend/assets/pitch_fill_black.png')}
+            style={{ width: 75, height: 50 }} 
+            />
           <Text style={styles.buttonTitle}>Add Facility Lease</Text>
       </TouchableOpacity>
     </View>
