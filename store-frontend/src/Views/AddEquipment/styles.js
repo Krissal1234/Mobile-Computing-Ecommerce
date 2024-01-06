@@ -17,6 +17,23 @@ export default StyleSheet.create({
             },
           }),
       },
+
+      choiceScreenContainer: {
+        flex: 1,
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        backgroundColor: colors.darkBlue,
+        padding: 20, 
+        
+        ...Platform.select({
+          ios: {  
+          },
+          android: {
+              paddingTop:StatusBar.currentHeight,
+          },
+        }),
+      },
+      
       scrollContainer: {
         flexGrow: 1,
         justifyContent: 'space-between',
