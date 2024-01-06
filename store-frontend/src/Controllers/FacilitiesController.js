@@ -3,7 +3,7 @@ import {
   getRef,
   getFirebaseStorage,
   uploadImage,
-  getCloudDownloadURL,
+  getCloudDownloadURL,deleteFacilityById
 } from "../../config/firebase";
 
 
@@ -111,6 +111,19 @@ export class FacilitiesController {
           }
         } catch (error) {
           return { success: false, message: error };
+        }
+      }
+
+      static async deleteFacility(itemId){
+        try{
+          var response = await deleteFacilityById(itemId);
+          if(response.data.success){
+          return {success: true, message: response.data.message};
+          }else{
+            return {success: false,message: response.data.message };
+          }
+        }catch(error){
+          return {success: false, message: "Internal Server Error"}
         }
       }
 }

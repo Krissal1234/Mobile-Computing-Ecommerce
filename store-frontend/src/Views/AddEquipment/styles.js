@@ -121,6 +121,13 @@ export default StyleSheet.create({
         textAlign: 'center',
         fontSize: 16,
       },
+      photoButton: {
+        alignItems: 'center', 
+        justifyContent: 'center',
+        padding: 10, 
+        
+      },
+      
       
       
     })

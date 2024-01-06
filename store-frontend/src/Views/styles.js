@@ -286,9 +286,9 @@ export default StyleSheet.create({
 
     buttonRow: {
         flexDirection: 'row',
-        justifyContent: 'space-between', // Or 'flex-start' based on your layout preference
+        justifyContent: 'space-between', 
         alignItems: 'center',
-        // Add other styling as needed, like padding or margin
+        
       },
       
       deleteButton: {
@@ -418,5 +418,17 @@ export default StyleSheet.create({
         alignItems: "center",
         justifyContent: 'center'
     },
+    
+    addButton: {
+      backgroundColor: colors.white,
+      width: width * 0.4, // Smaller width, e.g., 40% of the screen width
+      marginTop: height * 0.02, // Reduced margin-top
+      paddingVertical: height * 0.01, // Smaller padding
+      borderRadius: height * 0.02, // Smaller border-radius
+      borderWidth: width * 0.005, // Smaller border-width
+      borderColor: colors.red,
+      alignItems: "center",
+      justifyContent: 'center'
+    }
     
 })
