@@ -42,10 +42,10 @@ export class FacilitiesController {
           console.error('Error posting Facility:', error);
           return { success: false, message: "An error occurred when inputting your Facility." };
         }
-      } 
+    } 
       
 
-      static async _handleImageUpload(facilityData, user) {
+    static async _handleImageUpload(facilityData, user) {
         const { imageReference } = facilityData;
         const image = await fetch(imageReference);
         const blob = await image.blob();
@@ -60,10 +60,10 @@ export class FacilitiesController {
         console.log("Download URL: ", downloadURL);
     
         facilityData.imageReference = downloadURL;
-      }
+    }
     
 
-      static async getAllAvailableFacilities(){
+    static async getAllAvailableFacilities(){
         //return all facilties with availability status true
         try{
           var response = await getAllAvailableFacilities();
@@ -76,9 +76,9 @@ export class FacilitiesController {
         }catch(error){
           return {success: false, message: "Internal Server Error"}
         }
-      }
+    }
 
-      static async filteredFacilitiesBySport(sport){
+    static async filteredFacilitiesBySport(sport){
         //return all facilities with availability status true
         try{
           var response = await filterFacilitiesBySport(sport);
@@ -90,9 +90,9 @@ export class FacilitiesController {
         }catch(error){
           return {success: false, message: "Internal Server Error"}
         }
-      }
+    }
 
-      static async getFacilityById(id) {
+    static async getFacilityById(id) {
         try {
           var response = await getFacilityById(id);
     
@@ -112,9 +112,9 @@ export class FacilitiesController {
         } catch (error) {
           return { success: false, message: error };
         }
-      }
+    }
 
-      static async deleteFacility(itemId){
+    static async deleteFacility(itemId){
         try{
           var response = await deleteFacilityById(itemId);
           if(response.data.success){
@@ -125,5 +125,5 @@ export class FacilitiesController {
         }catch(error){
           return {success: false, message: "Internal Server Error"}
         }
-      }
+    }
 }
