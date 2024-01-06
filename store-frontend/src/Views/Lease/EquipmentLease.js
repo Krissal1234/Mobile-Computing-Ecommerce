@@ -12,8 +12,6 @@ import { UserContext } from '../../Contexts/UserContext';
 import { ListingsController } from '../../Controllers/ListingsController';
 
 
-
-
 const Stack = createStackNavigator();
 
 const LeasingEquipment = ({ navigation }) => {

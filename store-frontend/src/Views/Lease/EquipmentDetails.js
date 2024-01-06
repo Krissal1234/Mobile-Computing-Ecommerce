@@ -44,19 +44,25 @@ const EquipmentDetails = ({ route }) => {
   
 
   const handleEdit = () => {
+    
     if (isEditMode) {
-        // Log the updated values along with the equipment ID
-        console.log('Saving changes for Equipment ID:', equipment.id);
-        console.log('New Title:', editableTitle);
-        console.log('New Image URI:', editableImage);
+      const itemObject = {
+      itemId: equipment.id, // Assuming equipment has an id property
+      item: {
+        title: editableTitle,
+        imageReference: editableImage,
+        description: editableDescription,
+        price: editablePrice,
+        sportCategory: editableSportCategory,
+        availableStatus: editableAvailable,
+        deliveryType: editableDeliveryType,
+        condition: editableCondition,
+        // Include any other equipment properties you need
+      }
+    };
 
-        console.log('New Description:', editableDescription);
-        console.log('New Price:', editablePrice);
-        console.log('New Sport Category:', editableSportCategory);
-        console.log('New Available Status:', editableAvailable);
-        console.log('New Delivery Type:', editableDeliveryType);
-        console.log('New Condition:', editableCondition);
-
+    // Log the structured object
+    console.log(itemObject);
         // TODO: Implement the update logic here (e.g., updating the state, sending data to a server)
     }
     setIsEditMode(!isEditMode); 

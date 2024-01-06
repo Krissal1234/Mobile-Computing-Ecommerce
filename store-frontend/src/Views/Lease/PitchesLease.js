@@ -8,6 +8,7 @@ import PitchDetails from './PitchDetails';
 import { View } from 'react-native';
 import { UserContext } from '../../Contexts/UserContext';
 import { FacilitiesController } from '../../Controllers/FacilitiesController';
+import { ListingsController } from '../../Controllers/ListingsController';
 
 const Stack = createStackNavigator();
 
@@ -47,7 +48,7 @@ const dummyPitchData = [
 
 const LeasingPitches = ({ navigation }) => {
 
-  const [FacilitiesData, setFacilityData] = useState([]); // Step 2: State for equipment data
+  const [FacilitiesData, setFacilityData] = useState([]); 
 
   const { user } = useContext(UserContext);
   console.log("UserID: ", user.user.uid ); 
@@ -55,10 +56,10 @@ const LeasingPitches = ({ navigation }) => {
 
   useEffect(() => {
     const fetchAvailableFacilities = async () => {
-      const response = await FacilitiesController.getAllAvailableFacilities();
+      const response = await ListingsController.getAllFacilityUserListings(userId);
       console.log("Available Facilities:", response);
       if (response && response.success) {
-        setFacilityData(response.data); // Step 3: Update state with fetched data
+        setFacilityData(response.data);
       }
     };
 
