@@ -174,13 +174,21 @@ export default StyleSheet.create({
         alignSelf:'center',
         paddingVertical:height*0.015,
     },
+    filteredScrollView:{
+      height:height,
+      flexDirection: 'row',
+      marginTop:width*0.1,
+      flexWrap:'wrap',
+      justifyContent: 'space-evenly'
+    },
     verticalFlatList: {
-        width: width,
+      width: width,
     },
     horizontalFlatList: {
-        marginVertical:height*0.05,
+      marginVertical:height*0.05,
     },
     itemPreview:{
+      marginVertical:height*0.01,
         marginHorizontal: width*0.02,
         width:width*0.4,
         height:height*0.19,
