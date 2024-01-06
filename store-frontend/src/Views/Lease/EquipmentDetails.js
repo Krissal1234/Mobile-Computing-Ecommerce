@@ -46,26 +46,36 @@ const EquipmentDetails = ({ route }) => {
   const handleEdit = () => {
     
     if (isEditMode) {
-      const itemObject = {
-      itemId: equipment.id, // Assuming equipment has an id property
-      item: {
-        title: editableTitle,
-        imageReference: editableImage,
-        description: editableDescription,
-        price: editablePrice,
-        sportCategory: editableSportCategory,
-        availableStatus: editableAvailable,
-        deliveryType: editableDeliveryType,
-        condition: editableCondition,
-        // Include any other equipment properties you need
-      }
-    };
+     
+      console.log('itemId:', equipment.id);
 
-    // Log the structured object
-    console.log(itemObject);
-        // TODO: Implement the update logic here (e.g., updating the state, sending data to a server)
+    const itemObject = {
+      title: editableTitle,
+      imageReference: editableImage,
+      description: editableDescription,
+      price: editablePrice,
+      sportCategory: editableSportCategory,
+      availableStatus: editableAvailable === 'true',
+      deliveryType: editableDeliveryType,
+      condition: editableCondition,
+      createdAt: equipment.createdAt,
+      owner: equipment.owner,
+      pickupLocation: equipment.pickupLocation,
+      type: equipment.type,
+      id: equipment.id,
+    };
+    console.log('item:', itemObject);
+
+    editEquipment(equipment.id,itemObject); 
+  
     }
     setIsEditMode(!isEditMode); 
+};
+
+const editEquipment = async (equipmentId,equipmentItem) => {
+  const response = await EquipmentController.editEquipment(equipmentId,equipmentItem);
+  console.log(response.message);
+  // Handle the response, navigate back, show message, etc.
 };
 
 
