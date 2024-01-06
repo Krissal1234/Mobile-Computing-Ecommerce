@@ -129,7 +129,7 @@ const EquipmentDetails = ({ route}) => {
 
     //delivery and collection type. Keep below fetch equipment UseEffect
     const deliveryType = equipment.deliveryType.charAt(0).toUpperCase() + equipment.deliveryType.slice(1);//sets delivery type with uppercase first letter
-    const collectionType = deliveryType=='pickup' ? 'Drop-Off' : 'Retrieval';
+    const collectionType = deliveryType=='Pickup' ? 'Drop-Off' : 'Retrieval';
 
   // ---------------------------------------------------------------------------------------------------------------------
 
