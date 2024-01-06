@@ -362,8 +362,6 @@ exports.filterFacilitiesBySport = functions.https.onCall(async (data,context) =>
 
     // Reference to your Firestore collection
     const facilitiesRef = db.collection('facilities');
-
-    // Apply the filter to the query !!Adjust FieldName!!
     const querySnapshot = await facilitiesRef.where('sportCategory', '==', data).where('availableStatus', '==', true).get();
 
     const filteredData = [];

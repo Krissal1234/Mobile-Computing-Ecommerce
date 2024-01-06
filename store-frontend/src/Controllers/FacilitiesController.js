@@ -3,7 +3,7 @@ import {
   getRef,
   getFirebaseStorage,
   uploadImage,
-  getCloudDownloadURL,
+  getCloudDownloadURL,deleteFacilityById
 } from "../../config/firebase";
 
 
@@ -86,6 +86,20 @@ export class FacilitiesController {
           return {success: true, message: "Successfully retrieved available equipment", data:response.data.data};
           }else{
             return {success: false, message: "Failed to retrieve filtered equipment"+ response.data.message};
+          }
+        }catch(error){
+          return {success: false, message: "Internal Server Error"}
+        }
+      }
+
+
+      static async deleteFacility(itemId){
+        try{
+          var response = await deleteFacilityById(itemId);
+          if(response.data.success){
+          return {success: true, message: response.data.message};
+          }else{
+            return {success: false,message: response.data.message };
           }
         }catch(error){
           return {success: false, message: "Internal Server Error"}

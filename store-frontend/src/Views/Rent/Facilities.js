@@ -1,16 +1,25 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext,useCallback } from 'react';
 import { View, FlatList, TouchableOpacity, Image, Text , ActivityIndicator} from 'react-native';
 import styles from 'store-frontend/src/Views/styles';
 import { FacilitiesController } from '../../Controllers/FacilitiesController';
 import { ListingsController } from '../../Controllers/ListingsController';
 import { createStackNavigator } from '@react-navigation/stack';
 import FacilitiesDetails from './FacilitiesDetails';
+import { useFocusEffect } from '@react-navigation/native';
+import { UserContext } from '../../Contexts/UserContext';
 
 const Stack = createStackNavigator();
 
 const Facilities = ({ navigation }) => {
+  const {sportFilter,setSportFilter} = useContext(UserContext);
   const [facilities, setFacilities] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      setSportFilter('Set Sport Filter');
+    }, [])
+  );
 
   useEffect(() => {
     const fetchSportsAndFacilities = async () => {

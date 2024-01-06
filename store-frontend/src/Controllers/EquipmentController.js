@@ -3,7 +3,7 @@ import {
   postEquipment,
   getAllAvailableEquipment,
   filterEquipmentBySport,
-  getEquipmentById,
+  getEquipmentById,deleteEquipmentById
 } from "../../config/firebase";
 import {
   getRef,
@@ -130,6 +130,20 @@ export class EquipmentController {
       }
     } catch (error) {
       return { success: false, message: error };
+    }
+  }
+
+  static async deleteEquipment(itemId){
+
+    try{
+      var response = await deleteEquipmentById(itemId);
+      if(response.data.success){
+      return {success: true, message: response.data.message};
+      }else{
+        return {success: false,message: response.data.message };
+      }
+    }catch(error){
+      return {success: false, message: "Internal Server Error"}
     }
   }
 }

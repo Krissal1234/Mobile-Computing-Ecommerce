@@ -48,4 +48,6 @@ export const getPastOrders = httpsCallable(functions, 'getPastOrders');
 export const createPaymentSheet = httpsCallable(functions, 'createPaymentSheet');  
 export const getFacilitytListingsByUserUID= httpsCallable(functions, 'getFacilityListingsByUserUID');  
 export const getEquipmentListingsByUserUID= httpsCallable(functions, 'getEquipmentListingsByUserUID'); 
+export const deleteEquipmentById= httpsCallable(functions, 'deleteEquipmentById');  
+export const deleteFacilityById= httpsCallable(functions, 'deleteFacilityById'); 
 
