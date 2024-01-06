@@ -3,7 +3,7 @@ import {
   getRef,
   getFirebaseStorage,
   uploadImage,
-  getCloudDownloadURL,deleteFacilityById
+  getCloudDownloadURL,deleteFacilityById, editFacility
 } from "../../config/firebase";
 
 
@@ -126,4 +126,18 @@ export class FacilitiesController {
           return {success: false, message: "Internal Server Error"}
         }
     }
+
+    static async editFacility(itemId, item){
+      try{
+        
+        var response = await editFacility({itemId,item});
+        if(response.data.success){
+        return {success: true, message: response.data.message};
+        }else{
+          return {success: false,message: response.data.message };
+        }
+      }catch(error){
+        return {success: false, message: "Internal Server Error"}
+      }
+  }
 }

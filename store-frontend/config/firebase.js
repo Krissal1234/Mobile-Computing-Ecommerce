@@ -50,4 +50,6 @@ export const getFacilitytListingsByUserUID= httpsCallable(functions, 'getFacilit
 export const getEquipmentListingsByUserUID= httpsCallable(functions, 'getEquipmentListingsByUserUID'); 
 export const deleteEquipmentById= httpsCallable(functions, 'deleteEquipmentById');  
 export const deleteFacilityById= httpsCallable(functions, 'deleteFacilityById'); 
+export const editEquipment= httpsCallable(functions, 'editEquipment');  
+export const editFacility= httpsCallable(functions, 'editFacility'); 
 
