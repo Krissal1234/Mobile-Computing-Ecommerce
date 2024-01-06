@@ -24,7 +24,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const EquipmentDetails = ({ route}) => {
+const FacilitiesDetails = ({ route}) => {
 
   //Start Up
   const [loading, setLoading] = useState(true);
@@ -116,12 +116,7 @@ const EquipmentDetails = ({ route}) => {
     }, []);
 
     if (loading) {
-      // Display loading indicator when data is being loaded
-      return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      );
+      return <ActivityIndicator />; // or some loading screen
     }
   
     if (!equipment) {
@@ -134,7 +129,7 @@ const EquipmentDetails = ({ route}) => {
 
     //delivery and collection type. Keep below fetch equipment UseEffect
     const deliveryType = equipment.deliveryType.charAt(0).toUpperCase() + equipment.deliveryType.slice(1);//sets delivery type with uppercase first letter
-    const collectionType = deliveryType=='Pickup' ? 'Drop-Off' : 'Retrieval';
+    const collectionType = deliveryType=='pickup' ? 'Drop-Off' : 'Retrieval';
 
   // ---------------------------------------------------------------------------------------------------------------------
 
@@ -227,12 +222,6 @@ const EquipmentDetails = ({ route}) => {
   // ---------------------------------------------------------------------------------------------------------------------
   
   // Time Functions
-  function formatDateTimeModal(dateString, timeString) {
-    const date = new Date(`${dateString}T${timeString}`);
-    return `${date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} at ${date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
-  }
-  
-  
 
     function toggleStartTime (){
       if(startDate == ''){
@@ -430,11 +419,10 @@ const EquipmentDetails = ({ route}) => {
 
   // Buy now functions
   
-    const handleBuyNow = async () => {
-
+    const handleBuyNow = () => {
     
       console.log("Buy Now Pressed");
-      equipment.itemId = route.params.equipmentId;
+
       const order = {
         rentalPeriod: {
           start :{
@@ -446,12 +434,16 @@ const EquipmentDetails = ({ route}) => {
             endTime: selectedEndTime
           }
           },
-          item: equipment,
+          item: equipment
         }
 
-        const response = await OrderController.createOrder(order,user);
+        console.log("ORDER:", order);
+        const response = OrderController.createOrder(order,user);
+        console.log(respone.message);
+
         return response.success
 
+      
     }
 
   // ---------------------------------------------------------------------------------------------------------------------
@@ -459,7 +451,6 @@ const EquipmentDetails = ({ route}) => {
   // Notifications functions
 
     async function scheduleLocalNotification() {
-
       const notificationContent = {
         title: "Item Rent Request: " +equipment.title,
         body: "Your request has been received and the owner will be in contact shortly",
@@ -481,20 +472,14 @@ const EquipmentDetails = ({ route}) => {
       });
     
       console.log("Local notification should have been received");
-      return true;
     }
   
 
     const openModal = async () => {
       const success = handleBuyNow();
-      if(success){
-       // setLoading(true);
-        await scheduleLocalNotification();
-          setModalVisible(true);
-      }else{
-        console.error("Error in creating order");
-      }
-    
+
+      setModalVisible(true);
+      await scheduleLocalNotification();
     };
   
     const closeModal = () => {
@@ -714,28 +699,30 @@ const EquipmentDetails = ({ route}) => {
       </TouchableOpacity>
 
       <Modal
-      animationType="slide"
-      transparent={true}
-      visible={isModalVisible}
-      onRequestClose={closeModal}
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={closeModal}
       >
-  <View style={styles.modalContainer}>
-    <View style={styles.modalContent}>
-      <Text>Order Confirmed!</Text>
-      <Text>{equipment.title}</Text>
-      <Text>Start Date: {formatDateTimeModal(startDate, selectedStartTime)}</Text>
-      <Text>End Date: {formatDateTimeModal(endDate, selectedEndTime)}</Text>
-      <Text>Total Price: £{totalPrice}</Text>
-      <TouchableOpacity onPress={closeModal} style={styles.modalCloseButton}>
-        <Text style={styles.modalCloseButtonText}>Close</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-</Modal>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text>Sporty Rentals</Text>
+                <Text>{notification && notification.request.content.title}{" "}</Text>
+                <Text>Start Date: {notification && notification.request.content.data.startDate}</Text>
+                <Text>Start Time: {notification && notification.request.content.data.startTime}</Text>
+                <Text>End Date: {notification && notification.request.content.data.endDate}</Text>
+                <Text>End Date: {notification && notification.request.content.data.endTime}</Text>
+                <Text>Total Price: {notification && notification.request.content.data.totalPrice}</Text>
+            <TouchableOpacity onPress={closeModal} style={styles.modalCloseButton}>
+              <Text style={styles.modalCloseButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
     </ScrollView>
     
   );
 };
 
-export default EquipmentDetails;
+export default FacilitiesDetails;

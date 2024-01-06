@@ -5,12 +5,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import styles from 'store-frontend/src/Views/styles';
 import AddEquipment from './AddEquipment.js'; // Your AddEquipment screen
 import AddPitch from './AddPitch.js'; // Your AddPitch screen
+import addEquipmentStyles from './styles';
 
 const Stack = createStackNavigator();
 
 const ChoosingScreen = ({ navigation }) => {
   return (
-    <View style={styles.container}>
+    <View style={addEquipmentStyles.choiceScreenContainer}>
       <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('Add Equipment')}>
@@ -20,7 +21,7 @@ const ChoosingScreen = ({ navigation }) => {
       <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('Add Pitch')}>
-          <Text style={styles.buttonTitle}>Add Pitch Lease</Text>
+          <Text style={styles.buttonTitle}>Add Facility Lease</Text>
       </TouchableOpacity>
     </View>
   );

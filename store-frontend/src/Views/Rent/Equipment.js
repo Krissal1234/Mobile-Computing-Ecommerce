@@ -1,17 +1,25 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, FlatList, TouchableOpacity, Image, Text , ActivityIndicator} from 'react-native';
+import React, { useState, useEffect, useContext,useCallback } from 'react';
+import { View, FlatList, TouchableOpacity, Image, Text , ActivityIndicator,ScrollView} from 'react-native';
 import styles from 'store-frontend/src/Views/styles';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import { ListingsController } from '../../Controllers/ListingsController';
 import { createStackNavigator } from '@react-navigation/stack';
 import EquipmentDetails from './EquipmentDetails';
+import { UserContext } from '../../Contexts/UserContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 
 const Equipment = ({ navigation }) => {
+  const {sportFilter,setSportFilter} = useContext(UserContext);
   const [sportsEquipment, setSportsEquipment] = useState([]);
-  const [loadedSports, setLoadedSports] = useState(new Set()); // Keep track of loaded sports
   const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      setSportFilter('Set Sport Filter');
+    }, [])
+  );
 
   useEffect(() => {
     const fetchSportsAndEquipment = async () => {
@@ -47,7 +55,7 @@ const Equipment = ({ navigation }) => {
     };
 
     fetchSportsAndEquipment();
-  }, []);
+  }, [sportFilter]);
 
   const renderEquipmentItem = ({ item }) => (
     <TouchableOpacity onPress={() => navigation.navigate('EquipmentDetails', { equipmentId: item.id })}>
@@ -68,6 +76,7 @@ const Equipment = ({ navigation }) => {
       />
     </View>
   );
+
   if (loading) {
     // Display loading indicator when data is being loaded
     return (
@@ -76,17 +85,42 @@ const Equipment = ({ navigation }) => {
       </View>
     );
   }
+
+  // Filter and flatten the equipment for the selected sport
+  const filteredEquipment = sportsEquipment
+  .filter(({ sport }) => sport === sportFilter)
+  .flatMap(({ equipment }) => equipment);
+
   return (
+    sportFilter === 'Set Sport Filter' || sportFilter === 'No Filter' ? (
+      // This block will render when sportFilter is 'Set Sport Filter' or 'No Filter'
+      <View style={styles.container}>
+        <FlatList
+          contentContainerStyle={styles.verticalFlatList}
+          data={sportsEquipment}
+          renderItem={renderEquipmentRow}
+          keyExtractor={(item, index) => `sport-${index}`}
+          horizontal={false}
+          initialNumToRender={1}
+        />
+      </View>
+    ) : (
+    // Render only the equipment of the sport that matches the sportFilter
     <View style={styles.container}>
-      <FlatList
-        contentContainerStyle={styles.verticalFlatList}
-        data={sportsEquipment}
-        renderItem={renderEquipmentRow}
-        keyExtractor={(item, index) => `sport-${index}`}
-        horizontal={false}
-        initialNumToRender={1}
-      />
+      {filteredEquipment.length > 0 ? (
+        <ScrollView
+          contentContainerStyle={styles.filteredScrollView}
+          showsVerticalScrollIndicator={false}>
+          {filteredEquipment.map((item, index) => renderEquipmentItem({item, index}))}
+        </ScrollView>
+      ) : (
+        // Display no equipment message when there are no items
+        <View style={styles.noEquipmentContainer}>
+          <Text style={styles.noEquipmentText}>No Equipment Available</Text>
+        </View>
+      )}
     </View>
+    )
   );
 };
 
