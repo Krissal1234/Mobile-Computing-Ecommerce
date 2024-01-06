@@ -544,30 +544,40 @@ exports.deleteEquipmentById = functions.https.onCall(async (data,context) => {
 });
 
 exports.editFacility = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
 
   const itemID = data.itemId;
   const item = data.item;
 
-  db.collection('facilities').doc(itemID).update(item).then(() => {
+  try {
+    await db.collection('facilities').doc(itemID).update(item);
     console.log(`Document with ID ${itemID} successfully updated in collection facilities`);
-    return {success:true, message: "Item successfully edited"}
-  }).catch((error) => {
+    return { success: true, message: "Item successfully edited" };
+  } catch (error) {
     console.error("Error updating document: ", error);
-  });
+    throw new functions.https.HttpsError('unknown', 'An error occurred while updating the item');
+  }
 });
-
-exports.editEquipment= functions.https.onCall(async (data, context) => {
+exports.editEquipment = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
 
   const itemID = data.itemId;
   const item = data.item;
 
-  db.collection('equipment').doc(itemID).update(item).then(() => {
+  try {
+    await db.collection('equipment').doc(itemID).update(item);
     console.log(`Document with ID ${itemID} successfully updated in collection equipment`);
-    return {success:true, message: "Item successfully edited"}
-  }).catch((error) => {
+    return { success: true, message: "Item successfully edited" };
+  } catch (error) {
     console.error("Error updating document: ", error);
-  });
+    throw new functions.https.HttpsError('unknown', 'An error occurred while updating the item');
+  }
 });
+
 
 exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
 

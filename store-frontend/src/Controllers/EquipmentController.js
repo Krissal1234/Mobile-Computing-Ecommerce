@@ -149,15 +149,17 @@ export class EquipmentController {
 
   static async editEquipment(itemId, item){
     try{
-      
-      var response = await editEquipment({itemId,item});
+      delete item.id;
+      var response = await editEquipment({itemId:itemId,item:item});
+      console.log(response.data);
       if(response.data.success){
-      return {success: true, message: response.data.message};
+        console.log("Success");
+      return {success: true, message: "successfully edited"};
       }else{
-        return {success: false,message: response.data.message };
+        return {success: false,message:"failed to edit"};
       }
     }catch(error){
-      return {success: false, message: "Internal Server Error"}
+      return {success: false, message: "Internal Server Error again?"}
     }
 }
 }
