@@ -1,4 +1,4 @@
-import { postFacility,getAllAvailableFacilities,filterFacilitiesBySport } from '../../config/firebase';
+import { postFacility,getAllAvailableFacilities,filterFacilitiesBySport,getFacilityById } from '../../config/firebase';
 import {
   getRef,
   getFirebaseStorage,
@@ -79,16 +79,38 @@ export class FacilitiesController {
       }
 
       static async filteredFacilitiesBySport(sport){
-        //return all equipment with availability status true
+        //return all facilities with availability status true
         try{
           var response = await filterFacilitiesBySport(sport);
           if(response.data.success){
-          return {success: true, message: "Successfully retrieved available equipment", data:response.data.data};
+          return {success: true, message: "Successfully retrieved available facilities", data:response.data.data};
           }else{
-            return {success: false, message: "Failed to retrieve filtered equipment"+ response.data.message};
+            return {success: false, message: "Failed to retrieve filtered facilities"+ response.data.message};
           }
         }catch(error){
           return {success: false, message: "Internal Server Error"}
+        }
+      }
+
+      static async getFacilityById(id) {
+        try {
+          var response = await getFacilityById(id);
+    
+          if (response.data.success) {
+            return {
+              success: true,
+              message: "Successfully retrieved facilities by ID ",
+              data: response.data.data,
+            };
+          } else {
+            return {
+              success: false,
+              message:
+                "Failed to retrieve facilities by ID " + response.data.message,
+            };
+          }
+        } catch (error) {
+          return { success: false, message: error };
         }
       }
 }

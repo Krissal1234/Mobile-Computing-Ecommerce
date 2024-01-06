@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext,useCallback } from 'react';
-import { View, FlatList, TouchableOpacity, Image, Text , ActivityIndicator} from 'react-native';
+import { View, FlatList, TouchableOpacity, Image, Text , ActivityIndicator,ScrollView} from 'react-native';
 import styles from 'store-frontend/src/Views/styles';
 import { FacilitiesController } from '../../Controllers/FacilitiesController';
 import { ListingsController } from '../../Controllers/ListingsController';
@@ -58,6 +58,7 @@ const Facilities = ({ navigation }) => {
   }, []);
 
   const renderFacilitiesItem = ({ item }) => (
+    
     <TouchableOpacity onPress={() => navigation.navigate('FacilitiesDetails', { facilitiesId: item.id })}>
       <Image source={{ uri: item.imageReference }} style={styles.itemPreview} />
     </TouchableOpacity>
@@ -84,17 +85,40 @@ const Facilities = ({ navigation }) => {
       </View>
     );
   }
+
+  // Filter and flatten the equipment for the selected sport
+  const filteredFacilities = facilities
+  .filter(({ sport }) => sport === sportFilter)
+  .flatMap(({ facilities }) => facilities);
+
   return (
+    sportFilter === 'Set Sport Filter' || sportFilter === 'No Filter' ? (
+      // This block will render when sportFilter is 'Set Sport Filter' or 'No Filter'
+      <View style={styles.container}>
+        <FlatList
+          contentContainerStyle={styles.verticalFlatList}
+          data={facilities}
+          renderItem={renderFacilitiesRow}
+          keyExtractor={(item, index) => `sport-${index}`}
+          horizontal={false}
+          initialNumToRender={1}
+        />
+      </View>
+    ) : (
+    // Render only the equipment of the sport that matches the sportFilter
     <View style={styles.container}>
-      <FlatList
-        contentContainerStyle={styles.verticalFlatList}
-        data={facilities}
-        renderItem={renderFacilitiesRow}
-        keyExtractor={(item, index) => `sport-${index}`}
-        horizontal={false}
-        initialNumToRender={1}
-      />
+      {filteredFacilities.length > 0 ? (
+        <ScrollView
+          contentContainerStyle={styles.filteredScrollView}
+          showsVerticalScrollIndicator={false}>
+          {filteredFacilities.map((item, index) => renderFacilitiesItem({item, index}))}
+        </ScrollView>
+      ) : (
+        // Display no equipment message when there are no items
+        <Text style={styles.title}>No Facilities Available</Text>
+      )}
     </View>
+    )
   );
 };
 
