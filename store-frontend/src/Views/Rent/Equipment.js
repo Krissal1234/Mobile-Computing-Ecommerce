@@ -107,11 +107,18 @@ const Equipment = ({ navigation }) => {
     ) : (
     // Render only the equipment of the sport that matches the sportFilter
     <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.filteredScrollView}
-        showsVerticalScrollIndicator={false}>
-        {filteredEquipment.map((item, index) => renderEquipmentItem({item, index}))}
-      </ScrollView>
+      {filteredEquipment.length > 0 ? (
+        <ScrollView
+          contentContainerStyle={styles.filteredScrollView}
+          showsVerticalScrollIndicator={false}>
+          {filteredEquipment.map((item, index) => renderEquipmentItem({item, index}))}
+        </ScrollView>
+      ) : (
+        // Display no equipment message when there are no items
+        <View style={styles.noEquipmentContainer}>
+          <Text style={styles.noEquipmentText}>No Equipment Available</Text>
+        </View>
+      )}
     </View>
     )
   );
