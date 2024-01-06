@@ -51,6 +51,12 @@ const PitchDetails = ({ route }) => {
           price: editablePrice,
           sportCategory: editableSportCategory,
           availableStatus: editableAvailable === 'true',
+          createdAt: pitch.createdAt,
+          id: pitch.id,
+          location: pitch.location, //still to arrange
+          owner: pitch.owner,
+          type: pitch.type,
+
       };
       console.log('facility:', facilityObject);
       editFacility(pitch.id,facilityObject);
