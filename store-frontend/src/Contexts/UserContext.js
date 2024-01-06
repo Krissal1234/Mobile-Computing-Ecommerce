@@ -15,7 +15,7 @@ export const UserContext = createContext({
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [sportCategories, setSportCategories] = useState(null);
+  const [sportCategories, setSportCategories] = useState([]);
   const [accountType, setAccountType] = useState(null);
   const [showFilter, setShowFilter] = useState(false);
   const [sportFilter,setSportFilter] = useState('Set Sport Filter');

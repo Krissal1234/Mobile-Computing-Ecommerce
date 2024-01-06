@@ -1,59 +1,35 @@
 
-import { postOrder, getEquipmentById, getFacilityById } from '../../../store-backend/firebase/functions';
-
+import { postOrder } from "../../config/firebase";
 
 export class OrderController {
-    //expected parameter:
-    //usersBasket =
-//     {
-//         category: facility or equipment
-//         itemId: "equipment123",
-//         pricePerHour: 2,
-//         rentalPeriod: {
-//             start: "2023-07-01",
-//             end: "2023-07-05"
-//         },
-//     },
-    static async createOrder(usersBasket,user){
-        //usersBasket {
-        if(!usersBasket || usersBasket.length == 0){
-            return {success: false, message: "The basket is empty"};
-        }
-
-        let totalPrice = 0;
-
-        //Calculating total price
-        usersBasket.forEach(item => {
-            const { price_per_hour, rental_period } = item;
-            const startTime = new Date(rental_period.start);
-            const endTime = new Date(rental_period.end);
-            const durationHours = (endTime - startTime) / 3600000; // Convert milliseconds to hours
-            const price = durationHours * price_per_hour;
-            totalPrice += price;
-        });
+    // const order = {
+    //     rentalPeriod: {
+    //       start :{
+    //         startDate: startDate,
+    //         startTime: selectedStartTime
+    //       },
+    //       end: {
+    //         endDate:endDate,
+    //         endTime: selectedEndTime
+    //       }
+    //       },
+    //       item: equipment
+    //     }
+    static async createOrder(order,user){
 
     try{
     //Adding user data to order
-        const user ={
+        const renter ={
             userUid: user.user.uid, 
             email: user.user.email, 
             username: user.user.displayName
             };
 
-        const renter =[];
-        if(usersBasket.category == 'equipment'){
-            const itemFromDb = await getEquipmentById(usersBasket.itemId);
-            renter = itemFromDb.data.data.owner;
-        }else if(usersBasket.category == 'facility'){
-            const itemFromDb = await getFacilityById(usersBasket.itemId);
-            renter = itemFromDb.data.data.owner;
-        }
 
         const orderDetails = {
-            totalPrice,
-            renter,
-            item: usersBasket,
-            user: user,
+            rentalPeriod: order.rentalPeriod,
+            item: order.item,
+            renter: renter,
             status: "processing" //This will change to paid/finished, once paypal payment succeeds
         }
 

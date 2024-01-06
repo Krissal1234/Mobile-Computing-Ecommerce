@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, FlatList, TouchableOpacity, Image, Text } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, FlatList, TouchableOpacity, Image, Text , ActivityIndicator} from 'react-native';
 import styles from 'store-frontend/src/Views/styles';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import { ListingsController } from '../../Controllers/ListingsController';
@@ -17,13 +17,15 @@ const Equipment = ({ navigation }) => {
     const fetchSportsAndEquipment = async () => {
       setLoading(true);
       try {
-        let sportsResponse = await ListingsController.getAllSports();
-        if (sportsResponse.success) {
-          const sports = sportsResponse.data;
-          await loadEquipmentForSports(sports);
-        } else {
-          console.error("Error fetching sports:", sportsResponse.message);
+
+        let equipmentResponse = await EquipmentController.getAllAvailableEquipment();
+        
+        if (equipmentResponse.success){
+          console.log(equipmentResponse.data);
+          categorizeEquipment(equipmentResponse.data);
         }
+
+
       } catch (error) {
         console.error("Error fetching sports or equipment: ", error);
       } finally {
@@ -31,16 +33,17 @@ const Equipment = ({ navigation }) => {
       }
     };
 
-    const loadEquipmentForSports = async (sports) => {
-      for (let sport of sports) {
-        if (loadedSports.has(sport) || sportsEquipment.length >= 3) break; // Stop if already loaded 3 sports with equipment
-
-        const equipmentResponse = await EquipmentController.filterEquipmentBySport(sport);
-        if (equipmentResponse.success && equipmentResponse.data.length > 0) {
-          setLoadedSports(prev => new Set(prev.add(sport))); // Add sport to loaded sports
-          setSportsEquipment(prevData => [...prevData, { sport, equipment: equipmentResponse.data }]);
+    const categorizeEquipment = (equipmentList) => {
+      const categorizedData = equipmentList.reduce((acc, item) => {
+        const { sportCategory } = item;
+        if (!acc[sportCategory]) {
+          acc[sportCategory] = [];
         }
-      }
+        acc[sportCategory].push(item);
+        return acc;
+      }, {});
+
+      setSportsEquipment(Object.entries(categorizedData).map(([sport, equipment]) => ({ sport, equipment })));
     };
 
     fetchSportsAndEquipment();
@@ -65,7 +68,14 @@ const Equipment = ({ navigation }) => {
       />
     </View>
   );
-
+  if (loading) {
+    // Display loading indicator when data is being loaded
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <FlatList

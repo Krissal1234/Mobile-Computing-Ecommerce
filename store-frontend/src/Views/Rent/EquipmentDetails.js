@@ -2,6 +2,7 @@ import React, { useState, useEffect,useRef, useContext } from 'react';
 import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView,Animated,Modal,FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { EquipmentController } from '../../Controllers/EquipmentController';
+import { OrderController } from '../../Controllers/OrderController';
 import styles from '../styles';
 import { Calendar } from 'react-native-calendars';
 import { colors } from '../colors';
@@ -13,6 +14,7 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
+
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -419,16 +421,27 @@ const EquipmentDetails = ({ route}) => {
   
     const handleBuyNow = () => {
     
-      const newOrder = {
-        category : "equipment",
-        itemId: route.params,
-        pricePerHour: equipment.pricePerHour,
+      console.log("Buy Now Pressed");
+
+      const order = {
         rentalPeriod: {
-          start: startDate,
-          end: endDate,
+          start :{
+            startDate: startDate,
+            startTime: selectedStartTime
+          },
+          end: {
+            endDate:endDate,
+            endTime: selectedEndTime
+          }
+          },
+          item: equipment
         }
-    //   deliveryType
-      }
+
+        console.log("ORDER:", order);
+        const response = OrderController.createOrder(order,user);
+        console.log(respone.message);
+
+        return response.success
 
       
     }
@@ -461,8 +474,10 @@ const EquipmentDetails = ({ route}) => {
       console.log("Local notification should have been received");
     }
   
+
     const openModal = async () => {
-      console.log("Button Pressed");
+      const success = handleBuyNow();
+
       setModalVisible(true);
       await scheduleLocalNotification();
     };
