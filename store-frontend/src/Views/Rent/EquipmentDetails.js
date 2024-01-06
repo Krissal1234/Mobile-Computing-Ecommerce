@@ -723,8 +723,8 @@ const EquipmentDetails = ({ route}) => {
     <View style={styles.modalContent}>
       <Text>Order Confirmed!</Text>
       <Text>{equipment.title}</Text>
-      <Text>Start Date: {formatDateTimeModal(startDate, selectedStartTime)}</Text>
-      <Text>End Date: {formatDateTimeModal(endDate, selectedEndTime)}</Text>
+      <Text>{deliveryType}: {formatDateTimeModal(startDate, selectedStartTime)}</Text>
+      <Text>{collectionType}: {formatDateTimeModal(endDate, selectedEndTime)}</Text>
       <Text>Total Price: £{totalPrice}</Text>
       <TouchableOpacity onPress={closeModal} style={styles.modalCloseButton}>
         <Text style={styles.modalCloseButtonText}>Close</Text>
