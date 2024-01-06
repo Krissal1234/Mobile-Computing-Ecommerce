@@ -3,7 +3,7 @@ import {
   postEquipment,
   getAllAvailableEquipment,
   filterEquipmentBySport,
-  getEquipmentById,deleteEquipmentById
+  getEquipmentById,deleteEquipmentById, editEquipment
 } from "../../config/firebase";
 import {
   getRef,
@@ -146,4 +146,18 @@ export class EquipmentController {
       return {success: false, message: "Internal Server Error"}
     }
   }
+
+  static async editEquipment(itemId, item){
+    try{
+      
+      var response = await editEquipment({itemId,item});
+      if(response.data.success){
+      return {success: true, message: response.data.message};
+      }else{
+        return {success: false,message: response.data.message };
+      }
+    }catch(error){
+      return {success: false, message: "Internal Server Error"}
+    }
+}
 }
