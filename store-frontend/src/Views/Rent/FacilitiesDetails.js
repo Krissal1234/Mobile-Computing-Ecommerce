@@ -1,7 +1,7 @@
 import React, { useState, useEffect,useRef, useContext } from 'react';
 import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView,Animated,Modal,FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { EquipmentController } from '../../Controllers/EquipmentController';
+import { FacilitiesController } from '../../Controllers/FacilitiesController';
 import { OrderController } from '../../Controllers/OrderController';
 import styles from '../styles';
 import { Calendar } from 'react-native-calendars';
@@ -28,7 +28,7 @@ const FacilitiesDetails = ({ route}) => {
 
   //Start Up
   const [loading, setLoading] = useState(true);
-  const [equipment, setEquipment] = useState(null);
+  const [facilities, setFacilities] = useState(null);
 
   //Expand description
   const [isDetailsExpanded, setIsDetailsExpanded] = useState(false);
@@ -65,35 +65,22 @@ const FacilitiesDetails = ({ route}) => {
   // Start up functions
 
     useEffect(() => {
-      const fetchEquipment = async () => {
-        const { equipmentId } = route.params;
+      const fetchFacilities = async () => {
+        const { facilitiesId } = route.params;
         setLoading(true);
-        const response = await EquipmentController.getEquipmentById(equipmentId);
+        const response = await FacilitiesController.getFacilityById(facilitiesId);
+        console.log("facilities:",response);
         if (response.success) {
-          setEquipment(response.data);
+          setFacilities(response.data);
         } else {
-          console.error("Error fetching equipment:", response.message);
+          console.error("Error fetching facilities:", response.message);
           // Handle error - perhaps navigate back or show a message
         }
         setLoading(false);
       };
-      fetchEquipment();
+      fetchFacilities();
     }, []);
     
-    useEffect(() => {
-      (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-          return;
-        }
-
-        let currentLocation = await Location.getCurrentPositionAsync({});
-        setLocation(currentLocation);
-        setDeliveryLocation(currentLocation.coords); // Initialize deliveryLocation with the user's current location
-      })();
-    }, []);
-
     useEffect(() => {
       // Registers for push notifications and stores the token
       registerForPushNotificationsAsync().then((token) =>
@@ -119,17 +106,13 @@ const FacilitiesDetails = ({ route}) => {
       return <ActivityIndicator />; // or some loading screen
     }
   
-    if (!equipment) {
+    if (!facilities) {
       return (
         <View>
-          <Text>No equipment found.</Text>
+          <Text>No facilities found.</Text>
         </View>
       );
     }
-
-    //delivery and collection type. Keep below fetch equipment UseEffect
-    const deliveryType = equipment.deliveryType.charAt(0).toUpperCase() + equipment.deliveryType.slice(1);//sets delivery type with uppercase first letter
-    const collectionType = deliveryType=='pickup' ? 'Drop-Off' : 'Retrieval';
 
   // ---------------------------------------------------------------------------------------------------------------------
 
@@ -137,14 +120,6 @@ const FacilitiesDetails = ({ route}) => {
 
     const toggleDetailsExpanded = () => {
       setIsDetailsExpanded(!isDetailsExpanded);
-    };
-
-  // ---------------------------------------------------------------------------------------------------------------------
-
-  // Location functions:
-
-    const handleMapPress = (e) => {
-      setDeliveryLocation(e.nativeEvent.coordinate);
     };
 
   // ---------------------------------------------------------------------------------------------------------------------
@@ -388,9 +363,9 @@ const FacilitiesDetails = ({ route}) => {
   // Set Price Functions
 
     function calculateTotalPrice() {
-      if(startDate && selectedStartTime && selectedEndTime && equipment.price){
+      if(startDate && selectedStartTime && selectedEndTime && facilities.price){
         totalPrice=0;
-        totalPrice = calculateHoursDifference() * equipment.price +serviceFee;
+        totalPrice = calculateHoursDifference() * facilities.price +serviceFee;
       }
     }
 
@@ -434,7 +409,7 @@ const FacilitiesDetails = ({ route}) => {
             endTime: selectedEndTime
           }
           },
-          item: equipment
+          item: facilities
         }
 
         console.log("ORDER:", order);
@@ -452,14 +427,14 @@ const FacilitiesDetails = ({ route}) => {
 
     async function scheduleLocalNotification() {
       const notificationContent = {
-        title: "Item Rent Request: " +equipment.title,
+        title: "Item Rent Request: " +facilities.title,
         body: "Your request has been received and the owner will be in contact shortly",
         data: {
         startDate: startDate,
         endDate: endDate,
         startTime: selectedStartTime,
         endTime: selectedEndTime,
-        totalPrice: equipment.price,
+        totalPrice: facilities.price,
         }
       };
     
@@ -535,92 +510,51 @@ const FacilitiesDetails = ({ route}) => {
 
       {/* Img,Title,Desc */}
       <View style = {styles.card}>
-        <Image source = {{uri: equipment.imageReference}} style = {styles.detailsImage}></Image>
-        <Text style = {styles.title}>{equipment.title}</Text>
+        <Image source = {{uri: facilities.imageReference}} style = {styles.detailsImage}></Image>
+        <Text style = {styles.title}>{facilities.title}</Text>
         <TouchableOpacity onPress={toggleDetailsExpanded} style={styles.descriptionContainer}>
           <Text
             numberOfLines={isDetailsExpanded ? null : 2} // null means no limit
             ellipsizeMode='tail'
             style={styles.description}
           >
-          {equipment.description}
+          {facilities.description}
           </Text>
         </TouchableOpacity>
-      </View>
-
-      {/* Condition Type */}
-      <View style = {styles.card}>
-        <Text style = {styles.title}>Condition : {equipment.condition}</Text>
       </View>
 
       {/* Price Per Hour */}
       <View style = {styles.card}>
         <View style = {styles.priceContainer}>
           <Text style = {styles.title}>Price : </Text>
-          <Text style = {styles.title}>£{equipment.price}</Text>
+          <Text style = {styles.title}>£{facilities.price}</Text>
           <Text style = {styles.title}>Per Hour</Text>
         </View>
       </View>
 
-      {/* Handover Type */}
-      <View style = {styles.card}>
-        <Text style = {styles.title}>Handover Type : {deliveryType}</Text>
-      </View>
-
       {/* Location */}
-        {/* Set Delivery Location */}
-        {equipment.deliveryType === 'delivery' && (
+        {/* Show location */}
           <View style={styles.card}>
-            <Text style={styles.subtitle}>Click to Set Delivery Location:</Text>
-            {location ? (
-              <MapView
-                style={styles.map}
-                initialRegion={{
-                  latitude: location.coords.latitude,
-                  longitude: location.coords.longitude,
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
-                }}
-                onPress={handleMapPress} // Set new delivery location on map press
-              >
-                {deliveryLocation && (
-                  <Marker
-                    coordinate={{
-                      latitude: deliveryLocation.latitude,
-                      longitude: deliveryLocation.longitude,
+                <Text style={styles.subtitle}>Pickup Location:</Text>
+                <MapView
+                    style={styles.map}
+                    initialRegion={{
+                    latitude: parseFloat(facilities.location.latitude),
+                    longitude: parseFloat(facilities.location.longitude),
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
                     }}
-                    title="Delivery Location"
-                  />
-                )}
-              </MapView>
-            ) : (
-              <Text>{errorMsg || "Loading..."}</Text>
-            )}
+                >
+                    <Marker
+                    coordinate={{
+                        latitude: parseFloat(facilities.location.latitude),
+                        longitude: parseFloat(facilities.location.longitude),
+                    }}
+                    title="Pickup Location"
+                    />
+                </MapView>
           </View>
-        )}
-        {/* Show pickup location */}
-        {equipment.deliveryType === 'pickup' && (
-          <View style={styles.card}>
-            <Text style={styles.subtitle}>Pickup Location:</Text>
-              <MapView
-                style={styles.map}
-                initialRegion={{
-                  latitude: parseFloat(equipment.pickupLocation.latitude),
-                  longitude: parseFloat(equipment.pickupLocation.longitude),
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
-                }}
-              >
-                <Marker
-                  coordinate={{
-                    latitude: parseFloat(equipment.pickupLocation.latitude),
-                    longitude: parseFloat(equipment.pickupLocation.longitude),
-                  }}
-                  title="Pickup Location"
-                />
-              </MapView>
-          </View>
-        )}
+
       {/*  */}
 
       {/* Calendar */}
@@ -639,7 +573,7 @@ const FacilitiesDetails = ({ route}) => {
       <TouchableOpacity style={styles.card} onPress={toggleStartTime} activeOpacity={1}>
         <View style={styles.timeContainer}>
           
-          <Text style={styles.title}>{deliveryType} Time: {selectedStartTime}</Text>
+          <Text style={styles.title}>Start Time: {selectedStartTime}</Text>
           <Image source={startTimeDropdown ? upward_cevron : downward_cevron} style={styles.cevron} />
           
         </View>
@@ -652,7 +586,7 @@ const FacilitiesDetails = ({ route}) => {
       <TouchableOpacity style={styles.card} onPress={toggleEndTime} activeOpacity={1}>
 
         <View style={styles.timeContainer}>
-          <Text style={styles.title}>{collectionType} Time: {selectedEndTime}</Text>
+          <Text style={styles.title}>End Time: {selectedEndTime}</Text>
           <Image source={endTimeDropdown ? upward_cevron : downward_cevron} style={styles.cevron} />
         </View>
 

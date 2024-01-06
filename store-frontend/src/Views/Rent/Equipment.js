@@ -115,9 +115,9 @@ const Equipment = ({ navigation }) => {
         </ScrollView>
       ) : (
         // Display no equipment message when there are no items
-        <View style={styles.noEquipmentContainer}>
-          <Text style={styles.noEquipmentText}>No Equipment Available</Text>
-        </View>
+
+        <Text style={styles.noEquipmentText}>No Equipment Available</Text>
+
       )}
     </View>
     )
