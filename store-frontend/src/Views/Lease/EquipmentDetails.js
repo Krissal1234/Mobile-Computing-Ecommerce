@@ -88,7 +88,7 @@ const EquipmentDetails = ({ route }) => {
 
   const deleteEquipment = async (equipmentId) => {
     const response = await EquipmentController.deleteEquipment(equipmentId);
-    console.log(response);
+    console.log(response.message);
     // Handle the response, navigate back, show message, etc.
   };
 

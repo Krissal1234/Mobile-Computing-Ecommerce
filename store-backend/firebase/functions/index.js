@@ -518,52 +518,103 @@ exports.getPastOrders = functions.https.onCall(async (data,context) => {
     }
     });
 
-    exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
-
-      if (!context.auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
-    }
-    
-    try{
-    
-      const { itemId } = data;
-      let destinationAccountId = "";
-    
-    const querySnapshot = await db.collection('equipment').doc(itemId).get();
-
-    if (querySnapshot.empty) {
-        throw new functions.https.HttpsError('not-found', 'No equipment with the given ID exists in the database.');
-    }
-
-    const equipmentDoc = querySnapshot.docs[0];
-    const equipmentData = equipmentDoc.data();
-    const price = equipmentData.price * 100;
-    
-      const customer = await stripe.customers.create();
-      const ephemeralKey = await stripe.ephemeralKeys.create(
-          { customer: customer.id },
-          { apiVersion: '2023-08-16' }
-      );
-      const paymentIntent = await stripe.paymentIntents.create({
-          amount: price,
-          currency: 'eur',
-          customer: customer.id,
-          automatic_payment_methods: { enabled: true },
-          application_fee_amount: 123,
-          transfer_data: { destination: destinationAccountId },
-      });
-    
-      return {
-          paymentIntent: paymentIntent.client_secret,
-          ephemeralKey: ephemeralKey.secret,
-          customer: customer.id,
-          publishableKey: "pk_test_51LoBCWGC9MhpkKozMAo0UEkGa8FS5TEx8ExG6T702Z8HCA7BvkLRe9jvKHZn26XTJobo4eSgAhVcRQIdAJSJVYAk0077oMzWuL"
-      };
-    
-    }
-    catch (error) {
-      return {
-        error: error
-      }
-    }
+exports.deleteFacilityById = functions.https.onCall(async (data,context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
+    return db.collection('facilities').doc(data).delete().then(()=> {
+      console.log(`Document with ID ${data} successfully deleted from collection facilities`);
+      return {success:true, message: "Item successfully deleted"}
+    }).catch((error) =>{
+      console.error("Error deleting document: ", error);
+      return {success:false, message: "Item successfully deleted"};
     });
+});
+exports.deleteEquipmentById = functions.https.onCall(async (data,context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
+    return db.collection('equipment').doc(data).delete().then(()=> {
+      console.log(`Document with ID ${data} successfully deleted from collection equipment`);
+      return {success:true, message: "Item successfully deleted"}
+    }).catch((error) =>{
+      console.error("Error deleting document: ", error);
+      return {success:false, message: "Item successfully deleted"};
+    });
+});
+
+exports.editFacility = functions.https.onCall(async (data, context) => {
+
+  const itemID = data.itemId;
+  const item = data.item;
+
+  db.collection('facilities').doc(itemID).update(item).then(() => {
+    console.log(`Document with ID ${itemID} successfully updated in collection facilities`);
+    return {success:true, message: "Item successfully edited"}
+  }).catch((error) => {
+    console.error("Error updating document: ", error);
+  });
+});
+
+exports.editEquipment= functions.https.onCall(async (data, context) => {
+
+  const itemID = data.itemId;
+  const item = data.item;
+
+  db.collection('equipment').doc(itemID).update(item).then(() => {
+    console.log(`Document with ID ${itemID} successfully updated in collection equipment`);
+    return {success:true, message: "Item successfully edited"}
+  }).catch((error) => {
+    console.error("Error updating document: ", error);
+  });
+});
+
+exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
+
+    if (!context.auth) {
+      throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
+  
+  try{
+  
+    const { itemId } = data;
+    let destinationAccountId = "";
+  
+  const querySnapshot = await db.collection('equipment').doc(itemId).get();
+
+  if (querySnapshot.empty) {
+      throw new functions.https.HttpsError('not-found', 'No equipment with the given ID exists in the database.');
+  }
+
+  const equipmentDoc = querySnapshot.docs[0];
+  const equipmentData = equipmentDoc.data();
+  const price = equipmentData.price * 100;
+  
+    const customer = await stripe.customers.create();
+    const ephemeralKey = await stripe.ephemeralKeys.create(
+        { customer: customer.id },
+        { apiVersion: '2023-08-16' }
+    );
+    const paymentIntent = await stripe.paymentIntents.create({
+        amount: price,
+        currency: 'eur',
+        customer: customer.id,
+        automatic_payment_methods: { enabled: true },
+        application_fee_amount: 123,
+        transfer_data: { destination: destinationAccountId },
+    });
+  
+    return {
+        paymentIntent: paymentIntent.client_secret,
+        ephemeralKey: ephemeralKey.secret,
+        customer: customer.id,
+        publishableKey: "pk_test_51LoBCWGC9MhpkKozMAo0UEkGa8FS5TEx8ExG6T702Z8HCA7BvkLRe9jvKHZn26XTJobo4eSgAhVcRQIdAJSJVYAk0077oMzWuL"
+    };
+  
+  }
+  catch (error) {
+    return {
+      error: error
+    }
+  }
+  });
