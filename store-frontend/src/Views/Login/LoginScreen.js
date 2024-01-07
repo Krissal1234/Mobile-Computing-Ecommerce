@@ -163,7 +163,7 @@ export default function LoginScreen({ navigation }) {
             />
             <TouchableOpacity
               style={styles.button}
-              onPress={() => signIn()}>
+              onPress={() => onLoginPress()}>
               <Text style={styles.buttonTitle}>Log in</Text>
             </TouchableOpacity>
             <SafeAreaView style={styles.footerView}>

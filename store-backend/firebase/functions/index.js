@@ -586,15 +586,17 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
     const itemId = data.itemId;
     
     let destinationAccountId = "acct_1NzaId9SCquKWTyl";
-  
-   const querySnapshot = await db.collection('equipment').doc("BHfXe2kKvdIZBHdGnvpd").get();
 
-   if (querySnapshot.empty) {
-       throw new functions.https.HttpsError('not-found', 'No equipment with the given ID exists in the database.');
-   }
+    const equipmentListings = await db.collection("equipment").where("id", "==", "BHfXe2kKvdIZBHdGnvpd").get();
+   
 
-   const equipmentDoc = querySnapshot.docs[0];
-   const equipmentData = equipmentDoc.data();
+    let equipmentList = [];
+
+    //to append the specific document id
+    equipmentListings.forEach(doc => {
+      equipmentList.push({ id: doc.id, ...doc.data(), type: 'equipment' });
+    });
+
    const price = 100;
 
     const customer = await stripe.customers.create();
@@ -616,7 +618,7 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
         ephemeralKey: ephemeralKey.secret,
         customer: customer.id,
         publishableKey: "pk_test_51LoBCWGC9MhpkKozMAo0UEkGa8FS5TEx8ExG6T702Z8HCA7BvkLRe9jvKHZn26XTJobo4eSgAhVcRQIdAJSJVYAk0077oMzWuL",
-        price: querySnapshot
+        price: equipmentList
     };
   
   }
