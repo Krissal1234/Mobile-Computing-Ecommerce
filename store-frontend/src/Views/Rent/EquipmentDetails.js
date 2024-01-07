@@ -439,7 +439,7 @@ const EquipmentDetails = ({ route}) => {
     
       console.log("Buy Now Pressed");
       equipment.itemId = route.params.equipmentId;
-
+      
       let response = await ListingsController._createPaymentSheet();
       console.log(response)
 
@@ -483,18 +483,18 @@ const EquipmentDetails = ({ route}) => {
       //   rentalPeriod: {
       //     start :{
       //       startDate: startDate,
-      //       startTime: selectedStartTime
+            //       startTime: selectedStartTime
+          //     },
+          //     end: {
+            //       endDate:endDate,
+            //       endTime: selectedEndTime
+          //     }
       //     },
-      //     end: {
-      //       endDate:endDate,
-      //       endTime: selectedEndTime
-      //     }
-      //     },
-      //     item: equipment,
-      //   }
+          //     item: equipment,
+        //   }
 
-      //   const response = await OrderController.createOrder(order,user);
-      //   return response.success
+        //   const response = await OrderController.createOrder(order,user);
+        //   return response.success
 
     }
 
@@ -723,7 +723,7 @@ const EquipmentDetails = ({ route}) => {
       <View style = {styles.card}>
         <View style = {styles.priceContainer}>
           <Text style = {styles.title}>Service Fee : </Text>
-          <Text style = {styles.title}>£{serviceFee}</Text>
+          <Text style = {styles.title}>£{serviceFee}</Text> 
         </View>
       </View>
 
