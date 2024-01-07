@@ -16,17 +16,18 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.isaas.storefrontend"
+      "bundleIdentifier": "com.isaas.storefrontend",
+      "googleServicesFile": "../GoogleService-Info.plist"
     },
     "android": {
+      "package": "com.sportyrentals",
+      "googleServicesFile": "../google-services.json",
       "adaptiveIcon": {
-        "package": "com.sportyrentals",
-        "googleServicesFile": "../store-backend/firebase",
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.isaas.storefrontend"
+      }
     },
+    "scheme":"sportyrentals-app",
     "web": {
       "favicon": "./assets/favicon.png"
     },

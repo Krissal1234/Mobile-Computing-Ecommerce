@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "79967591982",
+    "project_id": "sportyrentals",
+    "storage_bucket": "sportyrentals.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79967591982:android:f7f82758c2bc30443c09bf",
+        "android_client_info": {
+          "package_name": "com.sportyrentals"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZGdBg2_Qiz8RsNS9KIgFNgZ0FqWfS2fg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
