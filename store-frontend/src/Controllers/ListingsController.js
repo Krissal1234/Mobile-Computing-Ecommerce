@@ -55,7 +55,7 @@ export class ListingsController {
 
   static async _createPaymentSheet(){
     try{
-      const response = await createPaymentSheet({itemId: '5awfBqaPBN42THWF6tJR'});
+      const response = await createPaymentSheet({itemId: "BHfXe2kKvdIZBHdGnvpd"});
       return (response)
     }
     catch (error) {

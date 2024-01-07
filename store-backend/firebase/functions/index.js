@@ -581,25 +581,22 @@ exports.editEquipment = functions.https.onCall(async (data, context) => {
 
 exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
 
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
-  }
-  
   try{
   
-    const { itemId } = data;
-    let destinationAccountId = "";
+    const itemId = data.itemId;
+    
+    let destinationAccountId = "acct_1NzaId9SCquKWTyl";
   
-  const querySnapshot = await db.collection('equipment').doc(itemId).get();
+   const querySnapshot = await db.collection('equipment').doc("BHfXe2kKvdIZBHdGnvpd").get();
 
-  if (querySnapshot.empty) {
-      throw new functions.https.HttpsError('not-found', 'No equipment with the given ID exists in the database.');
-  }
+   if (querySnapshot.empty) {
+       throw new functions.https.HttpsError('not-found', 'No equipment with the given ID exists in the database.');
+   }
 
-  const equipmentDoc = querySnapshot.docs[0];
-  const equipmentData = equipmentDoc.data();
-  const price = equipmentData.price * 100;
-  
+   const equipmentDoc = querySnapshot.docs[0];
+   const equipmentData = equipmentDoc.data();
+   const price = 100;
+
     const customer = await stripe.customers.create();
     const ephemeralKey = await stripe.ephemeralKeys.create(
         { customer: customer.id },
@@ -618,7 +615,8 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
         paymentIntent: paymentIntent.client_secret,
         ephemeralKey: ephemeralKey.secret,
         customer: customer.id,
-        publishableKey: "pk_test_51LoBCWGC9MhpkKozMAo0UEkGa8FS5TEx8ExG6T702Z8HCA7BvkLRe9jvKHZn26XTJobo4eSgAhVcRQIdAJSJVYAk0077oMzWuL"
+        publishableKey: "pk_test_51LoBCWGC9MhpkKozMAo0UEkGa8FS5TEx8ExG6T702Z8HCA7BvkLRe9jvKHZn26XTJobo4eSgAhVcRQIdAJSJVYAk0077oMzWuL",
+        price: querySnapshot
     };
   
   }
