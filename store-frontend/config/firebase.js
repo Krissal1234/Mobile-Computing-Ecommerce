@@ -5,8 +5,6 @@ import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import {getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-
-var provider = new GoogleAuthProvider();
 //DONT CHANGE
 const firebaseConfig = {
   apiKey: "AIzaSyBpCJtHqad3BnKh9PKURBVHQp7I6ykFCO0",
@@ -33,11 +31,6 @@ export const redirectSignIn = signInWithRedirect;
 export const login = signInWithEmailAndPassword;
 export const getFirebaseStorage = getStorage;
 export const getRef = ref;
-
-//provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-export const googleProvider = provider;
-export const googleOAuthProvider = OAuthCredential;
-
 export const uploadImage = uploadBytes;
 export const getCloudDownloadURL = getDownloadURL;
 export const postEquipment = httpsCallable(functions,'postEquipment');

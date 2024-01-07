@@ -724,7 +724,7 @@ const EquipmentDetails = ({ route}) => {
       <View style = {styles.card}>
         <View style = {styles.priceContainer}>
           <Text style = {styles.title}>Service Fee : </Text>
-          <Text style = {styles.title}>£{serviceFee}</Text> 
+          <Text style = {styles.title}>£{serviceFee}</Text>
         </View>
       </View>
 

@@ -23,7 +23,7 @@ const ChoosingScreen = ({ navigation }) => {
             source={require('store-frontend/assets/equipment_fill_black.png')}
             style={{ width: 75, height: 70 }} 
             />
-          <Text style={styles.buttonTitle}>Create equipment listing</Text>
+          <Text style={styles.buttonTitle}>Add Equipment Lease</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -33,7 +33,7 @@ const ChoosingScreen = ({ navigation }) => {
             source={require('store-frontend/assets/pitch_fill_black.png')}
             style={{ width: 75, height: 50 }} 
             />
-          <Text style={styles.buttonTitle}>Create facility listing</Text>
+          <Text style={styles.buttonTitle}>Add Facility Lease</Text>
       </TouchableOpacity>
     </View>
   );
