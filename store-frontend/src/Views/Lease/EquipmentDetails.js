@@ -91,7 +91,7 @@ const editEquipment = async (equipmentId,equipmentItem) => {
     setIsEditMode(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = () => {h
     console.log('Delete Equipment ID:', equipment.id);
     deleteEquipment(equipment.id); 
   };

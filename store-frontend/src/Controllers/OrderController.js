@@ -1,5 +1,5 @@
 
-import { postOrder } from "../../config/firebase";
+import { getCurrentOrders, getPastOrders, postOrder } from "../../config/firebase";
 
 export class OrderController {
     // const order = {
@@ -30,6 +30,7 @@ export class OrderController {
             rentalPeriod: order.rentalPeriod,
             item: order.item,
             renter: renter,
+            totalPrice: order.totalPrice,
             status: "processing" //This will change to paid/finished, once paypal payment succeeds
         }
 
@@ -43,6 +44,33 @@ export class OrderController {
     }catch(error){
         console.error(error);
         return {success:false, message: "Internal server error"}  
+    }
+}
+
+static async getPastBookings(userId){
+    try{
+        const response = await getPastOrders(userId);
+        console.log(response.data.data);
+        if (response.data.success){
+            return {success: true, message: response.data.message,data: response.data.data }
+        }else{
+            return {success: false, message: response.data.message }
+        }
+    }catch(error){
+        console.error("ERROR Internal SERver error");
+    }
+}
+
+static async getFutureBookings(userId){
+    try{
+        const response = await getCurrentOrders(userId);
+        if (response.data.success){
+            return {success: true, message: response.data.message,data: response.data.data }
+        }else{
+            return {success: false, message: response.data.message }
+        }
+    }catch(error){
+        console.error("ERROR Internal SERver error");
     }
 }
 }

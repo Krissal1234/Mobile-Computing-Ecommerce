@@ -440,61 +440,62 @@ const EquipmentDetails = ({ route}) => {
       console.log("Buy Now Pressed");
       equipment.itemId = route.params.equipmentId;
       
-      let response = await ListingsController._createPaymentSheet();
-      console.log(response)
+    //   let response = await ListingsController._createPaymentSheet();
+    //   console.log(response)
 
-      const {
-        paymentIntent,
-        ephemeralKey,
-        customer,
-        publishableKey,
-        price
-      } = response.data
+    //   const {
+    //     paymentIntent,
+    //     ephemeralKey,
+    //     customer,
+    //     publishableKey,
+    //     price
+    //   } = response.data
 
-      console.log("PRICE")
-      console.log("PRICE")
-      console.log("PRICE")
-      console.log("PRICE")
-      console.log("PRICE")
-      console.log("PRICE")
-      console.log(price)
+    //   console.log("PRICE")
+    //   console.log("PRICE")
+    //   console.log("PRICE")
+    //   console.log("PRICE")
+    //   console.log("PRICE")
+    //   console.log("PRICE")
+    //   console.log(price)
 
-      await initPaymentSheet({
-        merchantDisplayName: "Sporty Rentals",
-        customerId: customer,
-        customerEphemeralKeySecret: ephemeralKey,
-        paymentIntentClientSecret: paymentIntent,
-        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-        //methods that complete payment after a delay, like SEPA Debit and Sofort.
-        allowsDelayedPaymentMethods: true,
-        defaultBillingDetails: {
-          name: 'Jane Doe',
-        }
-      });
+    //   await initPaymentSheet({
+    //     merchantDisplayName: "Sporty Rentals",
+    //     customerId: customer,
+    //     customerEphemeralKeySecret: ephemeralKey,
+    //     paymentIntentClientSecret: paymentIntent,
+    //     // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+    //     //methods that complete payment after a delay, like SEPA Debit and Sofort.
+    //     allowsDelayedPaymentMethods: true,
+    //     defaultBillingDetails: {
+    //       name: 'Jane Doe',
+    //     }
+    //   });
 
-      const { error } = await presentPaymentSheet();
+    //   const { error } = await presentPaymentSheet();
 
-    if (error) {
-      return false;
-    } else {
-      return true;
-    }
-      // const order = {
-      //   rentalPeriod: {
-      //     start :{
-      //       startDate: startDate,
-            //       startTime: selectedStartTime
-          //     },
-          //     end: {
-            //       endDate:endDate,
-            //       endTime: selectedEndTime
-          //     }
-      //     },
-          //     item: equipment,
-        //   }
+    // if (error) {
+    //   return false;
+    // } else {
+    //   return true;
+    // }
+      const order = {
+        rentalPeriod: {
+          start :{
+            startDate: startDate,
+                  startTime: selectedStartTime
+              },
+              end: {
+                  endDate:endDate,
+                  endTime: selectedEndTime
+              }
+          },
+              item: equipment,
+              totalPrice: totalPrice
+          }
 
-        //   const response = await OrderController.createOrder(order,user);
-        //   return response.success
+          const response = await OrderController.createOrder(order,user);
+          return response.success
 
     }
 

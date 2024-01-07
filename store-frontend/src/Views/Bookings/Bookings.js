@@ -1,99 +1,76 @@
-import { View, Text, Image, ScrollView } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { View, Text, ScrollView, TouchableOpacity,ActivityIndicator } from 'react-native'
 import BookingsCard from '../../Components/BookingsCard'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import BookingDetails from './BookingDetails'
-import { ListingsController } from '../../Controllers/ListingsController'
-import { initPaymentSheet, presentPaymentSheet } from '@stripe/stripe-react-native'
+import { OrderController } from '../../Controllers/OrderController'
+import { UserContext } from '../../Contexts/UserContext'
 
-const Bookings = ({navigation}) => {
-
+const Bookings = ({ navigation }) => {
   const [isPastBookings, setIsPastBookings] = useState(true)
   const [isShowingDetails, setIsShowingDetails] = useState(false)
-  
+  const [pastbookingOrders, setPastBookingOrders] = useState([]) 
+  const [futureBookingOrders, setFutureBookingOrders] = useState([]) // State to store booking orders
+  const {user} = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(false); // new state variable for loading status
+
   useEffect(() => {
+    setIsLoading(true); // Start loading
+    fetchPastBookingOrders();
+    fetchFutureBookingOrders();
+  }, []);
 
-    getAllSports();
-    async function getAllSports(){
-      let a = await ListingsController._getPaymentSheet();//create account
-      console.log(a)
 
-      let b = await ListingsController._createPaymentSheet();
-      console.log(b)
-      const {
-        paymentIntent,
-        ephemeralKey,
-        customer,
-        publishableKey,
-      } = b.data
 
-      const { error } = await initPaymentSheet({
-        merchantDisplayName: "Sporty Rentals",
-        customerId: customer,
-        customerEphemeralKeySecret: ephemeralKey,
-        paymentIntentClientSecret: paymentIntent,
-        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-        //methods that complete payment after a delay, like SEPA Debit and Sofort.
-        allowsDelayedPaymentMethods: true,
-        defaultBillingDetails: {
-          name: 'Jane Doe',
-        }
-      });
-      await presentPaymentSheet();
+  const fetchFutureBookingOrders = async () => {
+    try {
+      console.log("Bookings past fetch")
+      const resp = await OrderController.getFutureBookings(user.user.uid);
+      console.log(user.user.uid);
+      if(resp.success){
+        setFutureBookingOrders(resp.data);
+      }else{
+        console.error(resp.message);
+      }
+
+    } catch (error) {
+      console.error('Failed to fetch future booking orders:', error);
+    }finally {
+      setIsLoading(false); // Stop loading
     }
-  }, [])
-
-  return (
-
-    <>
-    {!isShowingDetails ? 
-    <View style={{backgroundColor: "rgba(0, 22, 51, 1)"}}>
-    <View style={{flexDirection: "row", justifyContent: "space-around", paddingVertical: 8}}>
-      <TouchableOpacity onPress={() => setIsPastBookings(true)}>
-      <Text style={{
-  color: "white", 
-  fontWeight: "bold", 
-  textDecorationLine: isPastBookings ? 'underline' : 'none'
-}}>Past Bookings</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => setIsPastBookings(false)}>
-        <Text style={{
-          color: "white", 
-          fontWeight: "bold",
-          textDecorationLine: !isPastBookings ? 'underline' : 'none'}}>Future Bookings</Text>
-      </TouchableOpacity>
-    </View>
-    {isPastBookings ? (
-      <ScrollView style={{height: "100%", padding: 12}} contentContainerStyle={{gap: 16}}>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-      <BookingsCard title="Nike Football Shoes" description="past booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg" onPressFunc={navigateToBookingDetails}/>
-    </ScrollView>
-    ) : <>
-    <ScrollView style={{height: "100%", padding: 12}} contentContainerStyle={{gap: 16}}>
-    <BookingsCard title="Nike Football Shoes" description="Future booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg"/>
-    <BookingsCard title="Nike Football Shoes" description="Future booking of football shoes" pricePaid="€21.50" dateFrom="04/12/2023" dateTo="14/12/2023" imageUri="https://www.sportsdirect.com/images/products/08415840_l_a3.jpg"/>
-
-    </ScrollView>
-    </>}
-    
-  </View> : <BookingDetails backFunction={navigateToAllBookings} />
   }
-    
-    </>
+  const fetchPastBookingOrders = async () => {
+    try {
+      console.log("Bookings future fetch")
+      const resp = await OrderController.getPastBookings(user.user.uid);
+      console.log(user.user.uid);
+      if(resp.success){
+        setPastBookingOrders(resp.data);
+      }else{
+        console.error(resp.message);
+      }
 
-  )
+    } catch (error) {
+      console.error('Failed to fetch past booking orders:', error);
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
+  }
+
+
+  const renderBookingCards = (bookings) => {
+    return bookings.map((order, index) => (
+      <BookingsCard 
+        key={index}
+        title={order.item.title}
+        description={order.item.description}
+        pricePaid={order.totalPrice}
+        dateFrom={order.rentalPeriod.start.startDate}
+        dateTo={order.rentalPeriod.end.endDate}
+        imageUri={order.item.imageReference}
+        onPressFunc={navigateToBookingDetails}
+      />
+    ));
+  }
 
   function navigateToBookingDetails(){
     setIsShowingDetails(true)
@@ -102,9 +79,42 @@ const Bookings = ({navigation}) => {
   function navigateToAllBookings(){
     setIsShowingDetails(false)
   }
+  if (isLoading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
 
+  return (
+
+        <>
+        {!isShowingDetails ? 
+        <View style={{backgroundColor: "rgba(0, 22, 51, 1)"}}>
+        <View style={{flexDirection: "row", justifyContent: "space-around", paddingVertical: 8}}>
+          <TouchableOpacity onPress={() => setIsPastBookings(true)}>
+          <Text style={{
+      color: "white", 
+      fontWeight: "bold", 
+      textDecorationLine: isPastBookings ? 'underline' : 'none'
+    }}>Past Bookings</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setIsPastBookings(false)}>
+            <Text style={{
+              color: "white", 
+              fontWeight: "bold",
+              textDecorationLine: !isPastBookings ? 'underline' : 'none'}}>Future Bookings</Text>
+          </TouchableOpacity>
+        </View>
+        {isPastBookings ? (
+            Array.isArray(pastbookingOrders) && renderBookingCards(pastbookingOrders) 
+
+        ) : Array.isArray(pastbookingOrders) && renderBookingCards(futureBookingOrders)
+        }
+        
+      </View> : <BookingDetails backFunction={navigateToAllBookings} />
+      }
+        
+        </>
+    
+  )
 }
-
-
 
 export default Bookings

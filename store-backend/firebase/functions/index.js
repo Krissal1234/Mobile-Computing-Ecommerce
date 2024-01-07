@@ -437,86 +437,67 @@ exports.getPaymentSheet = functions.https.onCall(async (data, context) => {
 });
 
 exports.getCurrentOrders = functions.https.onCall(async (data,context) => {
-if (!context.auth) {
-  throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
-}
-
-try {
-  const userUid = data.userUid;
-  const currentDate = date.now();
-  const equipmentQuery = await db.collection("equipment").where("user.userUid", "==", userUid).where("rental_period.end", "=<", currentDate).get();
-  const facilitiesQuery = await db.collection("facilities").where("user.userUid", "==", userUid).where("rental_period.end", "=<", currentDate).get();
-  
-  const [equipmentSnapshot, facilitiesSnapshot] = await Promise.all([equipmentQuery, facilitiesQuery]);
-
-  let equipmentList = [];
-  let facilitiesList = [];
-
-  //to append the specific document id
-  equipmentSnapshot.forEach(doc => {
-    equipmentList.push({ id: doc.id, ...doc.data(), type: 'equipment' });
-  });
-
-  facilitiesSnapshot.forEach(doc => {
-    facilitiesList.push({ id: doc.id, ...doc.data(), type: 'facility' });
-  });
-  // Combine both lists
-  const combinedListings = equipmentList.concat(facilitiesList);
-
-  return {
-    success: true,
-    message: 'Current Bookings retrieved successfully for the user',
-    data: combinedListings,
-  };
-  } catch (error) {
-  console.error('Error retrieving listings by user UID:', error);
-  return {
-    success: false,
-    message: 'Internal Server Error',
-  };
-  }
-});
-
-exports.getPastOrders = functions.https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
+
   try {
+    const userUid = data;
+    const currentDate = new Date().toISOString().split('T')[0]; // Convert current date to YYYY-MM-DD format
 
-    const userUid = data.userUid;
-    const currentDate = date.now();
-    const equipmentQuery = await db.collection("equipment").where("user.userUid", "==", userUid).where("rental_period.end", ">", currentDate).get();
-    const facilitiesQuery = await db.collection("facilities").where("user.userUid", "==", userUid).where("rental_period.end", ">", currentDate).get();
-    
-    const [equipmentSnapshot, facilitiesSnapshot] = await Promise.all([equipmentQuery, facilitiesQuery]);
+    const snapshot = await admin.firestore().collection('orders')
+      .where('renter.userUid', '==', userUid)
+      .get();
 
-    let equipmentList = [];
-    let facilitiesList = [];
-
-    //to append the specific document id
-    equipmentSnapshot.forEach(doc => {
-      equipmentList.push({ id: doc.id, ...doc.data(), type: 'equipment' });
-    });
-
-    facilitiesSnapshot.forEach(doc => {
-      facilitiesList.push({ id: doc.id, ...doc.data(), type: 'facility' });
-    });
-    // Combine both lists
-    const combinedListings = equipmentList.concat(facilitiesList);
+    const futureBookings = snapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .filter(order => order.rentalPeriod.end.endDate >= currentDate);
 
     return {
       success: true,
-      message: 'Current Bookings retrieved successfully for the user',
-      data: combinedListings,
+      message: 'Future bookings retrieved successfully for the user',
+      data: futureBookings,
     };
-    } catch (error) {
+  } catch (error) {
+    console.error('Error retrieving future orders for user UID:', error);
+    return {
+      success: false,
+      message: 'Internal Server Error',
+    };
+  }
+});
+
+exports.getPastOrders = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+  }
+
+  try {
+    const userUid = data;
+    const currentDate = new Date().toISOString().split('T')[0]; // Convert current date to YYYY-MM-DD format
+
+    const snapshot = await admin.firestore().collection('orders')
+      .where('renter.userUid', '==', userUid)
+      .get();
+
+    const pastBookings = snapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .filter(order => order.rentalPeriod.end.endDate < currentDate);
+
+    return {
+      success: true,
+      message: 'Past bookings retrieved successfully for the user',
+      data: pastBookings,
+    };
+  } catch (error) {
     console.error('Error retrieving listings by user UID:', error);
     return {
       success: false,
       message: 'Internal Server Error',
     };
-    }
-    });
+  }
+});
+
 
 exports.deleteFacilityById = functions.https.onCall(async (data,context) => {
   if (!context.auth) {

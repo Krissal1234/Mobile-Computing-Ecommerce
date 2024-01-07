@@ -1,6 +1,6 @@
 import { firebase, initializeApp } from "firebase/app";
 import { getFunctions, httpsCallable, connectFunctionsEmulator } from 'firebase/functions';
-import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthCredential } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthCredential,signInWithRedirect } from "firebase/auth";
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import {getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -29,6 +29,7 @@ export const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
 });
 export const googleSignIn = signInWithPopup;
+export const redirectSignIn = signInWithRedirect;
 export const login = signInWithEmailAndPassword;
 export const getFirebaseStorage = getStorage;
 export const getRef = ref;
