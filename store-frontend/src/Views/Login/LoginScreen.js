@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, SafeAreaView ,ActivityIndicator, View,Button} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styles from 'store-frontend/src/Views/styles';
+import {auth, googleSignIn, googleProvider, googleOAuthProvider} from '../../../config/firebase'
 import LoginController from '../../Controllers/LoginController';
 import { colors } from 'store-frontend/src/Views/colors.js';
 import { UserContext } from '../../Contexts/UserContext';
@@ -12,17 +13,19 @@ import { EquipmentController } from '../../Controllers/EquipmentController';
 import { ListingsController } from '../../Controllers/ListingsController';
 //import { ANDROID_CLIENT_ID, IOS_CLIENT_ID,  } from "../../../../.env";
 
+
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { user, setUser } = useContext(UserContext);
   const {setSportCategories } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
-  // const ANDROID_CLIENT_ID = 
-  const config = {
-    androidClientId: "79967591982-96u6h31ffjjq8fmc3ortj7tqjflc1dhk.apps.googleusercontent.com",
-    //iosClientId: IOS_CLIENT_ID,
-     }
+
+     const config = {
+      androidClientId: "79967591982-96u6h31ffjjq8fmc3ortj7tqjflc1dhk.apps.googleusercontent.com",
+      iosClientId: "79967591982-kkuap9679v67qhrq4bl7h3mrjcsr6psd.apps.googleusercontent.com",
+      webClientId: "79967591982-24q93ovcvnd73t91k0tn1ph96ve9nqat.apps.googleusercontent.com",
+    };
   const [request, response, promptAsync] = Google.useAuthRequest(config);
 
   WebBrowser.maybeCompleteAuthSession();
@@ -53,22 +56,44 @@ export default function LoginScreen({ navigation }) {
     }
   };
   const signInWithGoogle = async () => {
-    try {
-      // Attempt to retrieve user information from AsyncStorage
-      const userJSON = await AsyncStorage.getItem("user");
+
+  googleSignIn(googleProvider)
+  .then((result) => {
+    /** @type {googleOAuthProvider} */
+    var credential = result.credential;
+
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    var token = credential.accessToken;
+    // The signed-in user info.
+    var user = result.user;
+    // IdP data available in result.additionalUserInfo.profile.
+      // ...
+  }).catch((error) => {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // The email of the user's account used.
+    var email = error.email;
+    // The firebase.auth.AuthCredential type that was used.
+    var credential = error.credential;
+    // ...
+  });
+    // try {
+    //   // Attempt to retrieve user information from AsyncStorage
+    //   const userJSON = await AsyncStorage.getItem("user");
   
-      if (userJSON) {
-        // If user information is found in AsyncStorage, parse it and set it in the state
-        setUserInfo(JSON.parse(userJSON));
-      } else if (response?.type === "success") {
-        // If no user information is found and the response type is "success" (assuming response is defined),
-        // call getUserInfo with the access token from the response
-        getUserInfo(response.authentication.accessToken);
-      }
-    } catch (error) {
-      // Handle any errors that occur during AsyncStorage retrieval or other operations
-      console.error("Error retrieving user data from AsyncStorage:", error);
-    }
+    //   if (userJSON) {
+    //     // If user information is found in AsyncStorage, parse it and set it in the state
+    //     setUserInfo(JSON.parse(userJSON));
+    //   } else if (response?.type === "success") {
+    //     // If no user information is found and the response type is "success" (assuming response is defined),
+    //     // call getUserInfo with the access token from the response
+    //     getUserInfo(response.authentication.accessToken);
+    //   }
+    // } catch (error) {
+    //   // Handle any errors that occur during AsyncStorage retrieval or other operations
+    //   console.error("Error retrieving user data from AsyncStorage:", error);
+    // }
   };
   
   //add it to a useEffect with response as a dependency 
@@ -148,7 +173,7 @@ export default function LoginScreen({ navigation }) {
                   Sign up
                 </Text>
               </Text>
-              <Button title= "sign in with google" onPress={()=>{promptAsync()}}/>
+              <Button title= "sign in with google" onPress={()=>{signInWithGoogle()}}/>
             </SafeAreaView>
           </>
         )}

@@ -12,7 +12,20 @@
           "package_name": "com.sportyrentals"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "79967591982-96u6h31ffjjq8fmc3ortj7tqjflc0dhk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sportyrentals",
+            "certificate_hash": "a663bcbe2cc9ea7fd669613077afce0fb3073d05"
+          }
+        },
+        {
+          "client_id": "79967591982-24q93ovcvnd73t91k0tn1ph96ve9nqat.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDZGdBg2_Qiz8RsNS9KIgFNgZ0FqWfS2fg"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "79967591982-24q93ovcvnd73t91k0tn1ph96ve9nqat.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "79967591982-kkuap9679v67qhrq4bl7h3mrjcsr6psd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.isaas.storefrontend"
+              }
+            }
+          ]
         }
       }
     }
