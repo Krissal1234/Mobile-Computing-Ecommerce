@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useRef, useContext } from 'react';
-import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView,Animated,Modal,FlatList } from 'react-native';
+import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView,Animated,Modal,FlatList, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import { OrderController } from '../../Controllers/OrderController';
@@ -14,6 +14,10 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
+
+import { initPaymentSheet, presentPaymentSheet } from '@stripe/stripe-react-native'
+import { ListingsController } from '../../Controllers/ListingsController';
+
 
 
 Notifications.setNotificationHandler({
@@ -435,22 +439,62 @@ const EquipmentDetails = ({ route}) => {
     
       console.log("Buy Now Pressed");
       equipment.itemId = route.params.equipmentId;
-      const order = {
-        rentalPeriod: {
-          start :{
-            startDate: startDate,
-            startTime: selectedStartTime
-          },
-          end: {
-            endDate:endDate,
-            endTime: selectedEndTime
-          }
-          },
-          item: equipment,
-        }
 
-        const response = await OrderController.createOrder(order,user);
-        return response.success
+      let response = await ListingsController._createPaymentSheet();
+      console.log(response)
+
+      const {
+        paymentIntent,
+        ephemeralKey,
+        customer,
+        publishableKey,
+        price
+      } = response.data
+
+      console.log("PRICE")
+      console.log("PRICE")
+      console.log("PRICE")
+      console.log("PRICE")
+      console.log("PRICE")
+      console.log("PRICE")
+      console.log(price)
+
+      await initPaymentSheet({
+        merchantDisplayName: "Sporty Rentals",
+        customerId: customer,
+        customerEphemeralKeySecret: ephemeralKey,
+        paymentIntentClientSecret: paymentIntent,
+        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+        //methods that complete payment after a delay, like SEPA Debit and Sofort.
+        allowsDelayedPaymentMethods: true,
+        defaultBillingDetails: {
+          name: 'Jane Doe',
+        }
+      });
+
+      const { error } = await presentPaymentSheet();
+
+    if (error) {
+      return false;
+    } else {
+      return true;
+    }
+      // const order = {
+      //   rentalPeriod: {
+      //     start :{
+      //       startDate: startDate,
+      //       startTime: selectedStartTime
+      //     },
+      //     end: {
+      //       endDate:endDate,
+      //       endTime: selectedEndTime
+      //     }
+      //     },
+      //     item: equipment,
+      //   }
+
+      //   const response = await OrderController.createOrder(order,user);
+      //   return response.success
 
     }
 
@@ -486,7 +530,7 @@ const EquipmentDetails = ({ route}) => {
   
 
     const openModal = async () => {
-      const success = handleBuyNow();
+      const success = await handleBuyNow();
       if(success){
        // setLoading(true);
         await scheduleLocalNotification();
