@@ -16,9 +16,13 @@ import * as ImagePicker from "expo-image-picker";
 import { UserContext } from "../../Contexts/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/FontAwesome";
-import styles from "store-frontend/src/Views/styles";
+import styles from '../styles';
 import { useNavigation } from "@react-navigation/native";
 import { FacilitiesController } from "../../Controllers/FacilitiesController";
+import { colors } from '../colors';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+
 
 import addEquipmentStyles from "./styles"; // Modify as needed for AddPitch
 
@@ -124,14 +128,18 @@ const AddPitch = () => {
 
   return (
     <SafeAreaView style={addEquipmentStyles.container}>
-      <ScrollView contentContainerStyle={addEquipmentStyles.scrollContainer}>
+     <KeyboardAwareScrollView
+        contentContainerStyle={styles.keyboardContainer}
+        keyboardShouldPersistTaps="never">
         {/* Back Button */}
+        
         <TouchableOpacity onPress={handleBack} style={styles.backButton}>
           <Icon name="arrow-left" size={40} color="white" />
         </TouchableOpacity>
 
-        <Card style={addEquipmentStyles.card}>
-          <TouchableOpacity onPress={handleChoosePhoto}>
+        <Card style={styles.card}>                          
+          <TouchableOpacity onPress={handleChoosePhoto} style={addEquipmentStyles.photoButton}>
+            <Icon name="camera" size={50} color={colors.darkBlue} />
             {images.length > 0 ? (
               images.map((image, index) => (
                 <Image
@@ -141,39 +149,49 @@ const AddPitch = () => {
                 />
               ))
             ) : (
-              <Text style={addEquipmentStyles.choosePhotoText}>
-                Choose Pitch Photos
+              <Text style={styles.title}>
+                Choose Facility Photo
               </Text>
             )}
           </TouchableOpacity>
+          </Card>
 
-          <Text style={addEquipmentStyles.label}>Pitch Title</Text>
+          <Card style={styles.card}> 
+          <Text style={styles.title}>Facility Title</Text>
           <TextInput
-            style={addEquipmentStyles.input}
+            style={styles.input}
             placeholder="Enter Pitch Title"
             value={title}
             onChangeText={setTitle}
           />
+          </Card>
 
-          <Text style={addEquipmentStyles.label}>Description</Text>
+          <Card style={styles.card}> 
+          <Text style={styles.title}>Description</Text>
           <TextInput
-            style={addEquipmentStyles.input}
+            style={styles.input}
             placeholder="Enter Description"
             value={description}
             onChangeText={setDescription}
           />
+          </Card>
 
-          <Text style={addEquipmentStyles.label}>Price Per Hour</Text>
+        
+          <Card style={styles.card}> 
+          <Text style={styles.title}>Price Per Hour</Text>
           <TextInput
-            style={addEquipmentStyles.input}
+            style={styles.input}
             placeholder="Enter Price"
             keyboardType="numeric"
             value={price}
             onChangeText={setPrice}
           />
-    {/* Sport Category Dropdown */}
-    <Text style={addEquipmentStyles.label}>Sport Category</Text>
-            <View style={addEquipmentStyles.input}>
+          </Card>
+
+          <Card style={styles.card}> 
+              {/* Sport Category Dropdown */}
+          <Text style={styles.title}>Sport Category</Text>
+            <View style={styles.input}>
             <TouchableOpacity 
               style={addEquipmentStyles.dropdownButton}
               onPress={() => setIsSportsDropdownVisible(true)}
@@ -202,10 +220,12 @@ const AddPitch = () => {
               </View>
             </Modal>
             </View>
+            </Card>
               
+            <Card style={styles.card}> 
 
-          <Text style={addEquipmentStyles.label}>Available</Text>
-          <View style={addEquipmentStyles.input}>
+          <Text style={styles.title}>Available</Text>
+          <View style={styles.input}>
             <TouchableOpacity
               style={addEquipmentStyles.dropdownButton}
               onPress={toggleAvailableDropdown}
@@ -243,9 +263,12 @@ const AddPitch = () => {
               </View>
             </Modal>
           </View>
+          </Card>
 
+
+          <Card style={styles.card}> 
           <View style={addEquipmentStyles.mapContainer}>
-            <Text style={addEquipmentStyles.label}>Pitch Location</Text>
+            <Text style={styles.title}>Facility Location</Text>
             <MapView
               style={addEquipmentStyles.map}
               region={{
@@ -273,6 +296,7 @@ const AddPitch = () => {
               )}
             </MapView>
           </View>
+          </Card>
 
           {errorMessage.length > 0 && (
         <Text style={addEquipmentStyles.errorMessage}>{errorMessage}</Text>
@@ -283,10 +307,10 @@ const AddPitch = () => {
       )}
 
           <TouchableOpacity style={styles.button} onPress={handleAddPitch}>
-            <Text style={styles.buttonTitle}>Add Pitch</Text>
+            <Text style={styles.buttonTitle}>Add Facility</Text>
           </TouchableOpacity>
-        </Card>
-      </ScrollView>
+       
+          </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

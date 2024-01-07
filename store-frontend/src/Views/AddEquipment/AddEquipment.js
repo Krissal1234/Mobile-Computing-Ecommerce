@@ -169,7 +169,6 @@ const AddEquipment = () => {
       <KeyboardAwareScrollView
         contentContainerStyle={styles.keyboardContainer}
         keyboardShouldPersistTaps="never">
-        <View style={addEquipmentStyles.container}>
 
           {/* Back Button */}
           <TouchableOpacity onPress={handleBack} style={styles.backButton}>
@@ -416,7 +415,7 @@ const AddEquipment = () => {
               <Text style={styles.buttonTitle}>Add Equipment</Text>
           </TouchableOpacity>
          
-        </View>
+     
         </KeyboardAwareScrollView>
     </SafeAreaView>
   );

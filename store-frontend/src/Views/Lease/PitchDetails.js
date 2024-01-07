@@ -42,7 +42,25 @@ const PitchDetails = ({ route }) => {
   const handleEdit = () => {
     if (isEditMode) {
       // TODO: Implement update logic here
-      console.log('Updating pitch details...');
+      console.log('facilityId:', pitch.id);
+
+      const facilityObject = {
+          title: editableTitle,
+          imageReference: editableImage,
+          description: editableDescription,
+          price: editablePrice,
+          sportCategory: editableSportCategory,
+          availableStatus: editableAvailable === 'true',
+          createdAt: pitch.createdAt,
+          id: pitch.id,
+          location: pitch.location, //still to arrange
+          owner: pitch.owner,
+          type: pitch.type,
+
+      };
+      console.log('facility:', facilityObject);
+      editFacility(pitch.id,facilityObject);
+
     }
     setIsEditMode(!isEditMode);
   };
@@ -65,6 +83,12 @@ const PitchDetails = ({ route }) => {
     const deleteFacility = async (facilityId) => {
       const response = await FacilitiesController.deleteFacility(facilityId);
       console.log(response);
+      // Handle the response, navigate back, show message, etc.
+    };
+
+    const editFacility = async (facilityId,facilityItem) => {
+      const response = await FacilitiesController.editFacility(facilityId,facilityItem);
+      console.log(response.message);
       // Handle the response, navigate back, show message, etc.
     };
 

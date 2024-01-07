@@ -44,22 +44,38 @@ const EquipmentDetails = ({ route }) => {
   
 
   const handleEdit = () => {
+    
     if (isEditMode) {
-        // Log the updated values along with the equipment ID
-        console.log('Saving changes for Equipment ID:', equipment.id);
-        console.log('New Title:', editableTitle);
-        console.log('New Image URI:', editableImage);
+     
+      console.log('itemId:', equipment.id);
 
-        console.log('New Description:', editableDescription);
-        console.log('New Price:', editablePrice);
-        console.log('New Sport Category:', editableSportCategory);
-        console.log('New Available Status:', editableAvailable);
-        console.log('New Delivery Type:', editableDeliveryType);
-        console.log('New Condition:', editableCondition);
+    const itemObject = {
+      title: editableTitle,
+      imageReference: editableImage,
+      description: editableDescription,
+      price: editablePrice,
+      sportCategory: editableSportCategory,
+      availableStatus: editableAvailable === 'true',
+      deliveryType: editableDeliveryType,
+      condition: editableCondition,
+      createdAt: equipment.createdAt,
+      owner: equipment.owner,
+      pickupLocation: equipment.pickupLocation,
+      type: equipment.type,
+      id: equipment.id,
+    };
+    console.log('item:', itemObject);
 
-        // TODO: Implement the update logic here (e.g., updating the state, sending data to a server)
+    editEquipment(equipment.id,itemObject); 
+  
     }
     setIsEditMode(!isEditMode); 
+};
+
+const editEquipment = async (equipmentId,equipmentItem) => {
+  const response = await EquipmentController.editEquipment(equipmentId,equipmentItem);
+  console.log(response.message);
+  // Handle the response, navigate back, show message, etc.
 };
 
 
