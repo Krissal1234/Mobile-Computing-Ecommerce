@@ -10,38 +10,6 @@ const Bookings = ({navigation}) => {
 
   const [isPastBookings, setIsPastBookings] = useState(true)
   const [isShowingDetails, setIsShowingDetails] = useState(false)
-  
-  useEffect(() => {
-
-    getAllSports();
-    async function getAllSports(){
-      let a = await ListingsController._getPaymentSheet();//create account
-      console.log(a)
-
-      let b = await ListingsController._createPaymentSheet();
-      console.log(b)
-      const {
-        paymentIntent,
-        ephemeralKey,
-        customer,
-        publishableKey,
-      } = b.data
-
-      const { error } = await initPaymentSheet({
-        merchantDisplayName: "Sporty Rentals",
-        customerId: customer,
-        customerEphemeralKeySecret: ephemeralKey,
-        paymentIntentClientSecret: paymentIntent,
-        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-        //methods that complete payment after a delay, like SEPA Debit and Sofort.
-        allowsDelayedPaymentMethods: true,
-        defaultBillingDetails: {
-          name: 'Jane Doe',
-        }
-      });
-      await presentPaymentSheet();
-    }
-  }, [])
 
   return (
 

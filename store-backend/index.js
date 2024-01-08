@@ -110,6 +110,36 @@ app.post('/payment-sheet/:itemId', async (req, res) => {
       })
     }
   })
+
+  app.get("/accountById", async (req, res) => {
+    try {
+      const accounts = await stripe.accounts.list({limit: 20})
+
+      let foundAccount = false;
+
+      for (let i = 0; i < accounts.data.length; i++) {
+        if (accounts.data[i].metadata.sportyRentalsUserId === "5VaqOr1aDLQov360AHZDicR158d2") {
+            res.json({
+                sportyRentalsUserId: accounts.data[i].metadata.sportyRentalsUserId,
+                stripeAccountId: accounts.data[i].id
+            });
+            foundAccount = true;
+            break;
+        }
+    }
+
+    if(!foundAccount){
+      res.json({
+        error: "No matching account found",
+        message: "You don't have a payment account linked to your account"
+      })
+    }
+    
+    } catch (error) {
+      res.json({error: error})      
+    }
+
+  })
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });

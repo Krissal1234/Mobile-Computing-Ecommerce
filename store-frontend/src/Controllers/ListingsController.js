@@ -47,15 +47,15 @@ export class ListingsController {
   static async _getPaymentSheet(){
     try {
       const response = await getPaymentSheet();
-      console.log(response)
+      return response;
     } catch (error) {
       console.log(error)
     }
   }
 
-  static async _createPaymentSheet(){
+  static async _createPaymentSheet(order){
     try{
-      const response = await createPaymentSheet({itemId: "BHfXe2kKvdIZBHdGnvpd"});
+      const response = await createPaymentSheet({order: order});
       return (response)
     }
     catch (error) {

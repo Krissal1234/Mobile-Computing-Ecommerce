@@ -410,6 +410,7 @@ exports.getPaymentSheet = functions.https.onCall(async (data, context) => {
     // Create a new Stripe express account
     const account = await stripe.accounts.create({
       type: 'express',
+      metadata: { sportyRentalsUserId: "5VaqOr1aDLQov360AHZDicR158d2"}
     });
 
     const accountId = account.id;
@@ -583,8 +584,8 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
 
   try{
   
-    const itemId = data.itemId;
-    
+    //const itemId = data.itemId;
+    const order = data.order;
     let destinationAccountId = "acct_1NzaId9SCquKWTyl";
 
     const equipmentListings = await db.collection("equipment").where("id", "==", "BHfXe2kKvdIZBHdGnvpd").get();
@@ -597,7 +598,25 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
       equipmentList.push({ id: doc.id, ...doc.data(), type: 'equipment' });
     });
 
-   const price = 100;
+    fromDate = order.rentalPeriod.start.startDate
+    fromTime = order.rentalPeriod.start.startTime
+    toDate = order.rentalPeriod.end.endDate
+    toTime = order.rentalPeriod.end.endTime
+
+    function combineDateTime(date, time) {
+      return new Date(date + 'T' + time);
+  }
+
+  const startDateTime = combineDateTime(fromDate, fromTime);
+const endDateTime = combineDateTime(toDate, toTime);
+
+const differenceInMilliseconds = endDateTime - startDateTime;
+
+// Converting milliseconds to hours
+const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
+
+
+   const price = equipmentList[0].price * 100 * Math.floor(differenceInHours);
 
     const customer = await stripe.customers.create();
     const ephemeralKey = await stripe.ephemeralKeys.create(
@@ -618,7 +637,7 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
         ephemeralKey: ephemeralKey.secret,
         customer: customer.id,
         publishableKey: "pk_test_51LoBCWGC9MhpkKozMAo0UEkGa8FS5TEx8ExG6T702Z8HCA7BvkLRe9jvKHZn26XTJobo4eSgAhVcRQIdAJSJVYAk0077oMzWuL",
-        price: equipmentList
+        price: order
     };
   
   }
@@ -628,3 +647,32 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
     }
   }
   });
+
+  exports.getPaymentIdFromUserId = functions.https.onCall(async (data, context) => {
+
+    const accountId = data.accountId;
+
+    try {
+      const accounts = await stripe.accounts.list({limit: 20})
+
+      for (let i = 0; i < accounts.data.length; i++) {
+        if (accounts.data[i].metadata.sportyRentalsUserId === accountId) {
+            return({
+                sportyRentalsUserId: accounts.data[i].metadata.sportyRentalsUserId,
+                stripeAccountId: accounts.data[i].id
+            });
+
+        }
+    }
+
+      //not found in loop
+      return({
+        error: "No matching account found",
+        message: "You don't have a payment account linked to your account"
+      })
+    
+    } catch (error) {
+      res.json({error: error})      
+    }
+
+    });

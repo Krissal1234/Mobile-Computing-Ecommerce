@@ -440,7 +440,21 @@ const EquipmentDetails = ({ route}) => {
       console.log("Buy Now Pressed");
       equipment.itemId = route.params.equipmentId;
       
-      let response = await ListingsController._createPaymentSheet();
+      const order = {
+        rentalPeriod: {
+          start :{
+            startDate: startDate,
+                  startTime: selectedStartTime
+              },
+              end: {
+                  endDate:endDate,
+                  endTime: selectedEndTime
+              }
+          },
+              item: equipment,
+          }
+
+      let response = await ListingsController._createPaymentSheet(order);
       console.log(response)
 
       const {
@@ -458,6 +472,7 @@ const EquipmentDetails = ({ route}) => {
       console.log("PRICE")
       console.log("PRICE")
       console.log(price)
+      console.log(paymentIntent)
 
       await initPaymentSheet({
         merchantDisplayName: "Sporty Rentals",
@@ -479,19 +494,7 @@ const EquipmentDetails = ({ route}) => {
     } else {
       return true;
     }
-      // const order = {
-      //   rentalPeriod: {
-      //     start :{
-      //       startDate: startDate,
-            //       startTime: selectedStartTime
-          //     },
-          //     end: {
-            //       endDate:endDate,
-            //       endTime: selectedEndTime
-          //     }
-      //     },
-          //     item: equipment,
-        //   }
+      
 
         //   const response = await OrderController.createOrder(order,user);
         //   return response.success
