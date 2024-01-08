@@ -132,6 +132,7 @@ const AddEquipment = () => {
       console.log('New Equipment:', newEquipment);
 
       const response = await EquipmentController.PostEquipment(newEquipment, user);
+      alert('Equipment added successfully!');
       setSuccessMessage('Equipment added successfully!');
       //Notification
       console.log(response.message);

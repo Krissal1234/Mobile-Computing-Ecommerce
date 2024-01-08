@@ -127,7 +127,9 @@ const AddPitch = () => {
 
       console.log("New Pitch:", newPitch);
       const response = await FacilitiesController.postFacility(newPitch, user);
+      alert('Facility added successfully!');
       setSuccessMessage('Facility added successfully!');// Notification if success
+
       console.log(response);
     } catch (error) {
       console.error("Error adding facility: ", error);
