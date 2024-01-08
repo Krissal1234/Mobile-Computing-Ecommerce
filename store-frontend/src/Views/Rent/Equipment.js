@@ -64,8 +64,8 @@ const Equipment = ({ navigation }) => {
   );
 
   const renderEquipmentRow = ({ item }) => (
-    <View style={styles.rowContainer}>
-      <Text style={styles.rowTitle}>{item.sport}</Text>
+    <>
+      <Text style={styles.sectionTitle}>{item.sport}</Text>
       <FlatList
         data={item.equipment}
         renderItem={renderEquipmentItem}
@@ -74,7 +74,7 @@ const Equipment = ({ navigation }) => {
         style={styles.horizontalFlatList}
         showsHorizontalScrollIndicator={false}
       />
-    </View>
+    </>
   );
 
   if (loading) {

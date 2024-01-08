@@ -190,37 +190,46 @@ export default StyleSheet.create({
     filteredScrollView:{
       height:height,
       flexDirection: 'row',
-      marginTop:width*0.1,
+      marginTop:width*0.05,
       flexWrap:'wrap',
       justifyContent: 'space-evenly'
     },
     verticalFlatList: {
       width: width,
+      marginTop:height*0.05,
+      marginLeft:width*0.05,
     },
     horizontalFlatList: {
-      marginVertical:height*0.05,
+      
+    },
+    sectionTitle:{
+      fontSize:20,
+      color:colors.white,
+      marginLeft:width*0.05,
+      fontWeight:'bold'
     },
     itemPreview:{
-      marginVertical:height*0.01,
-        marginHorizontal: width*0.02,
+      marginTop:height*0.01,
+      marginBottom:height*0.02,
+        marginHorizontal: width*0.01,
         width:width*0.4,
-        height:height*0.19,
-        backgroundColor: colors.white,
+        height:width*0.4,
+        backgroundColor: colors.mutedBlue,
         justifyContent:'center',
         alignContent:'center',
-        resizeMode:'contain',
-        borderRadius: height*0.035,
+        resizeMode:'cover',
+        borderRadius: height*0.03,
         borderWidth: 3,
         borderColor: colors.red,
         overflow:'hidden',
         
     },
     itemImg:{
-        height:height*0.19,
-        width:width*0.19,
+        height:height*0.25,
+        width:width*0.25,
         paddingHorizontal:width*0.21,
         paddingVertical:height*0.1,
-        marginHorizontal:width*0.05,
+        marginHorizontal:width*0.0,
 
     },
     testStyle:{
@@ -249,10 +258,11 @@ export default StyleSheet.create({
       alignSelf: 'center',
     },
     title: {
-      fontSize: width*0.05,
+      fontSize: 20,
       fontWeight: 'bold',
       textAlign: 'center',
       color: colors.black,
+      alignSelf:'center'
     },
     descriptionContainer:{
         alignItems:'center',
@@ -264,9 +274,9 @@ export default StyleSheet.create({
       marginTop:height*0.01,
     },
     priceContainer:{
-        flexDirection:'row',
-        justifyContent:'space-between',
-        alignItems:'center',
+      flexDirection:'row',
+      justifyContent:'space-evenly',
+      alignItems:'center',
     },
     price: {
       fontSize: width*0.05,
@@ -301,6 +311,7 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between', 
         alignItems: 'center',
+        marginTop:height*0.02,
         
       },
       

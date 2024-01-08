@@ -30,7 +30,7 @@ import ChoiceScreen from './AddEquipment/ChoiceScreen';
 
 const Tab = createBottomTabNavigator();
 
-function RenterTabs() {
+function RenterTabs(navigation ) {
     return (
       <Tab.Navigator
         screenOptions={({ route }) => ({
