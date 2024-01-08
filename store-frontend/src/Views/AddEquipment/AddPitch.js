@@ -24,6 +24,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import downward_cevron from '../../../assets/downward_cevron.png'
 import upward_cevron from '../../../assets/upward_cevron.png'
 import { Picker } from '@react-native-picker/picker';
+import { ActivityIndicator } from 'react-native';
+
 
 
 
@@ -50,6 +52,8 @@ const AddPitch = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [isSportDropdownVisible, setIsSportDropdownVisible] = useState(false);
+  const [loading, setLoading] = useState(false); 
+
 
 
   const selectSport = (item) => {
@@ -98,34 +102,49 @@ const AddPitch = () => {
   };
 
   const handleAddPitch = async () => {
+    setLoading(true); // Start loading
     setErrorMessage('');
     setSuccessMessage('');
 
+    if (!title || !description || !price || !selectedSport || !availableStatus || images.length === 0) {
+      setErrorMessage('Please fill in all fields and select an image.');
+      setLoading(false); // Stop loading in case of error
+      return; 
+    }
 
-  if (!title || !description || !price || !selectedSport || !availableStatus || images.length === 0) {
-    setErrorMessage('Please fill in all fields and select an image.');
-    return; 
-  }
+    try {
+      const parsedPrice = parseInt(price);
+      const availableStatusBoolean = availableStatus === "Yes";
+      const newPitch = {
+        title,
+        description,
+        price: parsedPrice,
+        sportCategory:  selectedSport,
+        availableStatus: availableStatusBoolean,
+        imageReference: images[0],
+        location: pickupLocation,
+      };
 
-
-    const parsedPrice = parseInt(price);
-    const availableStatusBoolean = availableStatus === "Yes"; 
-    const newPitch = {
-      title,
-      description,
-      price: parsedPrice,
-      sportCategory:  selectedSport,
-      availableStatus: availableStatusBoolean,
-      imageReference: images[0],
-      location: pickupLocation,
-    };
-
-    console.log("New Pitch:", newPitch);
-    const response = await FacilitiesController.postFacility(newPitch, user);
-    setSuccessMessage('Facility added successfully!');
-
-    console.log(response)
+      console.log("New Pitch:", newPitch);
+      const response = await FacilitiesController.postFacility(newPitch, user);
+      setSuccessMessage('Facility added successfully!');// Notification if success
+      console.log(response);
+    } catch (error) {
+      console.error("Error adding facility: ", error);
+      setErrorMessage('Failed to add facility.');
+    } finally {
+      setLoading(false); // Stop loading after operation
+    }
   };
+
+  if (loading) {
+    // Show loading indicator when submitting dasta
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   const toggleAvailableDropdown = () => {
     setIsAvailableDropdownVisible(!isAvailableDropdownVisible);
