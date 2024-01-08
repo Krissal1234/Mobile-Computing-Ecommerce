@@ -1,5 +1,6 @@
 import React, { useState, useEffect,useRef, useContext } from 'react';
 import { View, Text, ActivityIndicator,Image,TouchableOpacity,ScrollView,Animated,Modal,FlatList } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { Picker } from '@react-native-picker/picker';
 import { FacilitiesController } from '../../Controllers/FacilitiesController';
 import { OrderController } from '../../Controllers/OrderController';
@@ -14,6 +15,7 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
+import { useNavigation } from '@react-navigation/native';
 
 
 Notifications.setNotificationHandler({
@@ -27,6 +29,7 @@ Notifications.setNotificationHandler({
 const FacilitiesDetails = ({ route}) => {
 
   //Start Up
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [facilities, setFacilities] = useState(null);
 
@@ -507,6 +510,13 @@ const FacilitiesDetails = ({ route}) => {
   return (
     <ScrollView style = {styles.container} ref={scrollViewRef}>
     <View style={styles.androidFooterFix}>
+
+      {/*Back Button  */}
+      <View style={styles.buttonRow}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Icon name="arrow-left" size={40} color="white" />
+        </TouchableOpacity>
+      </View>
 
       {/* Img,Title,Desc */}
       <View style = {styles.card}>

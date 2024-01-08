@@ -66,7 +66,7 @@ const Facilities = ({ navigation }) => {
 
   const renderFacilitiesRow = ({ item }) => (
     <View style={styles.rowContainer}>
-      <Text style={styles.rowTitle}>{item.sport}</Text>
+      <Text style={styles.sectionTitle}>{item.sport}</Text>
       <FlatList
         data={item.facilities}
         renderItem={renderFacilitiesItem}

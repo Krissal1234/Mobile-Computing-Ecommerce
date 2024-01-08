@@ -24,7 +24,7 @@ const ChoosingScreen = ({ navigation }) => {
     <View style={addEquipmentStyles.choiceScreenContainer}>
       <TouchableOpacity
           style={styles.button}
-          nPress={() => navigation.navigate('Add Equipment')}>
+          onPress={() => navigation.navigate('Add Equipment')}>
             <Image
             source={require('store-frontend/assets/equipment_fill_black.png')}
             style={{ width: 75, height: 70 }} 
