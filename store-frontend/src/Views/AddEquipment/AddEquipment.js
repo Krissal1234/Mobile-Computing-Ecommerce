@@ -40,10 +40,11 @@ const AddEquipment = () => {
   const [sports, setSports] = useState([]);
   const [selectedSport, setSelectedSport] = useState('');
   const [isSportDropdownVisible, setIsSportDropdownVisible] = useState(false);
-  //Used for select sportCategory drop down
   const { sportCategories } = useContext(UserContext);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [isDeliveryDropdownVisible, setIsDeliveryDropdownVisible] = useState(false);
+  
 
   const handleBack = () => {
     navigation.goBack();
@@ -138,6 +139,10 @@ const AddEquipment = () => {
     setIsDropdownVisible(!isDropdownVisible);
   };
 
+  const toggleSportDropdown = () => {
+    setIsSportDropdownVisible(!isSportDropdownVisible);
+  };
+
   const toggleAvailableDropdown = () => {
     setIsAvailableDropdownVisible(!isAvailableDropdownVisible);
   };
@@ -166,13 +171,16 @@ const AddEquipment = () => {
     setIsConditionDropdownVisible(false); // Close the dropdown modal
   };
   
+
+  const toggleDeliveryDropdown = () => {
+    setIsDeliveryDropdownVisible(!isDeliveryDropdownVisible);
+  };
   
 
   return (
    
-    <SafeAreaView style={addEquipmentStyles.container}>
       <KeyboardAwareScrollView
-        contentContainerStyle={styles.keyboardContainer}
+        style={styles.container}
         keyboardShouldPersistTaps="never">
 
           {/* Back Button */}
@@ -199,7 +207,7 @@ const AddEquipment = () => {
             {/* Equipment Title */}
             <Text style={styles.title}>Equipment Title</Text>
             <TextInput
-              style={styles.input}
+              style={styles.addEquipmentInput}
               placeholder="Enter Equipment Title"
               value={title}
               onChangeText={(text) => setTitle(text)}
@@ -210,7 +218,7 @@ const AddEquipment = () => {
             {/* Description */}
             <Text style={styles.title}>Description</Text>
             <TextInput
-              style={styles.input}
+              style={styles.addEquipmentInput}
               placeholder="Enter Description"
               value={description}
               onChangeText={(text) => setDescription(text)}
@@ -221,28 +229,30 @@ const AddEquipment = () => {
             {/* Price Per Day */}
             <Text style={styles.title}>Price Per Day</Text>
             <TextInput
-              style={styles.input}
+              style={styles.addEquipmentInput}
               placeholder="Enter Price"
               keyboardType="numeric"
               value={price}
               onChangeText={(text) => setPrice(text)}
             />
             </Card>
-            <Card style={styles.card}>
          
-            <Text style={styles.title}>Sport Category.................</Text>
-            
-            <View style={addEquipmentStyles.dropdownSection}>             
+           
+
+            <TouchableOpacity 
+              style={styles.card} 
+              onPress={toggleSportDropdown}
+              activeOpacity={1}
+            >
               {/* Sport Category Dropdown Button */}
-              <TouchableOpacity 
-                style={addEquipmentStyles.dropdownButton}
-                onPress={() => setIsSportDropdownVisible(!isSportDropdownVisible)}
-              >
+              
+              <Text style={styles.title}>Sport Category</Text>
+              <View style={styles.timeContainer}>
                 <Text style={addEquipmentStyles.dropdownButtonText}>
                   {selectedSport || 'Select Sport Category'}
                 </Text>
                 <Image source={isSportDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />
-              </TouchableOpacity>
+              </View>
 
               {/* Sport Category Dropdown List */}
               {isSportDropdownVisible && (
@@ -274,25 +284,24 @@ const AddEquipment = () => {
                   </Picker>
                 )
               )}
-            </View>
-            </Card>
+              </TouchableOpacity>
             
  
-        {/* Available */}
-       
-          {/* Available Dropdown Button */}
-          <TouchableOpacity 
-            style={styles.card} 
-            onPress={toggleAvailableDropdown}
-          >
-            <View style={styles.timeContainer}>
-              <Text style={addEquipmentStyles.dropdownButtonText}>
-                {availableStatus ? availableStatus : 'Select Availability'}
-              </Text>
-              <Image source={isAvailableDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />          
-            </View>
+              {/* Available */}
+        <TouchableOpacity 
+          style={styles.card} 
+          onPress={toggleAvailableDropdown}
+          activeOpacity={1}
+        >
+          <Text style={styles.title}>Availability</Text>
+          <View style={styles.timeContainer}>
+            <Text style={addEquipmentStyles.dropdownButtonText}>
+              {availableStatus ? availableStatus : 'Select Availability'}
+            </Text>
+            <Image source={isAvailableDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />
+          </View>
 
-              {/* Available Dropdown List */}
+          {/* Available Dropdown List */}
           {isAvailableDropdownVisible && (
             Platform.OS === 'android' ? (
               <FlatList
@@ -322,70 +331,74 @@ const AddEquipment = () => {
               </Picker>
             )
           )}
-          </TouchableOpacity>
-
-        
- 
-
-        
-            <Card style={styles.card}>
-      {/* Delivery Type */}
-      <Text style={styles.title}>Delivery Type</Text>
-      <View style={styles.input}>
-        {/* Delivery Type Dropdown Button */}
-        <TouchableOpacity 
-          style={addEquipmentStyles.dropdownButton} 
-          onPress={toggleDropdown}
-        >
-          <Text style={addEquipmentStyles.dropdownButtonText}>
-            {deliveryType ? deliveryType : 'Select Delivery Type'}
-          </Text>
-          <Image source={isDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />
         </TouchableOpacity>
+              
+            {/* Delivery Type */}
+        <TouchableOpacity 
+          style={styles.card} 
+          onPress={toggleDeliveryDropdown}
+          activeOpacity={1}
+        >
+          <Text style={styles.title}>Delivery Type</Text>
+          <View style={styles.timeContainer}>
+            <Text style={addEquipmentStyles.dropdownButtonText}>
+              {deliveryType ? deliveryType : 'Select Delivery Type'}
+            </Text>
+            <Image source={isDeliveryDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />
+          </View>
 
-        {/* Delivery Type Dropdown List */}
-        {isDropdownVisible && (
-          Platform.OS === 'android' ? (
-            <FlatList
-              data={deliveryOptions}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={addEquipmentStyles.dropdownItem}
-                  onPress={() => handleSelectItem(item)}
-                >
-                  <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
-                </TouchableOpacity>
-              )}
-            />
-          ) : (
-            <Picker
-              selectedValue={deliveryType}
-              onValueChange={(itemValue, itemIndex) => setDeliveryType(itemValue)}
-              style={addEquipmentStyles.picker}
-            >
-              {deliveryOptions.map((option, index) => (
-                <Picker.Item label={option} value={option} key={index} />
-              ))}
-            </Picker>
-          )
-        )}
-      </View>
+          {/* Delivery Type Dropdown List */}
+          {isDeliveryDropdownVisible && (
+            Platform.OS === 'android' ? (
+              <FlatList
+                data={deliveryOptions}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={addEquipmentStyles.dropdownItem}
+                    onPress={() => {
+                      setDeliveryType(item);
+                      setIsDeliveryDropdownVisible(false);
+                    }}
+                  >
+                    <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            ) : (
+              <Picker
+                selectedValue={deliveryType}
+                onValueChange={(itemValue, itemIndex) => {
+                  setDeliveryType(itemValue);
+                  setIsDeliveryDropdownVisible(false);
+                }}
+                style={addEquipmentStyles.picker}
+              >
+                {deliveryOptions.map((option, index) => (
+                  <Picker.Item label={option} value={option} key={index} />
+                ))}
+              </Picker>
+            )
+          )}
+        </TouchableOpacity>
+      
+     
     
 
             {deliveryType !== 'delivery' && (
               // Render pickup location input only when not Delivery
-              <View style={addEquipmentStyles.mapContainer}>
+              <Card style={styles.card}>
+             <View style={addEquipmentStyles.mapContainer}>
                 <Text style={styles.title}>Pick Up Location</Text>
                 <TextInput
-                  style={styles.input}
+                  style={styles.addEquipmentInput}
                   placeholder="Enter Latitude"
                   keyboardType="numeric"
                   value={pickupLocation.latitude}
                   onChangeText={(text) => setPickupLocation({ ...pickupLocation, latitude: text })}
                 />
                 <TextInput
-                  style={styles.input}
+                  style={styles.addEquipmentInput}
                   placeholder="Enter Longitude"
                   keyboardType="numeric"
                   value={pickupLocation.longitude}
@@ -414,41 +427,62 @@ const AddEquipment = () => {
                   />
                 </MapView>
               </View>
+              </Card>
             )}
-            </Card>
-
-            <Card style={styles.card}>
-            {/* Condition */}
-      <Text style={styles.title}>Condition</Text>
-      <View style={styles.input}>
-        <TouchableOpacity style={addEquipmentStyles.dropdownButton} onPress={toggleConditionDropdown}>
-          <Text style={addEquipmentStyles.dropdownButtonText}>
-            {condition !== '' ? condition : 'Select Condition'}
-          </Text>
-        </TouchableOpacity>
-        {/* Condition Dropdown Modal */}
-        <Modal transparent={true} visible={isConditionDropdownVisible} animationType="slide">
-          <TouchableOpacity
-            style={addEquipmentStyles.dropdownOverlay}
+            
+          
+            <TouchableOpacity 
+            style={styles.card} 
             onPress={toggleConditionDropdown}
-          />
-          <View style={addEquipmentStyles.dropdownContainer}>
-            <FlatList
-              data={conditionOptions}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={addEquipmentStyles.dropdownItem}
-                  onPress={() => handleSelectCondition(item)}
-                >
-                  <Text>{item}</Text>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item) => item}
-            />
+            activeOpacity={1}
+          >
+         
+                    {/* Condition */}
+            <Text style={styles.title}>Condition</Text>
+            <View style={styles.timeContainer}>
+              <Text style={addEquipmentStyles.dropdownButtonText}>
+                {condition !== '' ? condition : 'Select Condition'}
+              </Text>
+              <Image source={isConditionDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />
           </View>
-        </Modal>
-      </View>
-      </Card>
+
+            {/* Condition Dropdown List */}
+            {isConditionDropdownVisible && (
+              Platform.OS === 'android' ? (
+                <FlatList
+                  data={conditionOptions}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={addEquipmentStyles.dropdownItem}
+                      onPress={() => {
+                        setCondition(item);
+                        setIsConditionDropdownVisible(false);
+                      }}
+                    >
+                      <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              ) : (
+                <Picker
+                  selectedValue={condition}
+                  onValueChange={(itemValue, itemIndex) => {
+                    setCondition(itemValue);
+                    setIsConditionDropdownVisible(false);
+                  }}
+                  style={addEquipmentStyles.picker}
+                >
+                  {conditionOptions.map((option, index) => (
+                    <Picker.Item label={option} value={option} key={index} />
+                  ))}
+                </Picker>
+              )
+            )}
+            </TouchableOpacity>
+ 
+
+
 
       {errorMessage.length > 0 && (
         <Text style={addEquipmentStyles.errorMessage}>{errorMessage}</Text>
@@ -466,7 +500,6 @@ const AddEquipment = () => {
          
      
         </KeyboardAwareScrollView>
-    </SafeAreaView>
   );
 };
 

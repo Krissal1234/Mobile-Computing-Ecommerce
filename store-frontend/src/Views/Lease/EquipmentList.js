@@ -10,7 +10,7 @@ const EquipmentList = ({ data, navigation }) => {
   return (
     <View style={{ flex: 1, padding: 10 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, color: 'white', margin: 5 }}>
-        Your equipment Listings:
+        Equipment Listings:
       </Text>
       <FlatList
         data={data}

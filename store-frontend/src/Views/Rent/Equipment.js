@@ -29,7 +29,7 @@ const Equipment = ({ navigation }) => {
         let equipmentResponse = await EquipmentController.getAllAvailableEquipment();
         
         if (equipmentResponse.success){
-          console.log(equipmentResponse.data);
+          //console.log(equipmentResponse.data);
           categorizeEquipment(equipmentResponse.data);
         }
 

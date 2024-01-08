@@ -59,6 +59,19 @@ export default StyleSheet.create({
         alignItems: "center",
         justifyContent: 'center',
     },
+
+    addEquipmentInput: {
+      backgroundColor: colors.white,
+      width:width*0.7,
+      marginTop: height*0.02,
+      paddingVertical: height*0.02,
+      paddingHorizontal: width*0.05,
+      borderRadius: height*0.035,
+      borderWidth:width*0.01,
+      borderColor:colors.red,
+      alignItems: "center",
+      justifyContent: 'center',
+  },
     button: {
         backgroundColor: colors.white,
         width:width*0.8,

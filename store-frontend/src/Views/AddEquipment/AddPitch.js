@@ -21,6 +21,9 @@ import { useNavigation } from "@react-navigation/native";
 import { FacilitiesController } from "../../Controllers/FacilitiesController";
 import { colors } from '../colors';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import downward_cevron from '../../../assets/downward_cevron.png'
+import upward_cevron from '../../../assets/upward_cevron.png'
+import { Picker } from '@react-native-picker/picker';
 
 
 
@@ -46,6 +49,8 @@ const AddPitch = () => {
   const [isSportsDropdownVisible, setIsSportsDropdownVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [isSportDropdownVisible, setIsSportDropdownVisible] = useState(false);
+
 
 
 
@@ -126,13 +131,16 @@ const AddPitch = () => {
     toggleAvailableDropdown();
   };
 
+  const toggleSportDropdown = () => {
+    setIsSportDropdownVisible(!isSportDropdownVisible);
+  };
+
   return (
-    <SafeAreaView style={addEquipmentStyles.container}>
      <KeyboardAwareScrollView
-        contentContainerStyle={styles.keyboardContainer}
+        style={styles.container}
         keyboardShouldPersistTaps="never">
-        {/* Back Button */}
         
+        {/* Back Button */}
         <TouchableOpacity onPress={handleBack} style={styles.backButton}>
           <Icon name="arrow-left" size={40} color="white" />
         </TouchableOpacity>
@@ -159,7 +167,7 @@ const AddPitch = () => {
           <Card style={styles.card}> 
           <Text style={styles.title}>Facility Title</Text>
           <TextInput
-            style={styles.input}
+            style={styles.addEquipmentInput}
             placeholder="Enter Pitch Title"
             value={title}
             onChangeText={setTitle}
@@ -169,7 +177,7 @@ const AddPitch = () => {
           <Card style={styles.card}> 
           <Text style={styles.title}>Description</Text>
           <TextInput
-            style={styles.input}
+            style={styles.addEquipmentInput}
             placeholder="Enter Description"
             value={description}
             onChangeText={setDescription}
@@ -180,7 +188,7 @@ const AddPitch = () => {
           <Card style={styles.card}> 
           <Text style={styles.title}>Price Per Hour</Text>
           <TextInput
-            style={styles.input}
+            style={styles.addEquipmentInput}
             placeholder="Enter Price"
             keyboardType="numeric"
             value={price}
@@ -188,82 +196,100 @@ const AddPitch = () => {
           />
           </Card>
 
-          <Card style={styles.card}> 
-              {/* Sport Category Dropdown */}
-          <Text style={styles.title}>Sport Category</Text>
-            <View style={styles.input}>
-            <TouchableOpacity 
-              style={addEquipmentStyles.dropdownButton}
-              onPress={() => setIsSportsDropdownVisible(true)}
+          <TouchableOpacity 
+              style={styles.card} 
+              onPress={toggleSportDropdown}
+              activeOpacity={1}
             >
-              <Text style={addEquipmentStyles.dropdownButtonText}>
-                {selectedSport || 'Select Sport Category'}
-              </Text>
-            </TouchableOpacity>
-
-            {/* Dropdown Modal for Sports */}
-            <Modal
-              transparent={true}
-              visible={isSportsDropdownVisible}
-              animationType="slide"
-            >
-              <TouchableOpacity
-                style={addEquipmentStyles.dropdownOverlay}
-                onPress={() => setIsSportsDropdownVisible(false)}
-              />
-              <View style={addEquipmentStyles.dropdownContainer}>
-                <FlatList
-                  data={sports}
-                  renderItem={renderSportItem}
-                  keyExtractor={(item) => item}
-                />
-              </View>
-            </Modal>
-            </View>
-            </Card>
+              {/* Sport Category Dropdown Button */}
               
-            <Card style={styles.card}> 
-
-          <Text style={styles.title}>Available</Text>
-          <View style={styles.input}>
-            <TouchableOpacity
-              style={addEquipmentStyles.dropdownButton}
-              onPress={toggleAvailableDropdown}
-            >
-              <Text style={addEquipmentStyles.dropdownButtonText}>
-                {availableStatus !== null
-                  ? availableStatus
-                    ? "Yes"
-                    : "No"
-                  : "Select Availability"}
-              </Text>
-            </TouchableOpacity>
-            <Modal
-              transparent={true}
-              visible={isAvailableDropdownVisible}
-              animationType="slide"
-            >
-              <TouchableOpacity
-                style={addEquipmentStyles.dropdownOverlay}
-                onPress={toggleAvailableDropdown}
-              />
-              <View style={addEquipmentStyles.dropdownContainer}>
-                <FlatList
-                  data={availableOptions}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      style={addEquipmentStyles.dropdownItem}
-                      onPress={() => handleSelectAvailable(item)}
-                    >
-                      <Text>{item}</Text>
-                    </TouchableOpacity>
-                  )}
-                  keyExtractor={(item) => item}
-                />
+              <Text style={styles.title}>Sport Category</Text>
+              <View style={styles.timeContainer}>
+                <Text style={addEquipmentStyles.dropdownButtonText}>
+                  {selectedSport || 'Select Sport Category'}
+                </Text>
+                <Image source={isSportDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />
               </View>
-            </Modal>
+
+              {/* Sport Category Dropdown List */}
+              {isSportDropdownVisible && (
+                Platform.OS === 'android' ? (
+                  <FlatList
+                    data={sports}
+                    keyExtractor={(item) => item}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        style={addEquipmentStyles.dropdownItem}
+                        onPress={() => {
+                          setSelectedSport(item);
+                          setIsSportDropdownVisible(false);
+                        }}
+                      >
+                        <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
+                      </TouchableOpacity>
+                    )}
+                  />
+                ) : (
+                  <Picker
+                    selectedValue={selectedSport}
+                    onValueChange={(itemValue, itemIndex) => setSelectedSport(itemValue)}
+                    style={addEquipmentStyles.picker}
+                  >
+                    {sports.map((sport, index) => (
+                      <Picker.Item label={sport} value={sport} key={index} />
+                    ))}
+                  </Picker>
+                )
+              )}
+              </TouchableOpacity>
+            
+ 
+              
+             {/* Available */}
+        <TouchableOpacity 
+          style={styles.card} 
+          onPress={toggleAvailableDropdown}
+          activeOpacity={1}
+        >
+          <Text style={styles.title}>Availability</Text>
+          <View style={styles.timeContainer}>
+            <Text style={addEquipmentStyles.dropdownButtonText}>
+              {availableStatus ? availableStatus : 'Select Availability'}
+            </Text>
+            <Image source={isAvailableDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />
           </View>
-          </Card>
+
+          {/* Available Dropdown List */}
+          {isAvailableDropdownVisible && (
+            Platform.OS === 'android' ? (
+              <FlatList
+                data={availableOptions}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={addEquipmentStyles.dropdownItem}
+                    onPress={() => {
+                      setAvailableStatus(item);
+                      setIsAvailableDropdownVisible(false);
+                    }}
+                  >
+                    <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            ) : (
+              <Picker
+                selectedValue={availableStatus}
+                onValueChange={(itemValue, itemIndex) => setAvailableStatus(itemValue)}
+                style={addEquipmentStyles.picker}
+              >
+                {availableOptions.map((option, index) => (
+                  <Picker.Item label={option} value={option} key={index} />
+                ))}
+              </Picker>
+            )
+          )}
+        </TouchableOpacity>
 
 
           <Card style={styles.card}> 
@@ -311,7 +337,6 @@ const AddPitch = () => {
           </TouchableOpacity>
        
           </KeyboardAwareScrollView>
-    </SafeAreaView>
   );
 };
 

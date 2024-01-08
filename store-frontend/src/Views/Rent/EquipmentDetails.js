@@ -457,13 +457,13 @@ const EquipmentDetails = ({ route}) => {
       let response = await ListingsController._createPaymentSheet(order);
       console.log(response)
 
-      const {
-        paymentIntent,
-        ephemeralKey,
-        customer,
-        publishableKey,
-        price
-      } = response.data
+    //   const {
+    //     paymentIntent,
+    //     ephemeralKey,
+    //     customer,
+    //     publishableKey,
+    //     price
+    //   } = response.data
 
       console.log("PRICE")
       console.log("PRICE")
@@ -474,20 +474,20 @@ const EquipmentDetails = ({ route}) => {
       console.log(price)
       console.log(paymentIntent)
 
-      await initPaymentSheet({
-        merchantDisplayName: "Sporty Rentals",
-        customerId: customer,
-        customerEphemeralKeySecret: ephemeralKey,
-        paymentIntentClientSecret: paymentIntent,
-        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-        //methods that complete payment after a delay, like SEPA Debit and Sofort.
-        allowsDelayedPaymentMethods: true,
-        defaultBillingDetails: {
-          name: 'Jane Doe',
-        }
-      });
+    //   await initPaymentSheet({
+    //     merchantDisplayName: "Sporty Rentals",
+    //     customerId: customer,
+    //     customerEphemeralKeySecret: ephemeralKey,
+    //     paymentIntentClientSecret: paymentIntent,
+    //     // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+    //     //methods that complete payment after a delay, like SEPA Debit and Sofort.
+    //     allowsDelayedPaymentMethods: true,
+    //     defaultBillingDetails: {
+    //       name: 'Jane Doe',
+    //     }
+    //   });
 
-      const { error } = await presentPaymentSheet();
+    //   const { error } = await presentPaymentSheet();
 
     if (error) {
       return false;
@@ -496,8 +496,6 @@ const EquipmentDetails = ({ route}) => {
     }
       
 
-        //   const response = await OrderController.createOrder(order,user);
-        //   return response.success
 
     }
 
@@ -726,7 +724,7 @@ const EquipmentDetails = ({ route}) => {
       <View style = {styles.card}>
         <View style = {styles.priceContainer}>
           <Text style = {styles.title}>Service Fee : </Text>
-          <Text style = {styles.title}>£{serviceFee}</Text> 
+          <Text style = {styles.title}>£{serviceFee}</Text>
         </View>
       </View>
 

@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, Button } from 'react-native';
 import { Card } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import styles from 'store-frontend/src/Views/styles';
+import addEquipmentStyles from 'store-frontend/src/Views/AddEquipment/styles.js';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../colors';
 import * as ImagePicker from 'expo-image-picker';
 import { FacilitiesController } from '../../Controllers/FacilitiesController';
+import downward_cevron from '../../../assets/downward_cevron.png'
+import upward_cevron from '../../../assets/upward_cevron.png'
+import { Picker } from '@react-native-picker/picker';
+import { UserContext } from "../../Contexts/UserContext";
 
 
 const PitchDetails = ({ route }) => {
@@ -20,6 +25,17 @@ const PitchDetails = ({ route }) => {
   const [editablePrice, setEditablePrice] = useState(pitch.price.toString());
   const [editableSportCategory, setEditableSportCategory] = useState(pitch.sportCategory);
   const [editableAvailable, setEditableAvailable] = useState(pitch.availableStatus.toString());
+  const [isSportDropdownVisible, setIsSportDropdownVisible] = useState(false);
+  const [sports, setSports] = useState([]);
+  const { user, sportCategories } = useContext(UserContext);
+  const [selectedSport, setSelectedSport] = useState(pitch.sportCategory);
+  const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
+  const availableOptions = ["Yes", "No"];
+  const initialAvailableValue = pitch.availableStatus ? "Yes" : "No";
+  const [selectedAvailable, setSelectedAvailable] = useState(initialAvailableValue);
+  useEffect(() => {
+    setSports(["No Filter", ...sportCategories]);
+  }, [sportCategories]);
 
   const selectImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -43,14 +59,15 @@ const PitchDetails = ({ route }) => {
     if (isEditMode) {
       // TODO: Implement update logic here
       console.log('facilityId:', pitch.id);
+      const availableStatusBoolean = selectedAvailable === "Yes";
 
       const facilityObject = {
           title: editableTitle,
           imageReference: editableImage,
           description: editableDescription,
           price: editablePrice,
-          sportCategory: editableSportCategory,
-          availableStatus: editableAvailable === 'true',
+          sportCategory: selectedSport,
+          availableStatus: availableStatusBoolean,
           createdAt: pitch.createdAt,
           id: pitch.id,
           location: pitch.location, //still to arrange
@@ -75,9 +92,18 @@ const PitchDetails = ({ route }) => {
     setIsEditMode(false);
   };
 
+  const handleSportSelection = (itemValue) => {
+    setSelectedSport(itemValue);
+    setIsSportDropdownVisible(false);
+  };
+
   const handleDelete = () => {
     console.log('Delete Pitch ID:', pitch.id);
     deleteFacility(pitch.id);
+  };
+
+  const toggleSportDropdown = () => {
+    setIsSportDropdownVisible(!isSportDropdownVisible);
   };
 
     const deleteFacility = async (facilityId) => {
@@ -90,6 +116,16 @@ const PitchDetails = ({ route }) => {
       const response = await FacilitiesController.editFacility(facilityId,facilityItem);
       console.log(response.message);
       // Handle the response, navigate back, show message, etc.
+    };
+
+    const toggleAvailableDropdown = () => {
+      setIsAvailableDropdownVisible(!isAvailableDropdownVisible);
+    };
+  
+    const handleAvailableSelection = (selectedValue) => {
+      setSelectedAvailable(selectedValue);
+      setEditableAvailable(selectedValue === "Yes");
+      setIsAvailableDropdownVisible(false);
     };
 
 
@@ -148,29 +184,100 @@ const PitchDetails = ({ route }) => {
         )}
      </Card>
 
-     <Card style={styles.card}>
+     
         {isEditMode ? (
-          <TextInput
-            value={editableSportCategory}
-            onChangeText={setEditableSportCategory}
-            style={styles.editableText}
-          />
+            <TouchableOpacity 
+            style={styles.card} 
+            onPress={toggleSportDropdown}
+            activeOpacity={1}
+          >
+            <Text style={styles.title}>Sport Category</Text>
+            <View style={styles.timeContainer}>
+              <Text style={addEquipmentStyles.dropdownButtonText}>
+                {selectedSport || 'Select Sport Category'}
+              </Text>
+              <Image source={isSportDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />
+            </View>
+  
+            {isSportDropdownVisible && (
+              Platform.OS === 'android' ? (
+                <FlatList
+                  data={sports}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={addEquipmentStyles.dropdownItem}
+                      onPress={() => handleSportSelection(item)}
+                    >
+                      <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              ) : (
+                <Picker
+                  selectedValue={selectedSport}
+                  onValueChange={handleSportSelection}
+                  style={addEquipmentStyles.picker}
+                >
+                  {sports.map((sport, index) => (
+                    <Picker.Item label={sport} value={sport} key={index} />
+                  ))}
+                </Picker>
+              )
+            )}
+          </TouchableOpacity>
         ) : (
+          <Card style={styles.card}>
           <Text style={styles.price}>Sport Category: {editableSportCategory}</Text>
+          </Card>
         )}
-        </Card>
+       
+       {isEditMode ? (
+          <TouchableOpacity 
+            style={styles.card} 
+            onPress={toggleAvailableDropdown}
+            activeOpacity={1}
+          >
+            <Text style={styles.title}>Availability</Text>
+            <View style={styles.timeContainer}>
+              <Text style={addEquipmentStyles.dropdownButtonText}>
+                {selectedAvailable || 'Select Availability'}
+              </Text>
+              <Image source={isAvailableDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />
+              </View>
 
-      <Card style={styles.card}>
-        {isEditMode ? (
-          <TextInput
-            value={editableAvailable}
-            onChangeText={setEditableAvailable}
-            style={styles.editableText}
-          />
+            {isAvailableDropdownVisible && (
+              Platform.OS === 'android' ? (
+                <FlatList
+                  data={availableOptions}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={addEquipmentStyles.dropdownItem}
+                      onPress={() => handleAvailableSelection(item)}
+                    >
+                      <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              ) : (
+                <Picker
+                  selectedValue={selectedAvailable}
+                  onValueChange={handleAvailableSelection}
+                  style={addEquipmentStyles.picker}
+                >
+                  {availableOptions.map((option, index) => (
+                    <Picker.Item label={option} value={option} key={index} />
+                  ))}
+                </Picker>
+              )
+            )}
+            </TouchableOpacity>
         ) : (
-          <Text style={styles.price}>Available: {editableAvailable === 'true' ? 'Yes' : 'No'}</Text>
+          <Card style={styles.card}>
+            <Text style={styles.price}>Available: {editableAvailable ? 'Yes' : 'No'}</Text>
+          </Card>
         )}
-        </Card>
       
 
       {isEditMode && (

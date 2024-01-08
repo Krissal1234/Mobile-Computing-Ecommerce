@@ -8,6 +8,12 @@ import { colors } from '../colors';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { EquipmentController } from '../../Controllers/EquipmentController';
+import downward_cevron from '../../../assets/downward_cevron.png'
+import upward_cevron from '../../../assets/upward_cevron.png'
+import { Picker } from '@react-native-picker/picker';
+import { UserContext } from "../../Contexts/UserContext";
+import addEquipmentStyles from 'store-frontend/src/Views/AddEquipment/styles.js';
+
 
 
 const EquipmentDetails = ({ route }) => {
@@ -21,7 +27,33 @@ const EquipmentDetails = ({ route }) => {
   const [editableSportCategory, setEditableSportCategory] = useState(equipment.sportCategory);
   const [editableAvailable, setEditableAvailable] = useState(equipment.availableStatus.toString());
   const [editableDeliveryType, setEditableDeliveryType] = useState(equipment.deliveryType);
+  const [selectedSport, setSelectedSport] = useState(equipment.sportCategory);
+  const [isSportDropdownVisible, setIsSportDropdownVisible] = useState(false);
+  const [sports, setSports] = useState([]);
+  const { user, sportCategories } = useContext(UserContext);
+  const [pickupLocation, setPickupLocation] = useState({ latitude: '', longitude: '' });
   const [editableCondition, setEditableCondition] = useState(equipment.condition);
+  const [isConditionDropdownVisible, setIsConditionDropdownVisible] = useState(false);
+  const conditionOptions = ['New', 'Used', 'Refurbished']; 
+  const [isDeliveryTypeDropdownVisible, setIsDeliveryTypeDropdownVisible] = useState(false);
+  const deliveryOptions = ['pickup', 'delivery']; //TODO: show capitals in UI but pass it to the firebase function in lowercase to keep lowercase standard. 
+  const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
+  const availableOptions = ["Yes", "No"];
+
+  const initialAvailableValue = equipment.availableStatus ? "Yes" : "No";
+  const [selectedAvailable, setSelectedAvailable] = useState(initialAvailableValue);
+
+  useEffect(() => {
+    setSports(["No Filter", ...sportCategories]);
+    // Set initial pickup location
+    if (equipment.location) {
+      setPickupLocation({
+        latitude: equipment.location.latitude,
+        longitude: equipment.location.longitude,
+      });
+    }
+  }, [sportCategories, equipment.location]); // Add equipment.location to dependency array
+
 
   const selectImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -42,25 +74,82 @@ const EquipmentDetails = ({ route }) => {
     }
   };
   
+  const handleMapPress = (e) => {
+    const { latitude, longitude } = e.nativeEvent.coordinate;
+    setPickupLocation({ latitude, longitude });
+  }
+  
+  const renderPickupLocation = () => {
+    if (editableDeliveryType !== 'delivery') {
+      return (
+        <Card style={styles.card}>
+          <Text style={styles.title}>Pick Up Location</Text>
+          {isEditMode && (
+            <>
+              <TextInput
+                style={styles.addEquipmentInput}
+                placeholder="Enter Latitude"
+                keyboardType="numeric"
+                value={pickupLocation.latitude.toString()}
+                onChangeText={handleLatitudeChange}
+              />
+              <TextInput
+                style={styles.addEquipmentInput}
+                placeholder="Enter Longitude"
+                keyboardType="numeric"
+                value={pickupLocation.longitude.toString()}
+                onChangeText={handleLongitudeChange}
+              />
+              <MapView
+                style={addEquipmentStyles.map}
+                initialRegion={{
+                  latitude: pickupLocation.latitude,
+                  longitude: pickupLocation.longitude,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }}
+                onPress={handleMapPress}>
+                <Marker coordinate={pickupLocation} />
+              </MapView>
+            </>
+          )}
+          {!isEditMode && (
+            <MapView
+              style={addEquipmentStyles.map}
+              initialRegion={{
+                latitude: pickupLocation.latitude,
+                longitude: pickupLocation.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}>
+              <Marker coordinate={pickupLocation} title="Pickup Location" />
+            </MapView>
+          )}
+        </Card>
+      );
+    }
+    return null;
+  };
 
   const handleEdit = () => {
     
     if (isEditMode) {
      
       console.log('itemId:', equipment.id);
+      const availableStatusBoolean = selectedAvailable === "Yes";
 
     const itemObject = {
       title: editableTitle,
       imageReference: editableImage,
       description: editableDescription,
       price: editablePrice,
-      sportCategory: editableSportCategory,
-      availableStatus: editableAvailable === 'true',
+      sportCategory: selectedSport,
+      availableStatus: availableStatusBoolean,
       deliveryType: editableDeliveryType,
       condition: editableCondition,
       createdAt: equipment.createdAt,
       owner: equipment.owner,
-      pickupLocation: equipment.pickupLocation,
+      pickupLocation: pickupLocation, 
       type: equipment.type,
       id: equipment.id,
     };
@@ -77,6 +166,11 @@ const editEquipment = async (equipmentId,equipmentItem) => {
   console.log(response.message);
   // Handle the response, navigate back, show message, etc.
 };
+  
+const toggleSportDropdown = () => {
+  setIsSportDropdownVisible(!isSportDropdownVisible);
+};
+
 
 
   const handleCancel = () => {
@@ -91,7 +185,7 @@ const editEquipment = async (equipmentId,equipmentItem) => {
     setIsEditMode(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = () => {h
     console.log('Delete Equipment ID:', equipment.id);
     deleteEquipment(equipment.id); 
   };
@@ -101,6 +195,41 @@ const editEquipment = async (equipmentId,equipmentItem) => {
     console.log(response.message);
     // Handle the response, navigate back, show message, etc.
   };
+
+  const handleSportSelection = (itemValue) => {
+    setSelectedSport(itemValue);
+    setIsSportDropdownVisible(false);
+  };
+
+  const handleDeliveryTypeSelection = (itemValue) => {
+    setEditableDeliveryType(itemValue);
+    setIsDeliveryTypeDropdownVisible(false);
+  };
+
+  const handleConditionSelection = (itemValue) => {
+    setEditableCondition(itemValue);
+    setIsConditionDropdownVisible(false);
+  };
+
+  const toggleAvailableDropdown = () => {
+    setIsAvailableDropdownVisible(!isAvailableDropdownVisible);
+  };
+
+  const handleAvailableSelection = (selectedValue) => {
+    setSelectedAvailable(selectedValue);
+    // Convert "Yes" or "No" back to boolean for editableAvailable
+    setEditableAvailable(selectedValue === "Yes");
+    setIsAvailableDropdownVisible(false);
+  };
+
+  const handleLatitudeChange = (text) => {
+    setPickupLocation({ ...pickupLocation, latitude: parseFloat(text) });
+  };
+
+  const handleLongitudeChange = (text) => {
+    setPickupLocation({ ...pickupLocation, longitude: parseFloat(text) });
+  };
+
 
 
   return (
@@ -163,53 +292,196 @@ const editEquipment = async (equipmentId,equipmentItem) => {
         </Card>
 
 
-      <Card style={styles.card}>
         {isEditMode ? (
-          <TextInput
-            value={editableSportCategory}
-            onChangeText={setEditableSportCategory}
-            style={styles.editableText}
-          />
+            <TouchableOpacity 
+            style={styles.card} 
+            onPress={toggleSportDropdown}
+            activeOpacity={1}
+          >
+            <Text style={styles.title}>Sport Category</Text>
+            <View style={styles.timeContainer}>
+              <Text style={addEquipmentStyles.dropdownButtonText}>
+                {selectedSport || 'Select Sport Category'}
+              </Text>
+              <Image source={isSportDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />
+            </View>
+  
+            {isSportDropdownVisible && (
+              Platform.OS === 'android' ? (
+                <FlatList
+                  data={sports}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={addEquipmentStyles.dropdownItem}
+                      onPress={() => handleSportSelection(item)}
+                    >
+                      <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              ) : (
+                <Picker
+                  selectedValue={selectedSport}
+                  onValueChange={handleSportSelection}
+                  style={addEquipmentStyles.picker}
+                >
+                  {sports.map((sport, index) => (
+                    <Picker.Item label={sport} value={sport} key={index} />
+                  ))}
+                </Picker>
+              )
+            )}
+          </TouchableOpacity>
         ) : (
+          <Card style={styles.card}>
           <Text style={styles.price}>Sport Category: {editableSportCategory}</Text>
+          </Card>
         )}
-      </Card>
 
-      <Card style={styles.card}>
-        {isEditMode ? (
-          <TextInput
-            value={editableAvailable}
-            onChangeText={setEditableAvailable}
-            style={styles.editableText}
-          />
-        ) : (
-          <Text style={styles.price}>Available: {editableAvailable === 'true' ? 'Yes' : 'No'}</Text>
-        )}
-      </Card>
+      
+    {isEditMode ? (
+        <TouchableOpacity 
+          style={styles.card} 
+          onPress={toggleAvailableDropdown}
+          activeOpacity={1}
+        >
+          <Text style={styles.title}>Availability</Text>
+          <View style={styles.timeContainer}>
+            <Text style={addEquipmentStyles.dropdownButtonText}>
+              {selectedAvailable || 'Select Availability'}
+            </Text>
+            <Image source={isAvailableDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />
+          </View>
 
-      <Card style={styles.card}>
-        {isEditMode ? (
-          <TextInput
-            value={editableDeliveryType}
-            onChangeText={setEditableDeliveryType}
-            style={styles.editableText}
-          />
-        ) : (
+          {isAvailableDropdownVisible && (
+            Platform.OS === 'android' ? (
+              <FlatList
+                data={availableOptions}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={addEquipmentStyles.dropdownItem}
+                    onPress={() => handleAvailableSelection(item)}
+                  >
+                    <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            ) : (
+              <Picker
+                selectedValue={selectedAvailable}
+                onValueChange={handleAvailableSelection}
+                style={addEquipmentStyles.picker}
+              >
+                {availableOptions.map((option, index) => (
+                  <Picker.Item label={option} value={option} key={index} />
+                ))}
+              </Picker>
+            )
+          )}
+        </TouchableOpacity>
+      ) : (
+        <Card style={styles.card}>
+          <Text style={styles.price}>Available: {editableAvailable ? 'Yes' : 'No'}</Text>
+        </Card>
+      )}
+
+      
+      {isEditMode ? (
+        <TouchableOpacity 
+          style={styles.card} 
+          onPress={() => setIsDeliveryTypeDropdownVisible(!isDeliveryTypeDropdownVisible)}
+          activeOpacity={1}
+        >
+          <Text style={styles.title}>Delivery Type</Text>
+          <View style={styles.timeContainer}>
+            <Text style={addEquipmentStyles.dropdownButtonText}>
+              {editableDeliveryType || 'Select Delivery Type'}
+            </Text>
+            <Image source={isDeliveryTypeDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />
+          </View>
+
+          {isDeliveryTypeDropdownVisible && (
+            Platform.OS === 'android' ? (
+              <FlatList
+                data={deliveryOptions}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={addEquipmentStyles.dropdownItem}
+                    onPress={() => handleDeliveryTypeSelection(item)}
+                  >
+                    <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            ) : (
+              <Picker
+                selectedValue={editableDeliveryType}
+                onValueChange={handleDeliveryTypeSelection}
+                style={addEquipmentStyles.picker}
+              >
+                {deliveryOptions.map((option, index) => (
+                  <Picker.Item label={option} value={option} key={index} />
+                ))}
+              </Picker>
+            )
+          )}
+        </TouchableOpacity>
+      ) : (
+        <Card style={styles.card}>
           <Text style={styles.price}>Delivery Type: {editableDeliveryType}</Text>
-        )}
-      </Card>
+        </Card>
+      )}
+      
+       {renderPickupLocation()}
+     {isEditMode ? (
+        <TouchableOpacity 
+          style={styles.card} 
+          onPress={() => setIsConditionDropdownVisible(!isConditionDropdownVisible)}
+          activeOpacity={1}
+        >
+          <Text style={styles.title}>Condition</Text>
+          <View style={styles.timeContainer}>
+            <Text style={addEquipmentStyles.dropdownButtonText}>
+              {editableCondition || 'Select Condition'}
+            </Text>
+            <Image source={isConditionDropdownVisible ? upward_cevron : downward_cevron} style={styles.cevron} />
+          </View>
 
-      <Card style={styles.card}>
-        {isEditMode ? (
-          <TextInput
-            value={editableCondition}
-            onChangeText={setEditableCondition}
-            style={styles.editableText}
-          />
-        ) : (
+          {isConditionDropdownVisible && (
+            Platform.OS === 'android' ? (
+              <FlatList
+                data={conditionOptions}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={addEquipmentStyles.dropdownItem}
+                    onPress={() => handleConditionSelection(item)}
+                  >
+                    <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            ) : (
+              <Picker
+                selectedValue={editableCondition}
+                onValueChange={handleConditionSelection}
+                style={addEquipmentStyles.picker}
+              >
+                {conditionOptions.map((option, index) => (
+                  <Picker.Item label={option} value={option} key={index} />
+                ))}
+              </Picker>
+            )
+          )}
+        </TouchableOpacity>
+      ) : (
+        <Card style={styles.card}>
           <Text style={styles.price}>Condition: {editableCondition}</Text>
-        )}
-      </Card>
+        </Card>
+      )}
 
       
       {isEditMode && (
