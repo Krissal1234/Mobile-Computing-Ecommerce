@@ -108,18 +108,21 @@ const AddEquipment = () => {
     setSuccessMessage('');
 
 
-  if (!title || !description || !price || !selectedSport || !availableStatus || !deliveryType || !condition || images.length === 0) {
+  if (!title || !description || !price || !selectedSport  || !availableStatus || !deliveryType || !condition || images.length === 0) {
     setErrorMessage('Please fill in all fields and select an image.');
     return; 
   }
  
+
     var parsedPrice = parseInt(price);
+    const availableStatusBoolean = availableStatus === "Yes"; 
+
     const newEquipment = {
       title,
       description,
       price: parsedPrice,
       sportCategory:  selectedSport,
-      availableStatus,
+      availableStatus: availableStatusBoolean, 
       deliveryType,
       condition,
       imageReference: images[0],
@@ -311,8 +314,7 @@ const AddEquipment = () => {
                   <TouchableOpacity
                     style={addEquipmentStyles.dropdownItem}
                     onPress={() => {
-                      setAvailableStatus(item);
-                      setIsAvailableDropdownVisible(false);
+                      handleSelectAvailable(item)
                     }}
                   >
                     <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
@@ -322,7 +324,7 @@ const AddEquipment = () => {
             ) : (
               <Picker
                 selectedValue={availableStatus}
-                onValueChange={(itemValue, itemIndex) => setAvailableStatus(itemValue)}
+                onValueChange={(itemValue, itemIndex) => handleSelectAvailable(itemValue)}
                 style={addEquipmentStyles.picker}
               >
                 {availableOptions.map((option, index) => (

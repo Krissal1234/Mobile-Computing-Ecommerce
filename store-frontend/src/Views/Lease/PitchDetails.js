@@ -59,7 +59,7 @@ const PitchDetails = ({ route }) => {
     if (isEditMode) {
       // TODO: Implement update logic here
       console.log('facilityId:', pitch.id);
-      const availableStatusBoolean = selectedAvailable === "Yes";
+      const availableStatusBoolean = selectedAvailable === "Yes" ? true : false;
 
       const facilityObject = {
           title: editableTitle,

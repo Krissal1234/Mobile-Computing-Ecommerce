@@ -105,12 +105,13 @@ const AddPitch = () => {
 
 
     const parsedPrice = parseInt(price);
+    const availableStatusBoolean = availableStatus === "Yes"; 
     const newPitch = {
       title,
       description,
       price: parsedPrice,
       sportCategory:  selectedSport,
-      availableStatus,
+      availableStatus: availableStatusBoolean,
       imageReference: images[0],
       location: pickupLocation,
     };
@@ -127,7 +128,7 @@ const AddPitch = () => {
   };
 
   const handleSelectAvailable = (item) => {
-    setAvailableStatus(item === "Yes");
+    setAvailableStatus(item);
     toggleAvailableDropdown();
   };
 
@@ -269,8 +270,7 @@ const AddPitch = () => {
                   <TouchableOpacity
                     style={addEquipmentStyles.dropdownItem}
                     onPress={() => {
-                      setAvailableStatus(item);
-                      setIsAvailableDropdownVisible(false);
+                      handleSelectAvailable(item)
                     }}
                   >
                     <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
@@ -280,7 +280,7 @@ const AddPitch = () => {
             ) : (
               <Picker
                 selectedValue={availableStatus}
-                onValueChange={(itemValue, itemIndex) => setAvailableStatus(itemValue)}
+                onValueChange={(itemValue, itemIndex) => handleSelectAvailable(itemValue)}
                 style={addEquipmentStyles.picker}
               >
                 {availableOptions.map((option, index) => (
