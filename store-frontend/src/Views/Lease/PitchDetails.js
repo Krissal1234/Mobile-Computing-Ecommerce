@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, Button } from 'react-native';
+import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, Button, FlatList } from 'react-native';
 import { Card } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
