@@ -24,11 +24,10 @@ const AddEquipment = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [availableStatus, setAvailableStatus] = useState(null);
+  const [availableStatus, setAvailableStatus] = useState('Yes');
   const [deliveryType, setDeliveryType] = useState(null);
   const [images, setImages] = useState([]);
   const [pickupLocation, setPickupLocation] = useState({ latitude: '', longitude: '' });
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
   const {user} = useContext(UserContext);
   const navigation = useNavigation();
@@ -138,9 +137,6 @@ const AddEquipment = () => {
   };
 
 
-  const toggleDropdown = () => {
-    setIsDropdownVisible(!isDropdownVisible);
-  };
 
   const toggleSportDropdown = () => {
     setIsSportDropdownVisible(!isSportDropdownVisible);
@@ -148,14 +144,6 @@ const AddEquipment = () => {
 
   const toggleAvailableDropdown = () => {
     setIsAvailableDropdownVisible(!isAvailableDropdownVisible);
-  };
-
-  const handleSelectItem = (item) => {
-    setDeliveryType(item);
-    if (item === 'delivery') {
-      setPickupLocation({ latitude: '', longitude: '' });
-    }
-    toggleDropdown();
   };
 
   
@@ -169,10 +157,11 @@ const AddEquipment = () => {
     setIsConditionDropdownVisible(!isConditionDropdownVisible);
   };
 
-  const handleSelectCondition = (item) => {
-    setCondition(item); // Update the condition state with the selected item
-    setIsConditionDropdownVisible(false); // Close the dropdown modal
+  const handleSelectSport = (item) => {
+    setSelectedSport(item);
+    setIsSportDropdownVisible(false); // This will close the dropdown
   };
+  
   
 
   const toggleDeliveryDropdown = () => {
@@ -266,10 +255,7 @@ const AddEquipment = () => {
                     renderItem={({ item }) => (
                       <TouchableOpacity
                         style={addEquipmentStyles.dropdownItem}
-                        onPress={() => {
-                          setSelectedSport(item);
-                          setIsSportDropdownVisible(false);
-                        }}
+                        onPress={() => handleSelectSport(item)}
                       >
                         <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
                       </TouchableOpacity>
@@ -278,7 +264,7 @@ const AddEquipment = () => {
                 ) : (
                   <Picker
                     selectedValue={selectedSport}
-                    onValueChange={(itemValue, itemIndex) => setSelectedSport(itemValue)}
+                    onValueChange={(itemValue, itemIndex) => handleSelectSport(itemValue)}
                     style={addEquipmentStyles.picker}
                   >
                     {sports.map((sport, index) => (
@@ -493,14 +479,13 @@ const AddEquipment = () => {
       {successMessage.length > 0 && (
         <Text style={addEquipmentStyles.successMessage}>{successMessage}</Text>
       )}
-
+        <View style={styles.buttonContainer}>
             <TouchableOpacity
-              style={styles.button}
-              onPress={handleAddEquipment}>
-              <Text style={styles.buttonTitle}>Add Equipment</Text>
-          </TouchableOpacity>
-         
-     
+                   style={styles.button}
+                   onPress={handleAddEquipment}>
+                  <Text style={styles.buttonTitle}>Add Equipment</Text>
+             </TouchableOpacity>
+         </View>
         </KeyboardAwareScrollView>
   );
 };

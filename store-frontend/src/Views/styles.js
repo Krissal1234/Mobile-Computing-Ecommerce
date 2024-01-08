@@ -88,6 +88,11 @@ export default StyleSheet.create({
         fontSize: width*0.05,
         fontWeight: "bold"
     },
+    buttonContainer: {
+      flex: 1, // Takes full height of the container
+      alignItems: 'center', // Centers horizontally
+      justifyContent: 'center', // Centers vertically
+    },
     footerView: {
         flex: 1,
         alignItems: "center",

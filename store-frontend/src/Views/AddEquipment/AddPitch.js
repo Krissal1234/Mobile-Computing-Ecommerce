@@ -33,7 +33,7 @@ const AddPitch = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [availableStatus, setAvailableStatus] = useState(null);
+  const [availableStatus, setAvailableStatus] = useState('Yes');
   const [images, setImages] = useState([]);
   const navigation = useNavigation();
   const [pickupLocation, setPickupLocation] = useState({
@@ -52,8 +52,6 @@ const AddPitch = () => {
   const [isSportDropdownVisible, setIsSportDropdownVisible] = useState(false);
 
 
-
-
   const selectSport = (item) => {
     setSelectedSport(item);
     setIsSportsDropdownVisible(false);
@@ -64,6 +62,12 @@ const AddPitch = () => {
       <Text style={addEquipmentStyles.dropdownItem}>{item}</Text>
     </TouchableOpacity>
   );
+
+  const handleSelectSport = (item) => {
+    setSelectedSport(item);
+    setIsSportDropdownVisible(false);
+  };
+  
 
   const handleBack = () => {
     navigation.goBack();
@@ -221,10 +225,7 @@ const AddPitch = () => {
                     renderItem={({ item }) => (
                       <TouchableOpacity
                         style={addEquipmentStyles.dropdownItem}
-                        onPress={() => {
-                          setSelectedSport(item);
-                          setIsSportDropdownVisible(false);
-                        }}
+                        onPress={() => handleSelectSport(item)}
                       >
                         <Text style={addEquipmentStyles.dropdownItemText}>{item}</Text>
                       </TouchableOpacity>
@@ -233,7 +234,7 @@ const AddPitch = () => {
                 ) : (
                   <Picker
                     selectedValue={selectedSport}
-                    onValueChange={(itemValue, itemIndex) => setSelectedSport(itemValue)}
+                    onValueChange={(itemValue, itemIndex) => handleSelectSport(itemValue)}
                     style={addEquipmentStyles.picker}
                   >
                     {sports.map((sport, index) => (
@@ -331,12 +332,12 @@ const AddPitch = () => {
       {successMessage.length > 0 && (
         <Text style={addEquipmentStyles.successMessage}>{successMessage}</Text>
       )}
-
+        <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={handleAddPitch}>
             <Text style={styles.buttonTitle}>Add Facility</Text>
           </TouchableOpacity>
-       
-          </KeyboardAwareScrollView>
+        </View>
+    </KeyboardAwareScrollView>
   );
 };
 
