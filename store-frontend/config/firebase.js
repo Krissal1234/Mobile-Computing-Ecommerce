@@ -54,4 +54,4 @@ export const deleteEquipmentById= httpsCallable(functions, 'deleteEquipmentById'
 export const deleteFacilityById= httpsCallable(functions, 'deleteFacilityById'); 
 export const editEquipment= httpsCallable(functions, 'editEquipment');  
 export const editFacility= httpsCallable(functions, 'editFacility'); 
-
+export const getPaymentIdFromUserId=httpsCallable(functions, 'getPaymentIdFromUserId')

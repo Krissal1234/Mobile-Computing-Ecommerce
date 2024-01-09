@@ -44,7 +44,7 @@ const ChoosingScreen = ({ navigation }) => {
 
       <TouchableOpacity
           style={styles.button}
-          onPress={() => createPaymentAccount()}>
+          onPress={() => checkPayment()}>
           <Image
             source={require('store-frontend/assets/pitch_fill_black.png')}
             style={{ width: 75, height: 50 }} 
@@ -73,6 +73,11 @@ async function createPaymentAccount() {
   let result = await openBrowserAsync(paymentSheet.data.accountLink)
   
   //Query stripe users for current user id, and save payment id in database
+}
+
+async function checkPayment(){
+  let a = await ListingsController._getPaymentIdFromUserId();
+  console.log(a)
 }
 
 export default ChoiceScreen;
