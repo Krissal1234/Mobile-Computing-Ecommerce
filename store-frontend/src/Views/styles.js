@@ -202,6 +202,7 @@ export default StyleSheet.create({
     verticalFlatList: {
       width: width,
       marginTop:height*0.05,
+      paddingBottom:footerHeight,
       marginLeft:width*0.05,
     },
     horizontalFlatList: {
