@@ -577,6 +577,7 @@ exports.deleteFacilityById = functions.https.onCall(async (data,context) => {
       return {success:false, message: "Item successfully deleted"};
     });
 });
+
 exports.deleteEquipmentById = functions.https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
