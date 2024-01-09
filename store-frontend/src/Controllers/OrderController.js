@@ -1,5 +1,5 @@
 
-import { getCurrentOrders, getPastOrders, postOrder } from "../../config/firebase";
+import { getCurrentOrders, getPastOrders, postOrder, getLeaserFutureOrderedListings,getLeaserPastOrderedListings } from "../../config/firebase";
 
 export class OrderController {
     // const order = {
@@ -47,7 +47,7 @@ export class OrderController {
     }
 }
 
-static async getPastBookings(userId){
+static async getRenterPastBookings(userId){
     try{
         const response = await getPastOrders(userId);
         console.log(response.data.data);
@@ -61,9 +61,35 @@ static async getPastBookings(userId){
     }
 }
 
-static async getFutureBookings(userId){
+static async getRenterFutureBookings(userId){
     try{
         const response = await getCurrentOrders(userId);
+        if (response.data.success){
+            return {success: true, message: response.data.message,data: response.data.data }
+        }else{
+            return {success: false, message: response.data.message }
+        }
+    }catch(error){
+        console.error("ERROR Internal SERver error");
+    }
+}
+static async getLeaserPastBookings(userId){
+    try{
+        const response = await getLeaserPastOrderedListings(userId);
+        console.log(response.data.data);
+        if (response.data.success){
+            return {success: true, message: response.data.message,data: response.data.data }
+        }else{
+            return {success: false, message: response.data.message }
+        }
+    }catch(error){
+        console.error("ERROR Internal SERver error");
+    }
+}
+
+static async getLeaserFutureBookings(userId){
+    try{
+        const response = await getLeaserFutureOrderedListings(userId);
         if (response.data.success){
             return {success: true, message: response.data.message,data: response.data.data }
         }else{

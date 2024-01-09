@@ -64,6 +64,7 @@ function RenterTabs(navigation ) {
           name="Bookings"
           component={Bookings}
           options={{ headerShown: false }}
+          initialParams={{from:'rent'}}
         />           
       </Tab.Navigator>
     );
@@ -110,6 +111,7 @@ function LeaserTabs() {
           name="Bookings"
           component={Bookings}
           options={{ headerShown: false }}
+          initialParams={{ from: 'lease' }}
         />
       </Tab.Navigator>
   );
