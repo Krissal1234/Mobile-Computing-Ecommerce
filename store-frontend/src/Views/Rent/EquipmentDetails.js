@@ -651,7 +651,7 @@ const EquipmentDetails = ({ route}) => {
         {/* Set Delivery Location */}
         {equipment.deliveryType === 'delivery' && (
           <View style={styles.card}>
-            <Text style={styles.subtitle}>Click to Set Delivery Location:</Text>
+            <Text style={styles.subtitle}>Delivery Location:</Text>
             {location ? (
               <MapView
                 style={styles.map}

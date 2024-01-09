@@ -11,6 +11,7 @@ import { colors } from '../colors';
 import { Image } from 'react-native';
 import { ListingsController } from '../../Controllers/ListingsController.js';
 import { openBrowserAsync } from 'expo-web-browser';
+import setUpPayment from '../../../assets/setup_payment.png'
 
 
 const Stack = createStackNavigator();
@@ -27,7 +28,7 @@ const ChoosingScreen = ({ navigation }) => {
           onPress={() => navigation.navigate('Add Equipment')}>
             <Image
             source={require('store-frontend/assets/equipment_fill_black.png')}
-            style={{ width: 75, height: 70 }} 
+            style={styles.choiceImg} 
             />
           <Text style={styles.buttonTitle}>Add Equipment Listing</Text>
       </TouchableOpacity>
@@ -37,7 +38,7 @@ const ChoosingScreen = ({ navigation }) => {
           onPress={() => navigation.navigate('Add Pitch')}>
           <Image
             source={require('store-frontend/assets/pitch_fill_black.png')}
-            style={{ width: 75, height: 50 }} 
+            style={styles.choiceImg} 
             />
           <Text style={styles.buttonTitle}>Add Facility Listing</Text>
       </TouchableOpacity>
@@ -46,8 +47,8 @@ const ChoosingScreen = ({ navigation }) => {
           style={styles.button}
           onPress={() => checkPayment()}>
           <Image
-            source={require('store-frontend/assets/pitch_fill_black.png')}
-            style={{ width: 75, height: 50 }} 
+            source={setUpPayment}
+            style={styles.choiceImg} 
             />
           <Text style={styles.buttonTitle}>Setup Payment Info</Text>
       </TouchableOpacity>

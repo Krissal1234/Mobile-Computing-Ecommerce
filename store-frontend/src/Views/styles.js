@@ -484,6 +484,11 @@ export default StyleSheet.create({
       borderColor: colors.red,
       alignItems: "center",
       justifyContent: 'center'
-    }
+    },
+  choiceImg:{
+    width:width*0.2,
+    height:height*0.08,
+    resizeMode:'contain',
+  },
     
 })
