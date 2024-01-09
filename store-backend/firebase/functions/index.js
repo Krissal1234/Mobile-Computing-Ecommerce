@@ -568,8 +568,7 @@ exports.deleteFacilityById = functions.https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
-    imageRef = storage.refFromURL(data.imageReference)
-    return imageRef.delete().db.collection('facilities').doc(data).delete().then(()=> {
+    return db.collection('facilities').doc(data).delete().then(()=> {
       console.log(`Document with ID ${data} successfully deleted from collection facilities`);
       return {success:true, message: "Item successfully deleted"}
     }).catch((error) =>{
@@ -581,8 +580,7 @@ exports.deleteEquipmentById = functions.https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
-  imageRef = storage.refFromURL(data.imageReference)
-  return imageRef.delete().db.collection('equipment').doc(data).delete().then(()=> {
+    return db.collection('equipment').doc(data).delete().then(()=> {
       console.log(`Document with ID ${data} successfully deleted from collection equipment`);
       return {success:true, message: "Item successfully deleted"}
     }).catch((error) =>{
