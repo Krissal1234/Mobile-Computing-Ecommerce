@@ -15,6 +15,14 @@ export default StyleSheet.create({
         backgroundColor: colors.darkBlue,
          
     },
+    loadingContainer:{
+      flex:1,
+      backgroundColor:colors.darkBlue,
+      width:width,
+      height:height,
+      justifyContent:'center',
+      alignContent:'center',
+    },
     coreContainer:{
       flex: 1,
         height:height,
@@ -484,6 +492,16 @@ export default StyleSheet.create({
       borderColor: colors.red,
       alignItems: "center",
       justifyContent: 'center'
-    }
+    },
+  choiceImg:{
+    width:width*0.2,
+    height:height*0.08,
+    resizeMode:'contain',
+  },
+  disabledButton: {
+    backgroundColor: '#cccccc', // Example grey color
+    opacity: 0.5,  
+  },
+  
     
 })

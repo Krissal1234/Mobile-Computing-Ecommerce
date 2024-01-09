@@ -54,6 +54,7 @@ import Core from './src/Views/Core';
 import LeaseEquipment from './src/Views/Lease/EquipmentLease.js';
 import RegisterScreen from "./src/Views/RegisterScreen/RegisterScreen";
 import Equipment from "./src/Views/Rent/Equipment";
+import Profile from './src/Views/Profile/profileCore.js'
 
 
 
@@ -93,6 +94,7 @@ export default function App() {
           <Stack.Screen name="Core" component={Core} />
           <Stack.Screen name="Equipment" component={Equipment} />
           <Stack.Screen name="Test" component={Test} />
+          <Stack.Screen name="Profile" component={Profile} />
 
           
         </Stack.Navigator>
