@@ -261,7 +261,7 @@ const toggleSportDropdown = () => {
 
   return (
     <ScrollView style={styles.container}>
-
+    <View style={styles.androidFooterFix}>
       {!isEditMode && (
         <View style={styles.buttonRow}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -533,6 +533,7 @@ const toggleSportDropdown = () => {
          </View>             
         </TouchableOpacity>               
       )}
+      </View>
     </ScrollView>
   );
 };
