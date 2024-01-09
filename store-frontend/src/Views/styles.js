@@ -498,5 +498,10 @@ export default StyleSheet.create({
     height:height*0.08,
     resizeMode:'contain',
   },
+  disabledButton: {
+    backgroundColor: '#cccccc', // Example grey color
+    opacity: 0.5,  
+  },
+  
     
 })
