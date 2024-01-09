@@ -162,20 +162,7 @@ const Core = () => {
 
   return (
 
-    <SafeAreaView style={styles.container}>
-
-      <BlurView 
-        style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: insets.top, // Blur only the non-safe area
-                  backgroundColor: colors.transDarkBlue
-                }}
-                intensity={8} // Adjust the intensity as needed
-                tint="default"   // 'light', 'dark', or 'default'
-      />
+    <SafeAreaView style={styles.coreContainer}>
 
       <BlurView style={styles.headerContainer}
       intensity={10}
