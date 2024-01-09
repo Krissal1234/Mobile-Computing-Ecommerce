@@ -1,69 +1,85 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Image, Text, TextInput, TouchableOpacity, SafeAreaView ,ActivityIndicator, View} from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import styles from 'store-frontend/src/Views/styles';
-import LoginController from '../../Controllers/LoginController';
-import { colors } from 'store-frontend/src/Views/colors.js';
-import { UserContext } from '../../Contexts/UserContext';
-import { EquipmentController } from '../../Controllers/EquipmentController';
-import { ListingsController } from '../../Controllers/ListingsController';
-import { getEquipmentById } from '../../../config/firebase';
-import { getEquipmentListingsByUserUID } from '../../../config/firebase';
-
+import React, { useState, useContext, useEffect } from "react";
+import {
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView,
+  ActivityIndicator,
+  View,
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import styles from "store-frontend/src/Views/styles";
+import LoginController from "../../Controllers/LoginController";
+import { colors } from "store-frontend/src/Views/colors.js";
+import { UserContext } from "../../Contexts/UserContext";
+import { ListingsController } from "../../Controllers/ListingsController";
 
 export default function LoginScreen({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { user, setUser } = useContext(UserContext);
-  const {setSportCategories } = useContext(UserContext);
+  const { setSportCategories } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState("");
   const onFooterLinkPress = () => {
-    navigation.navigate('Registration');
+    navigation.navigate("Registration");
   };
 
   const onLoginPress = async () => {
-
-  setLoading(true);
-    console.log('clicked login');
+    setLoading(true);
+    console.log("clicked login");
     const login = await LoginController.loginUser(email, password);
-    //Setting sport categories global variable to minimise overhead
 
-    const response = await ListingsController.getAllSports();
-
-    if(response.success){
-      setSportCategories(response.data);
-    }else{
-      console.log(response.message);
-    }
-    
     console.log(login.message);
     if (login.success) {
-        //Setting uid global variable
+      //Setting uid global variable
+
       setUser(login.user);
+
+      //Setting sport categories global variable to minimise overhead
+      const response = await ListingsController.getAllSports();
+      if (response.success) {
+        setSportCategories(response.data);
+      } else {
+        console.log(response.message);
+      }
+
       setLoading(false);
       navigation.navigate("Home");
+    } else {
+      setErrorMessage(login.message);
+      setLoading(false);
     }
-
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAwareScrollView
         contentContainerStyle={styles.keyboardContainer}
-        keyboardShouldPersistTaps="never">
-  
+        keyboardShouldPersistTaps="never"
+      >
         {loading ? (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
         ) : (
           // Show the rest of the form only when not loading
           <>
             <Image
               style={styles.logo}
-              source={require('store-frontend/assets/logo.png')}
+              source={require("store-frontend/assets/logo.png")}
             />
+
+            {errorMessage !== "" && (
+              <Text
+                style={{ color: "red", textAlign: "center", marginBottom: 10 }}
+              >
+                {errorMessage}
+              </Text>
+            )}
             <TextInput
               style={styles.input}
               placeholder="E-mail"
@@ -85,12 +101,13 @@ export default function LoginScreen({ navigation }) {
             />
             <TouchableOpacity
               style={styles.button}
-              onPress={() => onLoginPress()}>
+              onPress={() => onLoginPress()}
+            >
               <Text style={styles.buttonTitle}>Log in</Text>
             </TouchableOpacity>
             <SafeAreaView style={styles.footerView}>
               <Text style={styles.footerText}>
-                Don't have an account?{' '}
+                Don't have an account?{" "}
                 <Text onPress={onFooterLinkPress} style={styles.footerLink}>
                   Sign up
                 </Text>
@@ -101,4 +118,4 @@ export default function LoginScreen({ navigation }) {
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
-}  
+}

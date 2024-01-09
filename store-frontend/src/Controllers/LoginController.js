@@ -1,49 +1,49 @@
 // import functions from '@react-native-firebase/functions';
 // import { app, functions } from "@firebaseConfig.js"
-import { login, auth, registerUser,getUserFunc } from '../../config/firebase';
+import { login, auth, registerUser, getUserFunc } from "../../config/firebase";
 
 export class LoginController {
-  
-  static async registerUser(email,username, password, passwordVerify) {
-
-
-    const result = this.validateRegistrationInputs(email, password,passwordVerify);
-    if (!result.success){
-      console.log("success is false if");
-      return result.message;
+  static async registerUser(email, username, password, passwordVerify) {
+    const result = this.validateRegistrationInputs(
+      email,
+      password,
+      passwordVerify
+    );
+    if (!result.success) {
+      return {success: false, message: result.message};
     }
-    
+
     try {
       const userData = {
         email: email,
         password: password,
-        username: username
+        username: username,
       };
-      const registration = await registerUser(userData)
-      // Return success 
-      if(registration.data.success == true){
+      const registration = await registerUser(userData);
+      // Return success
+      if (registration.data.success == true) {
         return {
           success: true,
-          message: 'Registration successful!',
+          message: "Registration successful!",
         };
-      }else if(registration.data.success == false){
-          return {
-            success: false,
-            message: registration.data.message
-          }
+      } else if (registration.data.success == false) {
+        return {
+          success: false,
+          message: registration.data.message,
+        };
       }
     } catch (error) {
       // Handle specific error cases
-      if (error.code === 'auth/invalid-email') {
+      if (error.code === "auth/invalid-email") {
         return {
           success: false,
-          message: 'Invalid email format. Please provide a valid email address.',
+          message: "Invalid email format.",
         };
       } else {
         // Handle other error cases
         return {
           success: false,
-          message: 'An unexpected error occurred during registration.',
+          message: "An unexpected error occurred during registration.",
         };
       }
     }
@@ -59,7 +59,7 @@ export class LoginController {
     if (!validateEmail(email)) {
       return {
         success: false,
-        message: 'Invalid Email!',
+        message: "Invalid Email!",
       };
     }
 
@@ -67,14 +67,14 @@ export class LoginController {
     if (password != passwordVerify) {
       return {
         success: false,
-        message: 'Passwords do not match!',
+        message: "Passwords do not match!",
       };
     }
 
     // Validation passed
     return {
       success: true,
-      message: 'Inputs are valid!',
+      message: "Inputs are valid!",
     };
   }
 
@@ -84,7 +84,7 @@ export class LoginController {
       if (!email || !password) {
         return {
           success: false,
-          message: 'Invalid email or password',
+          message: "Invalid email or password",
         };
       }
 
@@ -99,19 +99,27 @@ export class LoginController {
 
       return {
         success: true,
-        message: 'Login successful',
-        user: userCredential        // Include user data if needed
+        message: "Login successful",
+        user: userCredential, // Include user data if needed
         // userData: userData.data,
       };
     } catch (error) {
-      console.error('Error calling login function:', error);
+      console.log("Error calling login function:");
 
       // Handle specific authentication errors
-      let errorMessage = 'Internal Server Error';
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-        errorMessage = 'Invalid email or password';
+      let errorMessage = "Internal Server Error";
+      console.log(error.code);
+      if (
+        error.code === "auth/user-not-found" ||
+        error.code === "auth/invalid-credential" ||
+        error.code === "auth/invalid-email" ||
+        error.code === "auth/wrong-password"
+      ) {
+        errorMessage = "Invalid email or password";
+      } else {
+        errorMessage = "Something Went wrong, please check your credentials";
       }
-      
+
       return {
         success: false,
         message: errorMessage,
@@ -119,4 +127,4 @@ export class LoginController {
     }
   };
 }
-export default LoginController
+export default LoginController;
