@@ -22,7 +22,7 @@ const BookingsCard = ({imageUri, title, description, pricePaid, dateFrom, dateTo
             style={{ width: 50, height: 50, paddingRight: 8 }}
           />
           <View>
-            <View style={{ width: "93%", paddingLeft: 16 }}>
+            <View style={{ paddingLeft: 16 }}>
               <Text>{title}</Text>
               <Text style={{ fontSize: 12 }}>
                 {description}
@@ -36,7 +36,7 @@ const BookingsCard = ({imageUri, title, description, pricePaid, dateFrom, dateTo
         </View>
         <View style={{ flexDirection: "row" }}>
           <Text>Dates</Text>
-          <Text style={{ marginLeft: "auto" }}>{dateFrom} - {dateTo}</Text>
+          <Text style={{ marginLeft: "auto" }}>{dateFrom} to {dateTo}</Text>
         </View>
       </View>
     </TouchableOpacity>
