@@ -6,6 +6,7 @@ import { OrderController } from '../../Controllers/OrderController'
 import { UserContext } from '../../Contexts/UserContext'
 
 const Bookings = ({ route }) => {
+  const {setShowFilter} = useContext(UserContext);
   const [isPastBookings, setIsPastBookings] = useState(true)
   const [isShowingDetails, setIsShowingDetails] = useState(false)
   const [pastbookingOrders, setPastBookingOrders] = useState([]) 
@@ -14,6 +15,7 @@ const Bookings = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false); // new state variable for loading status
   // const from = "";
   useEffect(() => {
+    setShowFilter(false);
     const {from} = route.params;
     
     setIsLoading(true); // Start loading

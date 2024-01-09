@@ -19,6 +19,7 @@ export default function Home({ navigation }) {
   const handleLeaseClick = async () => {
     setAccountType('Leaser');
     navigation.navigate('Core');
+    setShowFilter(false);
   };
 
   return (

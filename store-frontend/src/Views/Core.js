@@ -30,7 +30,10 @@ import ChoiceScreen from './AddEquipment/ChoiceScreen';
 
 const Tab = createBottomTabNavigator();
 
+
 function RenterTabs(navigation ) {
+  const { setShowFilter } = useContext(UserContext);
+
     return (
       <Tab.Navigator
         screenOptions={({ route }) => ({
@@ -50,21 +53,31 @@ function RenterTabs(navigation ) {
           tabBarStyle: styles.coreFooter,
         })}
       >
+      
       <Tab.Screen
           name="EquipmentStack"
           component={RentEquipment}
           options={{ headerShown: false }}
+          listeners={{
+            focus: () => setShowFilter(true),
+          }}
         />
         <Tab.Screen
           name="Facilities"
           component={RentFacilities}
           options={{ headerShown: false }}
+          listeners={{
+            focus: () => setShowFilter(true),
+          }}
         />
         <Tab.Screen
           name="Bookings"
           component={Bookings}
           options={{ headerShown: false }}
           initialParams={{from:'rent'}}
+          listeners={{
+            focus: () => setShowFilter(false),
+          }}
         />           
       </Tab.Navigator>
     );
@@ -141,7 +154,7 @@ const Core = () => {
       try {
         setLoadingSports(true);
         const sportsData = await ListingsController.getAllSports();
-        setSports(["No Filter", ...sportsData.data]);
+        setSports(["All Sports", ...sportsData.data]);
       } catch (error) {
         console.error(error);
       } finally {

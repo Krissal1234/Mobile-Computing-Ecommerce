@@ -92,7 +92,7 @@ const Facilities = ({ navigation }) => {
   .flatMap(({ facilities }) => facilities);
 
   return (
-    sportFilter === 'Set Sport Filter' || sportFilter === 'No Filter' ? (
+    sportFilter === 'Set Sport Filter' || sportFilter === 'All Sports' ? (
       // This block will render when sportFilter is 'Set Sport Filter' or 'No Filter'
       <View style={styles.container}>
         <FlatList

@@ -11,6 +11,7 @@ import { useFocusEffect } from '@react-navigation/native';
 const Stack = createStackNavigator();
 
 const Equipment = ({ navigation }) => {
+  
   const {sportFilter,setSportFilter} = useContext(UserContext);
   const [sportsEquipment, setSportsEquipment] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -92,7 +93,7 @@ const Equipment = ({ navigation }) => {
   .flatMap(({ equipment }) => equipment);
 
   return (
-    sportFilter === 'Set Sport Filter' || sportFilter === 'No Filter' ? (
+    sportFilter === 'Set Sport Filter' || sportFilter === 'All Sports' ? (
       // This block will render when sportFilter is 'Set Sport Filter' or 'No Filter'
       <View style={styles.container}>
         <FlatList
