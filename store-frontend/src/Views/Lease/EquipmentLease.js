@@ -8,7 +8,7 @@ import EquipmentDetails from './EquipmentDetails';
 import { View, ActivityIndicator } from 'react-native';
 import { UserContext } from '../../Contexts/UserContext';
 import { ListingsController } from '../../Controllers/ListingsController';
-
+import { colors } from '../colors';
 
 const Stack = createStackNavigator();
 
@@ -40,8 +40,8 @@ const LeasingEquipment = ({ navigation }) => {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.white} />
       </View>
     );
   }

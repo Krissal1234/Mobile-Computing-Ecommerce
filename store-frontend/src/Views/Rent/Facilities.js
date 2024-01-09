@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import FacilitiesDetails from './FacilitiesDetails';
 import { useFocusEffect } from '@react-navigation/native';
 import { UserContext } from '../../Contexts/UserContext';
+import {colors} from '../colors';
 
 const Stack = createStackNavigator();
 
@@ -80,8 +81,8 @@ const Facilities = ({ navigation }) => {
   if (loading) {
     // Display loading indicator when data is being loaded
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.white} />
       </View>
     );
   }

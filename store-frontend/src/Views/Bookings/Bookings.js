@@ -4,6 +4,8 @@ import BookingsCard from '../../Components/BookingsCard'
 import BookingDetails from './BookingDetails'
 import { OrderController } from '../../Controllers/OrderController'
 import { UserContext } from '../../Contexts/UserContext'
+import { colors } from '../colors'
+import styles from '../styles'
 
 const Bookings = ({ route }) => {
   const {setShowFilter} = useContext(UserContext);
@@ -95,7 +97,11 @@ const Bookings = ({ route }) => {
     setIsShowingDetails(false)
   }
   if (isLoading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
   }
 
   return (

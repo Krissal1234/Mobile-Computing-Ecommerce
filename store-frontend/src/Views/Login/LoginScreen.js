@@ -60,10 +60,8 @@ export default function LoginScreen({ navigation }) {
         keyboardShouldPersistTaps="never"
       >
         {loading ? (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <ActivityIndicator size="large" color="#0000ff" />
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={colors.white} />
           </View>
         ) : (
           // Show the rest of the form only when not loading

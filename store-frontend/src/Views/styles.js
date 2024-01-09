@@ -15,6 +15,14 @@ export default StyleSheet.create({
         backgroundColor: colors.darkBlue,
          
     },
+    loadingContainer:{
+      flex:1,
+      backgroundColor:colors.darkBlue,
+      width:width,
+      height:height,
+      justifyContent:'center',
+      alignContent:'center',
+    },
     coreContainer:{
       flex: 1,
         height:height,
