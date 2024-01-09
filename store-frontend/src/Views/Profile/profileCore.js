@@ -74,7 +74,8 @@ const Core = () => {
         </View>
       ) : (
         <TouchableOpacity onPress={handleNavigation} style={styles.countdownContainer}>
-          <Text style={styles.sectionTitle}>Click Home in {countdown} seconds or I will find you...</Text>
+            <Text style={styles.sectionTitle}>This Page is A Work In Progress</Text>
+            <Text style={styles.sectionTitle}>Click Home in {countdown} seconds or I will find you...</Text>
         </TouchableOpacity>
       )}
     </SafeAreaView>
