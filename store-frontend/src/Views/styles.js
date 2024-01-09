@@ -13,14 +13,20 @@ export default StyleSheet.create({
         height:height,
         width: width, 
         backgroundColor: colors.darkBlue,
+         
+    },
+    coreContainer:{
+      flex: 1,
+        height:height,
+        width: width, 
+        backgroundColor: colors.darkBlue,
         ...Platform.select({
             ios: {  
             },
             android: {
-                paddingTop:StatusBar.currentHeight,
+              paddingTop:StatusBar.currentHeight,
             },
           }),
-          
     },
     androidFooterFix:{
       ...Platform.select({
@@ -32,10 +38,17 @@ export default StyleSheet.create({
       }),
     },
     keyboardContainer:{
-        width:width,
-        alignItems:'center',
-        justifyContent:'center'
-
+      width:width,
+      alignItems:'center',
+      justifyContent:'center',
+      ...Platform.select({
+        ios: {  
+        },
+        android: {
+          paddingTop:StatusBar.currentHeight,
+        },
+      }),
+      backgroundColor: colors.darkBlue,
     },
     
     logo: {
@@ -46,6 +59,7 @@ export default StyleSheet.create({
         alignSelf: "center",
         marginBottom:height*0.05,
         marginTop:height*0.02,
+        resizeMode:'contain'
     },
     input: {
         backgroundColor: colors.white,
@@ -201,11 +215,17 @@ export default StyleSheet.create({
     },
     verticalFlatList: {
       width: width,
-      marginTop:height*0.05,
-      marginLeft:width*0.05,
+      paddingBottom:footerHeight,
+      ...Platform.select({
+        ios: {  
+          marginTop:height*0.05,
+        },
+        android: {
+          marginTop:height*0.01,
+        },
+      }),
     },
     horizontalFlatList: {
-      
     },
     sectionTitle:{
       fontSize:20,
@@ -216,7 +236,7 @@ export default StyleSheet.create({
     itemPreview:{
       marginTop:height*0.01,
       marginBottom:height*0.02,
-        marginHorizontal: width*0.01,
+        marginLeft: width*0.03,
         width:width*0.4,
         height:width*0.4,
         backgroundColor: colors.mutedBlue,
@@ -316,8 +336,14 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between', 
         alignItems: 'center',
-        marginTop:height*0.02,
-        
+        ...Platform.select({
+          ios: {  
+            marginTop:height*0.02,
+          },
+          android: {
+            marginTop:height*0.00,
+          },
+        }),
       },
       
       deleteButton: {

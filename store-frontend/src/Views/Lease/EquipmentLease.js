@@ -5,9 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import EquipmentList from './EquipmentList';
 import EquipmentDetails from './EquipmentDetails';
-import { View } from 'react-native';
-import { EquipmentController } from '../../Controllers/EquipmentController';
-
+import { View, ActivityIndicator } from 'react-native';
 import { UserContext } from '../../Contexts/UserContext';
 import { ListingsController } from '../../Controllers/ListingsController';
 
@@ -15,8 +13,8 @@ import { ListingsController } from '../../Controllers/ListingsController';
 const Stack = createStackNavigator();
 
 const LeasingEquipment = ({ navigation }) => {
-  const [equipmentData, setEquipmentData] = useState([]); // Step 2: State for equipment data
-
+  const [equipmentData, setEquipmentData] = useState([]); 
+  const [loading, setLoading] = useState(false); 
   const { user } = useContext(UserContext);
   console.log("UserID: ", user.user.uid ); 
   const userId = user ? user.user.uid  : null; 
@@ -24,15 +22,29 @@ const LeasingEquipment = ({ navigation }) => {
 
   useEffect(() => {
     const fetchAllEquipment = async () => {
-      const response = await ListingsController.getAllEquipmentUserListings(userId);
-      console.log("Available Equipment:", response);
-      if (response && response.success) {
-        setEquipmentData(response.data); // Step 3: Update state with fetched data
+      setLoading(true); 
+      try {
+        const response = await ListingsController.getAllEquipmentUserListings(user.user.uid);
+        if (response && response.success) {
+          setEquipmentData(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching equipment:", error);
+      } finally {
+        setLoading(false); 
       }
     };
 
     fetchAllEquipment();
   }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
 
 

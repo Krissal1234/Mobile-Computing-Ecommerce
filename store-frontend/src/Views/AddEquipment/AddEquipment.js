@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, Modal, FlatList,Platform  } from 'react-native';
-import { Card, Button } from 'react-native-paper';
+import { Card } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { EquipmentController } from '../../Controllers/EquipmentController';
 import { UserContext } from '../../Contexts/UserContext';
 import { useContext } from 'react';
@@ -16,6 +15,8 @@ import { colors } from '../colors';
 import downward_cevron from '../../../assets/downward_cevron.png'
 import upward_cevron from '../../../assets/upward_cevron.png'
 import { Picker } from '@react-native-picker/picker';
+import { ActivityIndicator } from 'react-native';
+
 
 
 
@@ -43,6 +44,8 @@ const AddEquipment = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [isDeliveryDropdownVisible, setIsDeliveryDropdownVisible] = useState(false);
+  const [loading, setLoading] = useState(false); 
+
   
 
   const handleBack = () => {
@@ -102,39 +105,53 @@ const AddEquipment = () => {
   
 
   const handleAddEquipment = async () => {
-
+    setLoading(true); 
     setErrorMessage('');
     setSuccessMessage('');
 
+    if (!title || !description || !price || !selectedSport || !availableStatus || !deliveryType || !condition || images.length === 0) {
+      setErrorMessage('Please fill in all fields and select an image.');
+      setLoading(false); 
+      return;
+    }
 
-  if (!title || !description || !price || !selectedSport  || !availableStatus || !deliveryType || !condition || images.length === 0) {
-    setErrorMessage('Please fill in all fields and select an image.');
-    return; 
-  }
- 
+    try {
+      var parsedPrice = parseInt(price);
+      const availableStatusBoolean = availableStatus === "Yes"; 
+      const newEquipment = {
+        title,
+        description,
+        price: parsedPrice,
+        sportCategory:  selectedSport,
+        availableStatus: availableStatusBoolean, 
+        deliveryType,
+        condition,
+        imageReference: images[0],
+        pickupLocation: deliveryType === 'delivery' ? null : pickupLocation,
+      };
+      console.log('New Equipment:', newEquipment);
 
-    var parsedPrice = parseInt(price);
-    const availableStatusBoolean = availableStatus === "Yes"; 
-
-    const newEquipment = {
-      title,
-      description,
-      price: parsedPrice,
-      sportCategory:  selectedSport,
-      availableStatus: availableStatusBoolean, 
-      deliveryType,
-      condition,
-      imageReference: images[0],
-      pickupLocation: deliveryType === 'delivery' ? null : pickupLocation,
-    };
-    console.log('New Equipment:', newEquipment);
-
-   //This will input the equipment into the database.
-    const response = await EquipmentController.PostEquipment(newEquipment,user); //TODO: find a way to use a laoding screen while you wait for this function to return (Communicate with the rest of UI team becuase it will be needed throughout the project)
-    setSuccessMessage('Equipment added successfully!');
-
-    console.log(response.message);
+      const response = await EquipmentController.PostEquipment(newEquipment, user);
+      alert('Equipment added successfully!');
+      setSuccessMessage('Equipment added successfully!');
+      //Notification
+      console.log(response.message);
+    } catch (error) {
+      console.error("Error adding equipment: ", error);
+      setErrorMessage('Failed to add equipment.');
+    } finally {
+      setLoading(false);
+      
+    }
   };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
 
 
@@ -174,6 +191,8 @@ const AddEquipment = () => {
       <KeyboardAwareScrollView
         style={styles.container}
         keyboardShouldPersistTaps="never">
+
+<View style={styles.androidFooterFix}>
 
           {/* Back Button */}
           <TouchableOpacity onPress={handleBack} style={styles.backButton}>
@@ -219,7 +238,7 @@ const AddEquipment = () => {
 
             <Card style={styles.card}>
             {/* Price Per Day */}
-            <Text style={styles.title}>Price Per Day</Text>
+            <Text style={styles.title}>Price Per Hour</Text>
             <TextInput
               style={styles.addEquipmentInput}
               placeholder="Enter Price"
@@ -486,7 +505,10 @@ const AddEquipment = () => {
                   <Text style={styles.buttonTitle}>Add Equipment</Text>
              </TouchableOpacity>
          </View>
+         </View>
+         
         </KeyboardAwareScrollView>
+
   );
 };
 

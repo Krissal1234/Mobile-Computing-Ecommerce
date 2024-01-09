@@ -14,6 +14,8 @@ import upward_cevron from '../../../assets/upward_cevron.png'
 import { Picker } from '@react-native-picker/picker';
 import { UserContext } from "../../Contexts/UserContext";
 import addEquipmentStyles from 'store-frontend/src/Views/AddEquipment/styles.js';
+import { ActivityIndicator } from 'react-native';
+
 
 
 
@@ -40,6 +42,8 @@ const EquipmentDetails = ({ route }) => {
   const deliveryOptions = ['pickup', 'delivery']; //TODO: show capitals in UI but pass it to the firebase function in lowercase to keep lowercase standard. 
   const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
   const availableOptions = ["Yes", "No"];
+  const [isLoading, setIsLoading] = useState(false); 
+
 
   const initialAvailableValue = equipment.availableStatus ? "Yes" : "No";
   const [selectedAvailable, setSelectedAvailable] = useState(initialAvailableValue);
@@ -162,10 +166,17 @@ const EquipmentDetails = ({ route }) => {
     setIsEditMode(!isEditMode); 
 };
 
-const editEquipment = async (equipmentId,equipmentItem) => {
-  const response = await EquipmentController.editEquipment(equipmentId,equipmentItem);
-  console.log(response.message);
-  // Handle the response, navigate back, show message, etc.
+const editEquipment = async (equipmentId, equipmentItem) => {
+  setIsLoading(true); 
+  try {
+    const response = await EquipmentController.editEquipment(equipmentId, equipmentItem);
+    console.log(response.message);
+    alert('Equipment edited successfully!');
+  } catch (error) {
+    console.error("Error editing equipment: ", error);
+  } finally {
+    setIsLoading(false); 
+  }
 };
   
 const toggleSportDropdown = () => {
@@ -186,16 +197,31 @@ const toggleSportDropdown = () => {
     setIsEditMode(false);
   };
 
-  const handleDelete = () => {h
+  const handleDelete = () => {
     console.log('Delete Equipment ID:', equipment.id);
     deleteEquipment(equipment.id); 
   };
 
   const deleteEquipment = async (equipmentId) => {
-    const response = await EquipmentController.deleteEquipment(equipmentId);
-    console.log(response.message);
-    // Handle the response, navigate back, show message, etc.
+    setIsLoading(true); 
+    try {
+      const response = await EquipmentController.deleteEquipment(equipmentId);
+      console.log(response.message);
+      alert('Equipment deleted successfully!');
+      navigation.goBack();
+       
+    } finally {
+      setIsLoading(false); 
+    }
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   const handleSportSelection = (itemValue) => {
     setSelectedSport(itemValue);
@@ -235,7 +261,7 @@ const toggleSportDropdown = () => {
 
   return (
     <ScrollView style={styles.container}>
-
+    <View style={styles.androidFooterFix}>
       {!isEditMode && (
         <View style={styles.buttonRow}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -507,6 +533,7 @@ const toggleSportDropdown = () => {
          </View>             
         </TouchableOpacity>               
       )}
+      </View>
     </ScrollView>
   );
 };

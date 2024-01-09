@@ -455,10 +455,20 @@ const EquipmentDetails = ({ route}) => {
               }
           },
               item: equipment,
+              totalPrice
           }
 
-      let response = await ListingsController._createPaymentSheet(order);
-      console.log(response)
+          // let paymentResponse = await ListingsController._createPaymentSheet(order);
+          // if(paymentResponse.success){
+          console.log("payment successful");
+          const response = await OrderController.createOrder(order, user);
+          if (response.success){
+            console.log("order response", response.message);
+            return true;
+          // }
+          }
+
+      // console.log(response)
 
     //   const {
     //     paymentIntent,
@@ -468,14 +478,14 @@ const EquipmentDetails = ({ route}) => {
     //     price
     //   } = response.data
 
-      console.log("PRICE")
-      console.log("PRICE")
-      console.log("PRICE")
-      console.log("PRICE")
-      console.log("PRICE")
-      console.log("PRICE")
-      console.log(price)
-      console.log(paymentIntent)
+      // console.log("PRICE")
+      // console.log("PRICE")
+      // console.log("PRICE")
+      // console.log("PRICE")
+      // console.log("PRICE")
+      // console.log("PRICE")
+      // console.log(price)
+      // console.log(paymentIntent)
 
     //   await initPaymentSheet({
     //     merchantDisplayName: "Sporty Rentals",
@@ -492,11 +502,11 @@ const EquipmentDetails = ({ route}) => {
 
     //   const { error } = await presentPaymentSheet();
 
-    if (error) {
-      return false;
-    } else {
-      return true;
-    }
+    // if (error) {
+    //   return false;
+    // } else {
+    //   return true;
+    // }
       
 
 

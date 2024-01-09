@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, Button, FlatList } from 'react-native';
 import { Card } from 'react-native-paper';
-import MapView, { Marker } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import styles from 'store-frontend/src/Views/styles';
 import addEquipmentStyles from 'store-frontend/src/Views/AddEquipment/styles.js';
@@ -13,6 +12,8 @@ import downward_cevron from '../../../assets/downward_cevron.png'
 import upward_cevron from '../../../assets/upward_cevron.png'
 import { Picker } from '@react-native-picker/picker';
 import { UserContext } from "../../Contexts/UserContext";
+import { ActivityIndicator } from 'react-native';
+
 
 
 const PitchDetails = ({ route }) => {
@@ -33,6 +34,8 @@ const PitchDetails = ({ route }) => {
   const availableOptions = ["Yes", "No"];
   const initialAvailableValue = pitch.availableStatus ? "Yes" : "No";
   const [selectedAvailable, setSelectedAvailable] = useState(initialAvailableValue);
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     setSports(["No Filter", ...sportCategories]);
   }, [sportCategories]);
@@ -106,18 +109,41 @@ const PitchDetails = ({ route }) => {
     setIsSportDropdownVisible(!isSportDropdownVisible);
   };
 
-    const deleteFacility = async (facilityId) => {
-      const response = await FacilitiesController.deleteFacility(facilityId);
-      console.log(response);
-      // Handle the response, navigate back, show message, etc.
-    };
-
-    const editFacility = async (facilityId,facilityItem) => {
-      const response = await FacilitiesController.editFacility(facilityId,facilityItem);
+  const editFacility = async (facilityId, facilityItem) => {
+    setIsLoading(true);
+    try {
+      const response = await FacilitiesController.editFacility(facilityId, facilityItem);
       console.log(response.message);
-      // Handle the response, navigate back, show message, etc.
-    };
+      alert('Facility edited successfully!');
+      navigation.goBack(); 
+    } catch (error) {
+      console.error("Error editing facility: ", error);
+      // Handle error
+    } finally {
+      setIsLoading(false); 
+    }
+  };
+  
+  const deleteFacility = async (facilityId) => {
+    setIsLoading(true); 
+    try {
+      const response = await FacilitiesController.deleteFacility(facilityId);
+      console.log(response.message);
+      alert('Facility deleted successfully!');
+      navigation.goBack();
+    } finally {
+      setIsLoading(false); 
+    }
+  };
 
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+  
     const toggleAvailableDropdown = () => {
       setIsAvailableDropdownVisible(!isAvailableDropdownVisible);
     };
@@ -132,6 +158,7 @@ const PitchDetails = ({ route }) => {
 
   return (
     <ScrollView style={styles.container}>
+      <View style={styles.androidFooterFix}>
       {!isEditMode && (
         <View style={styles.buttonRow}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -303,6 +330,7 @@ const PitchDetails = ({ route }) => {
         </TouchableOpacity>               
       
       )}
+      </View>
     </ScrollView>
   );
 };

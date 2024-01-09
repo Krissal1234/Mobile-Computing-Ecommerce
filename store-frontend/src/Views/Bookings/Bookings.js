@@ -5,27 +5,35 @@ import BookingDetails from './BookingDetails'
 import { OrderController } from '../../Controllers/OrderController'
 import { UserContext } from '../../Contexts/UserContext'
 
-const Bookings = ({ navigation }) => {
+const Bookings = ({ route }) => {
   const [isPastBookings, setIsPastBookings] = useState(true)
   const [isShowingDetails, setIsShowingDetails] = useState(false)
   const [pastbookingOrders, setPastBookingOrders] = useState([]) 
   const [futureBookingOrders, setFutureBookingOrders] = useState([]) // State to store booking orders
   const {user} = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(false); // new state variable for loading status
-
+  // const from = "";
   useEffect(() => {
+    const {from} = route.params;
+    
     setIsLoading(true); // Start loading
-    fetchPastBookingOrders();
-    fetchFutureBookingOrders();
+    fetchPastBookingOrders(from);
+    fetchFutureBookingOrders(from);
   }, []);
 
 
 
-  const fetchFutureBookingOrders = async () => {
+  const fetchFutureBookingOrders = async (from) => {
     try {
-      console.log("Bookings past fetch")
-      const resp = await OrderController.getFutureBookings(user.user.uid);
-      console.log(user.user.uid);
+      
+      console.log("Bookings future fetch");
+      let resp = Object;
+      if(from == "rent"){
+        resp = await OrderController.getRenterFutureBookings(user.user.uid);
+      }else if (from == "lease"){
+        resp = await OrderController.getLeaserFutureBookings(user.user.uid);
+      }
+      console.log(resp.message);
       if(resp.success){
         setFutureBookingOrders(resp.data);
       }else{
@@ -38,11 +46,16 @@ const Bookings = ({ navigation }) => {
       setIsLoading(false); // Stop loading
     }
   }
-  const fetchPastBookingOrders = async () => {
+  const fetchPastBookingOrders = async (from) => {
     try {
-      console.log("Bookings future fetch")
-      const resp = await OrderController.getPastBookings(user.user.uid);
-      console.log(user.user.uid);
+      console.log("Bookings past fetch");
+      let resp = Object;
+      if(from == 'rent'){
+        resp = await OrderController.getRenterPastBookings(user.user.uid);
+      }else if(from == 'lease'){
+        resp = await OrderController.getLeaserPastBookings(user.user.uid);
+      }
+      console.log(resp.message);
       if(resp.success){
         setPastBookingOrders(resp.data);
       }else{

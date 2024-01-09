@@ -16,8 +16,9 @@ export default StyleSheet.create({
         },    
         logo: {
         paddingVertical:height*0.28,
-        width:width*1.2,
+        width:width*1.1,
         height:height*0.5,
-        alignSelf:'center'
+        alignSelf:'center',
+        resizeMode:'cover',
     },
 })
