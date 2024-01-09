@@ -236,7 +236,7 @@ const AddEquipment = () => {
 
             <Card style={styles.card}>
             {/* Price Per Day */}
-            <Text style={styles.title}>Price Per Day</Text>
+            <Text style={styles.title}>Price Per Hour</Text>
             <TextInput
               style={styles.addEquipmentInput}
               placeholder="Enter Price"
