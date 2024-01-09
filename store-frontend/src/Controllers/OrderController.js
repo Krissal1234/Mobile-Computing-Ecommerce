@@ -42,7 +42,7 @@ export class OrderController {
             return {success:false, message: response.data.message}
         }
     }catch(error){
-        console.error(error);
+        console.error(error.message);
         return {success:false, message: "Internal server error"}  
     }
 }

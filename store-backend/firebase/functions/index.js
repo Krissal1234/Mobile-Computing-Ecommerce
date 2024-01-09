@@ -445,14 +445,15 @@ exports.getCurrentOrders = functions.https.onCall(async (data,context) => {
   try {
     const userUid = data;
     const currentDate = new Date().toISOString().split('T')[0]; // Convert current date to YYYY-MM-DD format
-
+    const currentDateObj = new Date(currentDate);
     const snapshot = await admin.firestore().collection('orders')
       .where('renter.userUid', '==', userUid)
       .get();
 
-    const futureBookings = snapshot.docs
+      const futureBookings = snapshot.docs
       .map(doc => ({ id: doc.id, ...doc.data() }))
-      .filter(order => order.rentalPeriod.end.endDate >= currentDate);
+      .filter(order => new Date(order.rentalPeriod.end.endDate) >= currentDateObj);
+
 
     return {
       success: true,
@@ -476,14 +477,14 @@ exports.getPastOrders = functions.https.onCall(async (data, context) => {
   try {
     const userUid = data;
     const currentDate = new Date().toISOString().split('T')[0]; // Convert current date to YYYY-MM-DD format
-
+    const currentDateObj = new Date(currentDate);
     const snapshot = await admin.firestore().collection('orders')
       .where('renter.userUid', '==', userUid)
       .get();
 
     const pastBookings = snapshot.docs
       .map(doc => ({ id: doc.id, ...doc.data() }))
-      .filter(order => order.rentalPeriod.end.endDate < currentDate);
+      .filter(order => new Date(order.rentalPeriod.end.endDate) <= currentDateObj);
 
     return {
       success: true,
@@ -492,6 +493,7 @@ exports.getPastOrders = functions.https.onCall(async (data, context) => {
     };
   } catch (error) {
     console.error('Error retrieving listings by user UID:', error);
+    // throw new functions.https.HttpsError('internal', `Error retrieving data: ${error.message}`);
     return {
       success: false,
       message: 'Internal Server Error',

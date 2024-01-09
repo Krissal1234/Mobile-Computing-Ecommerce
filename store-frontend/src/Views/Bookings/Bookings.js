@@ -23,9 +23,10 @@ const Bookings = ({ navigation }) => {
 
   const fetchFutureBookingOrders = async () => {
     try {
-      console.log("Bookings past fetch")
+      console.log("Bookings future fetch")
       const resp = await OrderController.getFutureBookings(user.user.uid);
       console.log(user.user.uid);
+      console.log(resp.message);
       if(resp.success){
         setFutureBookingOrders(resp.data);
       }else{
@@ -40,9 +41,10 @@ const Bookings = ({ navigation }) => {
   }
   const fetchPastBookingOrders = async () => {
     try {
-      console.log("Bookings future fetch")
+      console.log("Bookings past fetch")
       const resp = await OrderController.getPastBookings(user.user.uid);
       console.log(user.user.uid);
+      console.log(resp.message);
       if(resp.success){
         setPastBookingOrders(resp.data);
       }else{
