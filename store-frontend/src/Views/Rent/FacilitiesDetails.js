@@ -106,7 +106,11 @@ const FacilitiesDetails = ({ route}) => {
     }, []);
 
     if (loading) {
-      return <ActivityIndicator />; // or some loading screen
+      return(
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </View>
+      );
     }
   
     if (!facilities) {

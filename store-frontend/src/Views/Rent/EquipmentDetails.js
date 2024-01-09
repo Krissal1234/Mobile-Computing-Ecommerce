@@ -125,9 +125,9 @@ const EquipmentDetails = ({ route}) => {
     if (loading) {
       // Display loading indicator when data is being loaded
       return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
+        <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
       );
     }
   
