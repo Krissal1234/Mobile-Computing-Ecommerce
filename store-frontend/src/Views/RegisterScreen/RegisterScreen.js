@@ -1,38 +1,71 @@
-import React, { useState } from 'react';
-import { Image, Text, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import styles from 'store-frontend/src/Views/styles';
-import LoginController from '../../Controllers/LoginController';
-import {colors} from 'store-frontend/src/Views/colors.js'
+import React, { useState } from "react";
+import {
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import styles from "store-frontend/src/Views/styles";
+import LoginController from "../../Controllers/LoginController";
+import { colors } from "store-frontend/src/Views/colors.js";
 
 export default function RegisterScreen({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordVerify, setPasswordVerify] = useState('');
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordVerify, setPasswordVerify] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [registerSuccess, setRegisterSuccess] = useState("");
 
   const onFooterLinkPress = () => {
-    navigation.navigate('Login');
+    navigation.navigate("Login");
   };
+  const passwordRegex =
+    /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{9,}$/;
 
   const onRegisterPress = async () => {
-
     // Basic validation
-    if (!email || !password || password !== passwordVerify) {
-      console.log('Invalid registration data');
+    if (!email || !password || !passwordVerify) {
+      console.log("Please fill in all fields");
+      setErrorMessage("Please fill in all fields");
       return;
     }
 
-    await LoginController.registerUser(email,username, password, passwordVerify)
+    if (!passwordRegex.test(password)) {
+      console.log(
+        "Password must contain at least one uppercase letter, one number, one symbol, and be at least 9 characters long"
+      );
+      setErrorMessage(
+        "Password must contain at least one uppercase letter, one number, one symbol, and be at least 9 characters long"
+      );
+      return;
+    }
+    if (password !== passwordVerify) {
+      console.log("Passwords do not match");
+      setErrorMessage("Passwords do not match");
+      return;
+    }
+
+    await LoginController.registerUser(
+      email,
+      username,
+      password,
+      passwordVerify
+    )
       .then((result) => {
         if (result.success) {
-          console.log('Registration successful:', result.message);
+          console.log("Registration successful:", result.message);
+          setRegisterSuccess("Registration Successful!");
+          setErrorMessage("");
         } else {
-          console.error('Registration failed:', result.message);
+          console.log("Registration failed:", result.message);
+          setErrorMessage(result.message);
         }
       })
       .catch((error) => {
-        console.error('Error during registration:', error);
+        console.error("Error during registration:", error);
       });
   };
 
@@ -42,12 +75,25 @@ export default function RegisterScreen({ navigation }) {
         contentContainerStyle={styles.keyboardContainer}
         keyboardShouldPersistTaps="never"
         scrollEnabled={true}
-        alwaysBounceVertical={true}>
+        alwaysBounceVertical={true}
+      >
         <Image
           style={styles.logo}
-          source={require('store-frontend/assets/logo.png')}
+          source={require("store-frontend/assets/logo.png")}
         />
-          <TextInput
+        {errorMessage !== "" && (
+          <Text style={{ color: "red", textAlign: "center", marginBottom: 10 }}>
+            {errorMessage}
+          </Text>
+        )}
+        {registerSuccess !== "" && (
+          <Text
+            style={{ color: "white", textAlign: "center", marginBottom: 10 }}
+          >
+            {registerSuccess}
+          </Text>
+        )}
+        <TextInput
           style={styles.input}
           placeholder="Username"
           placeholderTextColor={colors.grey}
@@ -85,12 +131,15 @@ export default function RegisterScreen({ navigation }) {
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-        <TouchableOpacity style={styles.button} onPress={() => onRegisterPress()}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => onRegisterPress()}
+        >
           <Text style={styles.buttonTitle}>Register</Text>
         </TouchableOpacity>
         <SafeAreaView style={styles.footerView}>
           <Text style={styles.footerText}>
-            Already have an account?{' '}
+            Already have an account?{" "}
             <Text onPress={onFooterLinkPress} style={styles.footerLink}>
               Log in
             </Text>
