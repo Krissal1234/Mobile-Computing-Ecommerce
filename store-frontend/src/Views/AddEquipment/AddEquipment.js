@@ -192,6 +192,8 @@ const AddEquipment = () => {
         style={styles.container}
         keyboardShouldPersistTaps="never">
 
+<View style={styles.androidFooterFix}>
+
           {/* Back Button */}
           <TouchableOpacity onPress={handleBack} style={styles.backButton}>
             <Icon name="arrow-left" size={40} color="white" />
@@ -503,7 +505,10 @@ const AddEquipment = () => {
                   <Text style={styles.buttonTitle}>Add Equipment</Text>
              </TouchableOpacity>
          </View>
+         </View>
+         
         </KeyboardAwareScrollView>
+
   );
 };
 

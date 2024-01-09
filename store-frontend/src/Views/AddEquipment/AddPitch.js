@@ -165,6 +165,8 @@ const AddPitch = () => {
      <KeyboardAwareScrollView
         style={styles.container}
         keyboardShouldPersistTaps="never">
+
+<View style={styles.androidFooterFix}>
         
         {/* Back Button */}
         <TouchableOpacity onPress={handleBack} style={styles.backButton}>
@@ -357,6 +359,7 @@ const AddPitch = () => {
           <TouchableOpacity style={styles.button} onPress={handleAddPitch}>
             <Text style={styles.buttonTitle}>Add Facility</Text>
           </TouchableOpacity>
+        </View>
         </View>
     </KeyboardAwareScrollView>
   );
