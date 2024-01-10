@@ -78,6 +78,7 @@ const Bookings = ({ route }) => {
 
 
   const renderBookingCards = (bookings) => {
+    if(bookings.length > 0){
     return bookings.map((order, index) => (
       <BookingsCard 
         key={index}
@@ -89,7 +90,11 @@ const Bookings = ({ route }) => {
         imageUri={order.item.imageReference}
         onPressFunc={() => navigateToBookingDetails(setSelectedBooking(order))}
       />
-    ));
+    ))} else {
+      return (<>
+      <Text style={{textAlign: "center", color: "white"}}>No bookings</Text>
+      </>)
+    };
   }
 
   function navigateToBookingDetails(){
@@ -111,7 +116,7 @@ const Bookings = ({ route }) => {
 
         <>
         {!isShowingDetails ? 
-        <View style={{backgroundColor: "rgba(0, 22, 51, 1)"}}>
+        <View style={{backgroundColor: "rgba(0, 22, 51, 1)", height: "100%"}}>
         <View style={{flexDirection: "row", justifyContent: "space-around", paddingVertical: 8}}>
           <TouchableOpacity onPress={() => setIsPastBookings(true)}>
           <Text style={{

@@ -408,24 +408,27 @@ exports.getAllListedSports = functions.https.onCall(async (data, context) => {
 exports.getPaymentSheet = functions.https.onCall(async (data, context) => {
   try {
     // Create a new Stripe express account
+
+    
     const account = await stripe.accounts.create({
       type: 'express',
       metadata: { sportyRentalsUserId: "5VaqOr1aDLQov360AHZDicR158d2"}
     });
-
+    
     const accountId = account.id;
+    await db.collection("users").doc(data.userId).set({stripeAccountId: accountId}, {merge: true})
 
     // Create an account link for the onboarding process
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
       refresh_url: 'https://example.com/reauth',
       return_url: 'https://example.com/return',
-      type: 'account_onboarding',
-    });
+      type: 'account_onboarding'    });
 
     return {
       success: true,
       accountLink: accountLink.url,
+      accountId: accountId
     };
 
   } catch (error) {
@@ -633,7 +636,7 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
     const order = data.order;
     let destinationAccountId = "acct_1NzaId9SCquKWTyl";
 
-    const equipmentListings = await db.collection("equipment").where("id", "==", "BHfXe2kKvdIZBHdGnvpd").get();
+    const equipmentListings = await db.collection("equipment").where("id", "==", order.itemId).get();
    
 
     let equipmentList = [];

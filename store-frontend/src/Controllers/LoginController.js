@@ -95,13 +95,12 @@ export class LoginController {
       console.log(`User ${email} logged in successfully`);
 
       // Fetch additional user data if needed
-      // const userData = await getUserFunc(email);
-
+      const userData = await getUserFunc({email: email});
       return {
         success: true,
         message: "Login successful",
         user: userCredential, // Include user data if needed
-        // userData: userData.data,
+        userData: userData.data,
       };
     } catch (error) {
       console.log("Error calling login function:");

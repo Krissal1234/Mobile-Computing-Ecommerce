@@ -7,7 +7,7 @@ import { colors } from "../colors";
 const BookingDetails = ({ backFunction, booking }) => {
 
   useEffect(() => {
-    console.log(booking)
+    console.log(booking.item.imageReference)
   })
   return (
     <View
@@ -17,9 +17,7 @@ const BookingDetails = ({ backFunction, booking }) => {
         padding: 16,
       }}
     >
-      <TouchableOpacity onPress={() => backFunction()}>
-        <Text style={{ color: "white" }}>Back</Text>
-      </TouchableOpacity>
+
 
       <View
         style={{
@@ -32,7 +30,7 @@ const BookingDetails = ({ backFunction, booking }) => {
       >
         <Image
           source={{
-            uri: "https://www.sportsdirect.com/images/products/08415840_l_a3.jpg",
+            uri: booking.item.imageReference,
           }}
           style={{ width: 100, height: 100 }}
         />
@@ -71,10 +69,8 @@ const BookingDetails = ({ backFunction, booking }) => {
         </View>
       </View>
 
-      <TouchableOpacity style={{marginTop: 16}} onPress={() => backFunction()}>
-        <View style={{paddingVertical: 5, paddingHorizontal: 10, backgroundColor: colors.lightBlue, borderRadius: 100, borderWidth: 2, borderColor: colors.red}}>
-          <Text style={{color: "white", textAlign: "center"}}>Back to all bookings</Text>
-        </View>
+      <TouchableOpacity style={{marginTop: 16, padding: 4}} onPress={() => backFunction()}>
+          <Text style={{color: "lightgray", textAlign: "center"}}>Back to all bookings</Text>
       </TouchableOpacity>
 
     </View>
