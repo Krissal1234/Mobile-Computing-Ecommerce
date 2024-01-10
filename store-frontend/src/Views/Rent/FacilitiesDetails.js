@@ -570,6 +570,12 @@ const FacilitiesDetails = ({ route }) => {
     return token;
   }
 
+  const isBuyNowEnabled = () => {
+    return (
+      startDate && selectedStartTime && selectedEndTime && totalPrice
+    );
+  };
+
   // ---------------------------------------------------------------------------------------------------------------------
 
   return (
@@ -618,7 +624,7 @@ const FacilitiesDetails = ({ route }) => {
         {/* Location */}
         {/* Show location */}
         <View style={styles.card}>
-          <Text style={styles.subtitle}>Pickup Location:</Text>
+          <Text style={styles.subtitle}>Location:</Text>
           <MapView
             style={styles.map}
             initialRegion={{
@@ -712,7 +718,11 @@ const FacilitiesDetails = ({ route }) => {
         </View>
 
         {/* Buy Now */}
-        <TouchableOpacity onPress={openModal} style={styles.card}>
+        <TouchableOpacity onPress={isBuyNowEnabled() ? openModal : null}
+        style={[
+          styles.card,
+          isBuyNowEnabled() ? styles.enabledButton : styles.disabledButton,
+        ]}>
           <View style={styles.timeContainer}>
             <Text style={styles.title}>Buy Now</Text>
             <Image source={basket_outline_black} style={styles.basket} />
