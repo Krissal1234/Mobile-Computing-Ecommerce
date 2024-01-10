@@ -19,6 +19,7 @@ const Stack = createStackNavigator();
 const ChoosingScreen = ({ navigation }) => {
 
   useEffect(() => {
+    console.log("Hello")
   }, [])
   return (
     <View style={addEquipmentStyles.choiceScreenContainer}>

@@ -27,11 +27,11 @@ export default function Home({ navigation }) {
       <Image source={require('store-frontend/assets/logo.png')} style={homeStyles.logo} />
 
       <TouchableOpacity style={styles.button} onPress={handleRentClick}>
-        <Text style={styles.buttonTitle}>Discover & Rent</Text>
+        <Text style={styles.buttonTitle}>Rent</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.button} onPress={handleLeaseClick}>
-        <Text style={styles.buttonTitle}>Create & Track Listings</Text>
+        <Text style={styles.buttonTitle}>Lease</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
