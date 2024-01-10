@@ -8,18 +8,20 @@ import AddPitch from "./AddPitch.js"; // Your AddPitch screen
 import addEquipmentStyles from "./styles";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { colors } from "../colors";
-import { Image } from "react-native";
+import { Image,ActivityIndicator } from "react-native";
 import { ListingsController } from "../../Controllers/ListingsController.js";
 import { openBrowserAsync } from "expo-web-browser";
 import setUpPayment from "../../../assets/setup_payment.png";
 import { UserContext } from "../../Contexts/UserContext.js";
 import { getUserFunc } from "../../../config/firebase.js";
+import { isSideLoadingEnabledAsync } from "expo-device";
 
 const Stack = createStackNavigator();
 
 const ChoosingScreen = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
-  const [hasStripeAccount, setHasStripeAccount] = useState(false)
+  const [hasStripeAccount, setHasStripeAccount] = useState(false);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     setButtonStyling();
     async function setButtonStyling(){
@@ -31,6 +33,13 @@ const ChoosingScreen = ({ navigation }) => {
                 }
     }
   }, [])
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
+  }
 
   return (
     <View style={addEquipmentStyles.choiceScreenContainer}>
@@ -85,12 +94,14 @@ const ChoosingScreen = ({ navigation }) => {
   );
 
   async function createPaymentAccount() {
+    setLoading(true);
     let paymentSheet = await ListingsController._getPaymentSheet(user.user.uid);
     console.log(paymentSheet);
     setUser((prev) => {
       return { ...prev, stripeAccountId: paymentSheet.data.accountId };
     });
     await openBrowserAsync(paymentSheet.data.accountLink);
+    setLoading(false);
     //Query stripe users for current user id, and save payment id in database
   }
 
