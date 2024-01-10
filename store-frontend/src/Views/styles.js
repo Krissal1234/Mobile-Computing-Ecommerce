@@ -209,7 +209,7 @@ export default StyleSheet.create({
     },
     dropdownItem: {
         fontSize: width*0.05,
-        fontWeight:'480',
+        fontWeight:500,
         color: colors.white,
         alignSelf:'center',
         paddingVertical:height*0.015,

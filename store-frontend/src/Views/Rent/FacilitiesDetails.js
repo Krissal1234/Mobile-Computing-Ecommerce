@@ -582,7 +582,7 @@ const FacilitiesDetails = ({ route }) => {
         {/* Location */}
         {/* Show location */}
         <View style={styles.card}>
-          <Text style={styles.subtitle}>Pickup Location:</Text>
+          <Text style={styles.subtitle}>Location:</Text>
           <MapView
             style={styles.map}
             initialRegion={{
