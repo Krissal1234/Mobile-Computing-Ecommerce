@@ -80,6 +80,8 @@ const Bookings = ({ route }) => {
   const renderBookingCards = (bookings) => {
     if(bookings.length > 0){
     return bookings.map((order, index) => (
+      <View style={{marginBottom: 8}}>
+
       <BookingsCard 
         key={index}
         title={order.item.title}
@@ -89,7 +91,8 @@ const Bookings = ({ route }) => {
         dateTo={order.rentalPeriod.end.endDate}
         imageUri={order.item.imageReference}
         onPressFunc={() => navigateToBookingDetails(setSelectedBooking(order))}
-      />
+        />
+        </View>
     ))} else {
       return (<>
       <Text style={{textAlign: "center", color: "white"}}>No bookings</Text>
@@ -132,14 +135,14 @@ const Bookings = ({ route }) => {
               textDecorationLine: !isPastBookings ? 'underline' : 'none'}}>Future Bookings</Text>
           </TouchableOpacity>
         </View>
-        <View style={{padding: 20}}>
+        <ScrollView style={{padding: 20}}>
 
         {isPastBookings ? (
           Array.isArray(pastbookingOrders) && renderBookingCards(pastbookingOrders) 
           
           ) : Array.isArray(pastbookingOrders) && renderBookingCards(futureBookingOrders)
         }
-        </View>
+        </ScrollView>
         
       </View> : <BookingDetails backFunction={navigateToAllBookings} booking={selectedBooking} />
       }

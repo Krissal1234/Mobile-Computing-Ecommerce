@@ -635,8 +635,13 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
     //const itemId = data.itemId;
     const order = data.order;
     let destinationAccountId = "acct_1NzaId9SCquKWTyl";
-
-    const equipmentListings = await db.collection("equipment").where("id", "==", order.itemId).get();
+    
+    let equipmentLisings = null;
+    if(order.item.type === "equipment"){
+      equipmentListings = await db.collection("equipment").where("id", "==", order.item.itemId).get();
+    } else {
+      equipmentListings = await db.collection("facilities").where("id", "==", order.itemId).get();
+    }
    
 
     let equipmentList = [];
@@ -645,7 +650,7 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
     equipmentListings.forEach(doc => {
       equipmentList.push({ id: doc.id, ...doc.data(), type: 'equipment' });
     });
-
+//HERE
     fromDate = order.rentalPeriod.start.startDate
     fromTime = order.rentalPeriod.start.startTime
     toDate = order.rentalPeriod.end.endDate
@@ -655,16 +660,16 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
       return new Date(date + 'T' + time);
   }
 
-  const startDateTime = combineDateTime(fromDate, fromTime);
+ const startDateTime = combineDateTime(fromDate, fromTime);
 const endDateTime = combineDateTime(toDate, toTime);
 
 const differenceInMilliseconds = endDateTime - startDateTime;
 
-// Converting milliseconds to hours
+//Converting milliseconds to hours
 const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
+//TO HERE
 
-
-   const price = equipmentList[0].price * 100 * Math.floor(differenceInHours);
+   const price = order.item.price * differenceInHours * 100 + 200;
 
     const customer = await stripe.customers.create();
     const ephemeralKey = await stripe.ephemeralKeys.create(
@@ -685,7 +690,7 @@ const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
         ephemeralKey: ephemeralKey.secret,
         customer: customer.id,
         publishableKey: "pk_test_51LoBCWGC9MhpkKozMAo0UEkGa8FS5TEx8ExG6T702Z8HCA7BvkLRe9jvKHZn26XTJobo4eSgAhVcRQIdAJSJVYAk0077oMzWuL",
-        price: order
+        order: order
     };
   
   }
