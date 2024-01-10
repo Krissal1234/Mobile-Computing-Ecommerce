@@ -44,9 +44,9 @@ export class ListingsController {
     }
 
   }
-  static async _getPaymentSheet(){
+  static async _getPaymentSheet(userId){
     try {
-      const response = await getPaymentSheet();
+      const response = await getPaymentSheet({userId: userId});
       return response;
     } catch (error) {
       console.log(error)

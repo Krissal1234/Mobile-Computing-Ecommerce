@@ -1,31 +1,52 @@
-import {React, useEffect} from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import styles from 'store-frontend/src/Views/styles';
-import AddEquipment from './AddEquipment.js'; // Your AddEquipment screen
-import AddPitch from './AddPitch.js'; // Your AddPitch screen
-import addEquipmentStyles from './styles';
-import Icon from 'react-native-vector-icons/FontAwesome'; 
-import { colors } from '../colors';
-import { Image } from 'react-native';
-import { ListingsController } from '../../Controllers/ListingsController.js';
-import { openBrowserAsync } from 'expo-web-browser';
-import setUpPayment from '../../../assets/setup_payment.png'
-
+import { React, useContext, useEffect, useState } from "react";
+import { View, TouchableOpacity, Text, Alert } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import styles from "store-frontend/src/Views/styles";
+import AddEquipment from "./AddEquipment.js"; // Your AddEquipment screen
+import AddPitch from "./AddPitch.js"; // Your AddPitch screen
+import addEquipmentStyles from "./styles";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { colors } from "../colors";
+import { Image } from "react-native";
+import { ListingsController } from "../../Controllers/ListingsController.js";
+import { openBrowserAsync } from "expo-web-browser";
+import setUpPayment from "../../../assets/setup_payment.png";
+import { UserContext } from "../../Contexts/UserContext.js";
+import { getUserFunc } from "../../../config/firebase.js";
 
 const Stack = createStackNavigator();
 
 const ChoosingScreen = ({ navigation }) => {
-
+  const { user, setUser } = useContext(UserContext);
+  const [hasStripeAccount, setHasStripeAccount] = useState(false)
   useEffect(() => {
-    console.log("Hello")
+    setButtonStyling();
+    async function setButtonStyling(){
+      let u = await getUserFunc({email: user.user.email});
+              if(u.data.data.stripeAccountId){
+                  setHasStripeAccount(true)
+                } else {
+                  setHasStripeAccount(false)
+                }
+    }
   }, [])
+
   return (
     <View style={addEquipmentStyles.choiceScreenContainer}>
-      <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Add Equipment')}>
+        <>
+          <TouchableOpacity
+            style={hasStripeAccount ? styles.button : {...styles.button, backgroundColor: "gray"}}
+            onPress={async () => {
+              let u = await getUserFunc({email: user.user.email});
+              if(u.data.data.stripeAccountId){
+                  navigation.navigate("Add Equipment")
+                } else {
+                  Alert.alert("Please setup payment info first")
+                }
+            }}
+            disabled={!hasStripeAccount}
+          >
             <Image
             source={require('store-frontend/assets/equipment_fill_black.png')}
             style={styles.choiceImg} 
@@ -33,27 +54,53 @@ const ChoosingScreen = ({ navigation }) => {
           <Text style={styles.buttonTitle}>Add Equipment Listing</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Add Pitch')}>
-          <Image
-            source={require('store-frontend/assets/pitch_fill_black.png')}
-            style={styles.choiceImg} 
+          <TouchableOpacity
+            style={hasStripeAccount ? styles.button : {...styles.button, backgroundColor: "gray"}}
+            onPress={async () => {
+              let u = await getUserFunc({email: user.user.email});
+              if(u.data.data.stripeAccountId){
+                navigation.navigate("Add Pitch")
+              } else {
+                Alert.alert("Please setup payment info first")
+              }
+            }}
+          >
+            <Image
+              source={require("store-frontend/assets/pitch_fill_black.png")}
+              style={styles.choiceImg}
             />
-          <Text style={styles.buttonTitle}>Add Facility Listing</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-          style={styles.button}
-          onPress={() => checkPayment()}>
-          <Image
-            source={setUpPayment}
-            style={styles.choiceImg} 
-            />
-          <Text style={styles.buttonTitle}>Setup Payment Info</Text>
-      </TouchableOpacity>
+            <Text style={styles.buttonTitle}>Add Facility Listing</Text>
+          </TouchableOpacity>
+        </>
+        <>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => createPaymentAccount()}
+          >
+            <Image source={setUpPayment} style={styles.choiceImg} />
+            <Text style={styles.buttonTitle}>Setup Payment Info</Text>
+          </TouchableOpacity>
+        </>
     </View>
   );
+
+  async function createPaymentAccount() {
+    let paymentSheet = await ListingsController._getPaymentSheet(user.user.uid);
+    console.log(paymentSheet);
+    setUser((prev) => {
+      return { ...prev, stripeAccountId: paymentSheet.data.accountId };
+    });
+    await openBrowserAsync(paymentSheet.data.accountLink);
+    //Query stripe users for current user id, and save payment id in database
+  }
+
+  async function checkPayment() {
+    let a = await ListingsController._getPaymentIdFromUserId();
+    console.log(a);
+    setUser((prev) => {
+      return { ...prev, stripeAccountId: "fwfwef" };
+    });
+  }
 };
 
 const ChoiceScreen = () => {
