@@ -18,8 +18,6 @@ const Stack = createStackNavigator();
 
 const ChoosingScreen = ({ navigation }) => {
 
-  useEffect(() => {
-  }, [])
   return (
     <View style={addEquipmentStyles.choiceScreenContainer}>
       <TouchableOpacity

@@ -15,6 +15,8 @@ const Bookings = ({ route }) => {
   const [futureBookingOrders, setFutureBookingOrders] = useState([]) // State to store booking orders
   const {user} = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(false); // new state variable for loading status
+  const [selectedBooking, setSelectedBooking] = useState(null)
+
   // const from = "";
   useEffect(() => {
     setShowFilter(false);
@@ -37,7 +39,8 @@ const Bookings = ({ route }) => {
       }else if (from == "lease"){
         resp = await OrderController.getLeaserFutureBookings(user.user.uid);
       }
-      console.log(resp.message);
+      console.log(resp.data);
+
       if(resp.success){
         setFutureBookingOrders(resp.data);
       }else{
@@ -59,7 +62,7 @@ const Bookings = ({ route }) => {
       }else if(from == 'lease'){
         resp = await OrderController.getLeaserPastBookings(user.user.uid);
       }
-      console.log(resp.message);
+      console.log(resp.data);
       if(resp.success){
         setPastBookingOrders(resp.data);
       }else{
@@ -75,18 +78,26 @@ const Bookings = ({ route }) => {
 
 
   const renderBookingCards = (bookings) => {
+    if(bookings.length > 0){
     return bookings.map((order, index) => (
+      <View style={{marginBottom: 8}}>
+
       <BookingsCard 
         key={index}
         title={order.item.title}
         description={order.item.description}
-        pricePaid={order.totalPrice}
+        pricePaid={"€" + order.totalPrice}
         dateFrom={order.rentalPeriod.start.startDate}
         dateTo={order.rentalPeriod.end.endDate}
         imageUri={order.item.imageReference}
-        onPressFunc={navigateToBookingDetails}
-      />
-    ));
+        onPressFunc={() => navigateToBookingDetails(setSelectedBooking(order))}
+        />
+        </View>
+    ))} else {
+      return (<>
+      <Text style={{textAlign: "center", color: "white"}}>No bookings</Text>
+      </>)
+    };
   }
 
   function navigateToBookingDetails(){
@@ -108,7 +119,7 @@ const Bookings = ({ route }) => {
 
         <>
         {!isShowingDetails ? 
-        <View style={{backgroundColor: "rgba(0, 22, 51, 1)"}}>
+        <View style={{backgroundColor: "rgba(0, 22, 51, 1)", height: "100%"}}>
         <View style={{flexDirection: "row", justifyContent: "space-around", paddingVertical: 8}}>
           <TouchableOpacity onPress={() => setIsPastBookings(true)}>
           <Text style={{
@@ -124,13 +135,16 @@ const Bookings = ({ route }) => {
               textDecorationLine: !isPastBookings ? 'underline' : 'none'}}>Future Bookings</Text>
           </TouchableOpacity>
         </View>
-        {isPastBookings ? (
-            Array.isArray(pastbookingOrders) && renderBookingCards(pastbookingOrders) 
+        <ScrollView style={{padding: 20}}>
 
-        ) : Array.isArray(pastbookingOrders) && renderBookingCards(futureBookingOrders)
+        {isPastBookings ? (
+          Array.isArray(pastbookingOrders) && renderBookingCards(pastbookingOrders) 
+          
+          ) : Array.isArray(pastbookingOrders) && renderBookingCards(futureBookingOrders)
         }
+        </ScrollView>
         
-      </View> : <BookingDetails backFunction={navigateToAllBookings} />
+      </View> : <BookingDetails backFunction={navigateToAllBookings} booking={selectedBooking} />
       }
         
         </>

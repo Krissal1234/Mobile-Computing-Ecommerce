@@ -1,9 +1,14 @@
 import { View, Text, Image } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-ico-material-design";
+import { colors } from "../colors";
 
-const BookingDetails = ({ backFunction }) => {
+const BookingDetails = ({ backFunction, booking }) => {
+
+  useEffect(() => {
+    console.log(booking.item.imageReference)
+  })
   return (
     <View
       style={{
@@ -12,9 +17,7 @@ const BookingDetails = ({ backFunction }) => {
         padding: 16,
       }}
     >
-      <TouchableOpacity onPress={() => backFunction()}>
-        <Text style={{ color: "white" }}>Back</Text>
-      </TouchableOpacity>
+
 
       <View
         style={{
@@ -27,16 +30,13 @@ const BookingDetails = ({ backFunction }) => {
       >
         <Image
           source={{
-            uri: "https://www.sportsdirect.com/images/products/08415840_l_a3.jpg",
+            uri: booking.item.imageReference,
           }}
           style={{ width: 100, height: 100 }}
         />
-        <Text style={{ fontWeight: "bold" }}>Nike Football Shoes</Text>
+        <Text style={{ fontWeight: "bold" }}>{booking.item.title}</Text>
         <Text style={{ fontSize: 12, textAlign: "center" }}>
-          The Nike Phantom Club GX Junior Firm Ground Football Boots are not for
-          the faint hearted. Designed with an elasticated knit collar that wraps
-          around the ankle, the two pull tabs make the boots super easy to slip
-          in to.
+        {booking.item.description}
         </Text>
       </View>
 
@@ -45,43 +45,34 @@ const BookingDetails = ({ backFunction }) => {
           backgroundColor: "white",
           padding: 16,
           borderRadius: 8,
-          flexDirection: "row",
           marginBottom: 16,
         }}
       >
-        <Text>Price:</Text>
-        <Text style={{ marginLeft: "auto" }}>€20.45 / hour</Text>
+        <View style={{flexDirection: "row"}}>
+        <Text>Price</Text>
+        <Text style={{ marginLeft: "auto" }}>€{booking.item.price} / hour</Text>
+        </View>
+        <View style={{flexDirection: "row"}}>
+        <Text>Leaser</Text>
+        <Text style={{ marginLeft: "auto" }}>{booking.renter.username}</Text>
+        </View>
       </View>
 
       <View style={{ backgroundColor: "white", padding: 16, borderRadius: 8 }}>
         <View style={{ flexDirection: "row" }}>
-          <Text>From:</Text>
-          <Text style={{ marginLeft: "auto" }}>04/12/2023 - 14:00</Text>
+          <Text>From</Text>
+          <Text style={{ marginLeft: "auto" }}>{booking.rentalPeriod.start.startDate} - {booking.rentalPeriod.start.startTime}</Text>
         </View>
         <View style={{ flexDirection: "row" }}>
-          <Text>To:</Text>
-          <Text style={{ marginLeft: "auto" }}>04/12/2023 - 18:00</Text>
+          <Text>To</Text>
+          <Text style={{ marginLeft: "auto" }}>{booking.rentalPeriod.end.endDate} - {booking.rentalPeriod.end.endTime}</Text>
         </View>
       </View>
 
-      <View
-        style={{
-          backgroundColor: "white",
-          padding: 16,
-          borderRadius: 8,
-          marginTop: 16,
-        }}
-      >
-        <Text>Rating</Text>
-        <View style={{flexDirection: "row", width: "100%", justifyContent: "space-around", paddingHorizontal: 64, paddingVertical: 16}}>
+      <TouchableOpacity style={{marginTop: 16, padding: 4}} onPress={() => backFunction()}>
+          <Text style={{color: "lightgray", textAlign: "center"}}>Back to all bookings</Text>
+      </TouchableOpacity>
 
-        <Icon name="thumb-up-button"/>
-        <Icon name="thumb-up-button"/>
-        <Icon name="thumb-up-button"/>
-        <Icon name="thumb-up-button"/>
-        <Icon name="thumb-up-button"/>
-        </View>
-      </View>
     </View>
   );
 };
