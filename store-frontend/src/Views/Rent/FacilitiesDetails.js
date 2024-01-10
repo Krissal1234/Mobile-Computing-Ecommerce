@@ -26,8 +26,6 @@ import * as Device from "expo-device";
 import * as Location from "expo-location";
 import MapView, { Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
-import { ListingsController } from "../../Controllers/ListingsController";
-import { initPaymentSheet, presentPaymentSheet } from "@stripe/stripe-react-native";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -431,9 +429,7 @@ const FacilitiesDetails = ({ route }) => {
     }else{
       finalEndDate = endDate;
     }
-    const { facilitiesId } = route.params;
-
-    const _order = {
+    const order = {
       rentalPeriod: {
         start: {
           startDate: startDate,
@@ -446,46 +442,14 @@ const FacilitiesDetails = ({ route }) => {
       },
       item: facilities,
       totalPrice,
-      itemId: facilitiesId
     };
 
-    console.log("ORDER ID:", _order.itemId);
-
-    let _response = await ListingsController._createPaymentSheet(_order);
-    console.log(_response)
-
-    
-      const {
-        paymentIntent,
-        ephemeralKey,
-        customer,
-        publishableKey,
-        order
-      } = _response.data;
-
-           await initPaymentSheet({
-        merchantDisplayName: "Sporty Rentals",
-        customerId: customer,
-        customerEphemeralKeySecret: ephemeralKey,
-        paymentIntentClientSecret: paymentIntent,
-        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-        //methods that complete payment after a delay, like SEPA Debit and Sofort.
-        allowsDelayedPaymentMethods: true,
-        defaultBillingDetails: {
-          name: 'Jane Doe',
-        }
-      });
-
-      const { error } = await presentPaymentSheet();
-
-      if(!error){
-        
-        const response = await OrderController.createOrder(order, user);
-        if(response.success){
-          console.log("order response", response.message);
-          return true;
-        } else return false;
-      } else return false;
+    console.log("ORDER:", order);
+    const response = await OrderController.createOrder(order, user);
+    if(response.success){
+      console.log("order response", response.message);
+      return true;
+    }
   };
 
   // ---------------------------------------------------------------------------------------------------------------------

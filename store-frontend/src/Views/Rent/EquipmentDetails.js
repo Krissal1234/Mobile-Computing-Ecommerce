@@ -469,7 +469,7 @@ const EquipmentDetails = ({ route }) => {
     }else{
       finalEndDate = endDate;
     }
-    const _order = {
+    const order = {
       rentalPeriod: {
         start: {
           startDate: startDate,
@@ -484,46 +484,15 @@ const EquipmentDetails = ({ route }) => {
       totalPrice,
     };
 
-    console.log(_order.item.itemId)
-    let _response = await ListingsController._createPaymentSheet(_order);
-    console.log(_response)
-
-    
-      const {
-        paymentIntent,
-        ephemeralKey,
-        customer,
-        publishableKey,
-        order
-      } = _response.data;
-
-           await initPaymentSheet({
-        merchantDisplayName: "Sporty Rentals",
-        customerId: customer,
-        customerEphemeralKeySecret: ephemeralKey,
-        paymentIntentClientSecret: paymentIntent,
-        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-        //methods that complete payment after a delay, like SEPA Debit and Sofort.
-        allowsDelayedPaymentMethods: true,
-        defaultBillingDetails: {
-          name: 'Jane Doe',
-        }
-      });
-
-      const { error } = await presentPaymentSheet();
-
-if(!error){
-
-  console.log("payment successful");
-  const response = await OrderController.createOrder(_order, user);
-  if (response.success) {
-    console.log("order response", response.message);
-    return true;
-  } else return false;
-}
-else {
-  return false;
-}
+    // let paymentResponse = await ListingsController._createPaymentSheet(order);
+    // if(paymentResponse.success){
+    console.log("payment successful");
+    const response = await OrderController.createOrder(order, user);
+    if (response.success) {
+      console.log("order response", response.message);
+      return true;
+      // }
+    }
 
     // console.log(response)
 

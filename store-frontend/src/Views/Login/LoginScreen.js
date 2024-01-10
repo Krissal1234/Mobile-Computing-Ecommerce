@@ -35,9 +35,6 @@ export default function LoginScreen({ navigation }) {
     if (login.success) {
       //Setting uid global variable
 
-      login.user.stripeAccountId = login.userData.data.stripeAccountId
-      console.log(login)
-      console.log(login)
       setUser(login.user);
 
       //Setting sport categories global variable to minimise overhead

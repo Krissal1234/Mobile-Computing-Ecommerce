@@ -408,27 +408,24 @@ exports.getAllListedSports = functions.https.onCall(async (data, context) => {
 exports.getPaymentSheet = functions.https.onCall(async (data, context) => {
   try {
     // Create a new Stripe express account
-
-    
     const account = await stripe.accounts.create({
       type: 'express',
       metadata: { sportyRentalsUserId: "5VaqOr1aDLQov360AHZDicR158d2"}
     });
-    
+
     const accountId = account.id;
-    await db.collection("users").doc(data.userId).set({stripeAccountId: accountId}, {merge: true})
 
     // Create an account link for the onboarding process
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
       refresh_url: 'https://example.com/reauth',
       return_url: 'https://example.com/return',
-      type: 'account_onboarding'    });
+      type: 'account_onboarding',
+    });
 
     return {
       success: true,
       accountLink: accountLink.url,
-      accountId: accountId
     };
 
   } catch (error) {
@@ -635,13 +632,8 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
     //const itemId = data.itemId;
     const order = data.order;
     let destinationAccountId = "acct_1NzaId9SCquKWTyl";
-    
-    let equipmentLisings = null;
-    if(order.item.type === "equipment"){
-      equipmentListings = await db.collection("equipment").where("id", "==", order.item.itemId).get();
-    } else {
-      equipmentListings = await db.collection("facilities").where("id", "==", order.itemId).get();
-    }
+
+    const equipmentListings = await db.collection("equipment").where("id", "==", "BHfXe2kKvdIZBHdGnvpd").get();
    
 
     let equipmentList = [];
@@ -650,7 +642,7 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
     equipmentListings.forEach(doc => {
       equipmentList.push({ id: doc.id, ...doc.data(), type: 'equipment' });
     });
-//HERE
+
     fromDate = order.rentalPeriod.start.startDate
     fromTime = order.rentalPeriod.start.startTime
     toDate = order.rentalPeriod.end.endDate
@@ -660,16 +652,16 @@ exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
       return new Date(date + 'T' + time);
   }
 
- const startDateTime = combineDateTime(fromDate, fromTime);
+  const startDateTime = combineDateTime(fromDate, fromTime);
 const endDateTime = combineDateTime(toDate, toTime);
 
 const differenceInMilliseconds = endDateTime - startDateTime;
 
-//Converting milliseconds to hours
+// Converting milliseconds to hours
 const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
-//TO HERE
 
-   const price = order.item.price * differenceInHours * 100 + 200;
+
+   const price = equipmentList[0].price * 100 * Math.floor(differenceInHours);
 
     const customer = await stripe.customers.create();
     const ephemeralKey = await stripe.ephemeralKeys.create(
@@ -690,7 +682,7 @@ const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
         ephemeralKey: ephemeralKey.secret,
         customer: customer.id,
         publishableKey: "pk_test_51LoBCWGC9MhpkKozMAo0UEkGa8FS5TEx8ExG6T702Z8HCA7BvkLRe9jvKHZn26XTJobo4eSgAhVcRQIdAJSJVYAk0077oMzWuL",
-        order: order
+        price: order
     };
   
   }
