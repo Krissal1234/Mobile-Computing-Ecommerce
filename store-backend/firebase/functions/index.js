@@ -400,7 +400,7 @@ exports.getAllListedSports = functions.https.onCall(async (data, context) => {
       });
       return { success: true, message: "Successfully retrieved listed sports", data: sports };
   } catch (error) {
-      console.error("Error getting sports", error);
+      console.error("Error getting sports", error);getPay
       return { success: false, message: "Internal server error" };
   }
 });
@@ -409,13 +409,12 @@ exports.getPaymentSheet = functions.https.onCall(async (data, context) => {
   try {
     // Create a new Stripe express account
 
-    
     const account = await stripe.accounts.create({
-      type: 'express',
-      metadata: { sportyRentalsUserId: "5VaqOr1aDLQov360AHZDicR158d2"}
+      type: 'express'
     });
     
     const accountId = account.id;
+
     await db.collection("users").doc(data.userId).set({stripeAccountId: accountId}, {merge: true})
 
     // Create an account link for the onboarding process

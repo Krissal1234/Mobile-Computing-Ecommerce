@@ -1,5 +1,5 @@
-import { React, useContext, useEffect } from "react";
-import { View, TouchableOpacity, Text } from "react-native";
+import { React, useContext, useEffect, useState } from "react";
+import { View, TouchableOpacity, Text, Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import styles from "store-frontend/src/Views/styles";
@@ -13,22 +13,39 @@ import { ListingsController } from "../../Controllers/ListingsController.js";
 import { openBrowserAsync } from "expo-web-browser";
 import setUpPayment from "../../../assets/setup_payment.png";
 import { UserContext } from "../../Contexts/UserContext.js";
+import { getUserFunc } from "../../../config/firebase.js";
 
 const Stack = createStackNavigator();
 
 const ChoosingScreen = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
-
+  const [hasStripeAccount, setHasStripeAccount] = useState(false)
   useEffect(() => {
-    console.log(user);
-  }, []);
+    setButtonStyling();
+    async function setButtonStyling(){
+      let u = await getUserFunc({email: user.user.email});
+              if(u.data.data.stripeAccountId){
+                  setHasStripeAccount(true)
+                } else {
+                  setHasStripeAccount(false)
+                }
+    }
+  }, [])
+
   return (
     <View style={addEquipmentStyles.choiceScreenContainer}>
-      {user.stripeAccountId ? (
         <>
           <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Add Equipment")}
+            style={hasStripeAccount ? styles.button : {...styles.button, backgroundColor: "gray"}}
+            onPress={async () => {
+              let u = await getUserFunc({email: user.user.email});
+              if(u.data.data.stripeAccountId){
+                  navigation.navigate("Add Equipment")
+                } else {
+                  Alert.alert("Please setup payment info first")
+                }
+            }}
+            disabled={!hasStripeAccount}
           >
             <Image
               source={require("store-frontend/assets/equipment_fill_black.png")}
@@ -38,8 +55,15 @@ const ChoosingScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Add Pitch")}
+            style={hasStripeAccount ? styles.button : {...styles.button, backgroundColor: "gray"}}
+            onPress={async () => {
+              let u = await getUserFunc({email: user.user.email});
+              if(u.data.data.stripeAccountId){
+                navigation.navigate("Add Pitch")
+              } else {
+                Alert.alert("Please setup payment info first")
+              }
+            }}
           >
             <Image
               source={require("store-frontend/assets/pitch_fill_black.png")}
@@ -48,7 +72,6 @@ const ChoosingScreen = ({ navigation }) => {
             <Text style={styles.buttonTitle}>Add Facility Listing</Text>
           </TouchableOpacity>
         </>
-      ) : (
         <>
           <TouchableOpacity
             style={styles.button}
@@ -58,12 +81,11 @@ const ChoosingScreen = ({ navigation }) => {
             <Text style={styles.buttonTitle}>Setup Payment Info</Text>
           </TouchableOpacity>
         </>
-      )}
     </View>
   );
 
   async function createPaymentAccount() {
-    let paymentSheet = await ListingsController._getPaymentSheet();
+    let paymentSheet = await ListingsController._getPaymentSheet(user.user.uid);
     console.log(paymentSheet);
     setUser((prev) => {
       return { ...prev, stripeAccountId: paymentSheet.data.accountId };
