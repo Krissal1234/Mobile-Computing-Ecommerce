@@ -22,7 +22,7 @@ import profileFill from '../../assets/profile_fill_black.png'
 import homeTransparent from '../../assets/home_button.png'
 import homeFill from '../../assets/home_button_fill.png'
 import EquipmentLease from './Lease/EquipmentLease';
-import PitchesLease from './Lease/PitchesLease';
+import PitchesLease from './Lease/FacilityLease';
 import addEquipmentFillIcon from '../../assets/add_report_black.png';
 import addEquipmentTransparentIcon from '../../assets/add_report.png';
 import { ListingsController } from '../Controllers/ListingsController';

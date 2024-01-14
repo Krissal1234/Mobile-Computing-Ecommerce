@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { View, FlatList, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Card, Title, Paragraph } from 'react-native-paper'; // Import components from react-native-paper
+import { Card, Title, Paragraph } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import { UserContext } from '../../Contexts/UserContext';
 import { ListingsController } from '../../Controllers/ListingsController';
 import styles from 'store-frontend/src/Views/styles';
 import { colors } from '../colors'; 
 
-const PitchList = ({ navigation }) => {
+const FacilityList = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
@@ -43,7 +43,7 @@ const PitchList = ({ navigation }) => {
   
   
   const handleItemPress = (pitch) => {
-    navigation.navigate('PitchDetails', { pitch });
+    navigation.navigate('FacilityDetails', { pitch });
   };
 
   return (
@@ -72,5 +72,5 @@ const PitchList = ({ navigation }) => {
   );
 };
 
-export default PitchList;
+export default FacilityList;
 

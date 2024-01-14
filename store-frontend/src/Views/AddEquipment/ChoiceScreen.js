@@ -3,8 +3,8 @@ import { View, TouchableOpacity, Text, Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import styles from "store-frontend/src/Views/styles";
-import AddEquipment from "./AddEquipment.js"; // Your AddEquipment screen
-import AddPitch from "./AddPitch.js"; // Your AddPitch screen
+import AddEquipment from "./AddEquipment.js"; 
+import AddFacility from "./AddFacility.js"; 
 import addEquipmentStyles from "./styles";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { colors } from "../colors";
@@ -129,8 +129,8 @@ const ChoiceScreen = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Add Pitch"
-          component={AddPitch}
+          name="Add Facility"
+          component={AddFacility}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
