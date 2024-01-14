@@ -297,6 +297,14 @@ export default StyleSheet.create({
       color: colors.black,
       alignSelf:'center'
     },
+
+    noEquipmentTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      color: colors.white,
+      alignSelf:'center'
+    },
     descriptionContainer:{
         alignItems:'center',
     },

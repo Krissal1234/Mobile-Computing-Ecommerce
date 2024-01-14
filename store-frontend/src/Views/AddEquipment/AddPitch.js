@@ -130,6 +130,8 @@ const AddPitch = () => {
       const response = await FacilitiesController.postFacility(newPitch, user);
       alert("Facility added successfully!");
       setSuccessMessage("Facility added successfully!"); // Notification if success
+      navigation.goBack();
+
 
       console.log(response);
     } catch (error) {

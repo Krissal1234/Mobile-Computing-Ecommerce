@@ -175,6 +175,9 @@ const AddEquipment = () => {
       );
       alert("Equipment added successfully!");
       setSuccessMessage("Equipment added successfully!");
+      navigation.goBack();
+
+      
       //Notification
       console.log(response.message);
     } catch (error) {

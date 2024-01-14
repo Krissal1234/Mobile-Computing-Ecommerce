@@ -118,7 +118,7 @@ const Equipment = ({ navigation }) => {
       ) : (
         // Display no equipment message when there are no items
 
-        <Text style={styles.noEquipmentText}>No Equipment Available</Text>
+        <Text style={styles.noEquipmentTitle}>No Equipment Available</Text>
 
       )}
     </View>
