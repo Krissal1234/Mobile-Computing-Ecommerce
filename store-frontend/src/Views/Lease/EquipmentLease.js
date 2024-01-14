@@ -13,47 +13,13 @@ import { colors } from '../colors';
 const Stack = createStackNavigator();
 
 const LeasingEquipment = ({ navigation }) => {
-  const [equipmentData, setEquipmentData] = useState([]); 
-  const [loading, setLoading] = useState(false); 
-  const { user } = useContext(UserContext);
-  console.log("UserID: ", user.user.uid ); 
-  const userId = user ? user.user.uid  : null; 
-
-
-  useEffect(() => {
-    const fetchAllEquipment = async () => {
-      setLoading(true); 
-      try {
-        const response = await ListingsController.getAllEquipmentUserListings(user.user.uid);
-        if (response && response.success) {
-          setEquipmentData(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching equipment:", error);
-      } finally {
-        setLoading(false); 
-      }
-    };
-
-    fetchAllEquipment();
-  }, []);
-
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
-  }
-
-
-
   return (
     <View style={styles1.container}>
-      <EquipmentList data={equipmentData} navigation={navigation} />
+      <EquipmentList navigation={navigation} />
     </View>
   );
 };
+
 
 
 

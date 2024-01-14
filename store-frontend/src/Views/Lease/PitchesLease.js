@@ -14,42 +14,9 @@ import { colors } from '../colors';
 const Stack = createStackNavigator();
 
 const LeasingPitches = ({ navigation }) => {
-
-  const [FacilitiesData, setFacilityData] = useState([]); 
-  const [loading, setLoading] = useState(false); 
-  const { user } = useContext(UserContext);
-  console.log("UserID: ", user.user.uid ); 
-  const userId = user ? user.user.uid  : null; 
-
-  useEffect(() => {
-    const fetchAvailableFacilities = async () => {
-      setLoading(true); 
-      try {
-        const response = await ListingsController.getAllFacilityUserListings(user.user.uid);
-        if (response && response.success) {
-          setFacilityData(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching facilities:", error);
-      } finally {
-        setLoading(false); 
-      }
-    };
-
-    fetchAvailableFacilities();
-  }, []);
-
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
-  }
-
   return (
     <View style={styles1.container}>
-      <PitchList data={FacilitiesData} navigation={navigation} />
+      <PitchList navigation={navigation} />
     </View>
   );
 };

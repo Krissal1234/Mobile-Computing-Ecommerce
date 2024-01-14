@@ -1,8 +1,47 @@
-import React from 'react';
-import { View, FlatList, Text, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { View, FlatList, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Card, Title, Paragraph } from 'react-native-paper'; // Import components from react-native-paper
+import { useFocusEffect } from '@react-navigation/native';
+import { UserContext } from '../../Contexts/UserContext';
+import { ListingsController } from '../../Controllers/ListingsController';
+import styles from 'store-frontend/src/Views/styles';
+import { colors } from '../colors'; 
 
-const PitchList = ({ data, navigation }) => {
+const PitchList = ({ navigation }) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { user } = useContext(UserContext);
+
+  const fetchAllFacilities = async () => {
+    setLoading(true); 
+    try {
+      const response = await ListingsController.getAllFacilityUserListings(user.user.uid);
+      if (response && response.success) {
+        setData(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching equipment:", error);
+    } finally {
+      setLoading(false); 
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchAllFacilities();
+    }, [])
+  );
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
+  }
+  
+  
+  
   const handleItemPress = (pitch) => {
     navigation.navigate('PitchDetails', { pitch });
   };
@@ -34,3 +73,4 @@ const PitchList = ({ data, navigation }) => {
 };
 
 export default PitchList;
+
