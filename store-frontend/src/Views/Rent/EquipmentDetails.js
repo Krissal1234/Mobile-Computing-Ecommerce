@@ -501,13 +501,8 @@ const EquipmentDetails = ({ route }) => {
         merchantDisplayName: "Sporty Rentals",
         customerId: customer,
         customerEphemeralKeySecret: ephemeralKey,
-        paymentIntentClientSecret: paymentIntent,
-        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-        //methods that complete payment after a delay, like SEPA Debit and Sofort.
-        allowsDelayedPaymentMethods: true,
-        defaultBillingDetails: {
-          name: 'Jane Doe',
-        }
+        paymentIntentClientSecret: paymentIntent
+ 
       });
 
       const { error } = await presentPaymentSheet();
@@ -522,6 +517,7 @@ if(!error){
   } else return false;
 }
 else {
+  console.log(error)
   return false;
 }
 

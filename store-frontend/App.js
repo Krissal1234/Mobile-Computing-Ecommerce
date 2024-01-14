@@ -1,37 +1,4 @@
-// import { StatusBar } from 'expo-status-bar';
-// import { Button, StyleSheet, Text, View } from 'react-native';
 
-// import { StripeProvider } from '@stripe/stripe-react-native';
-// import Profile from './Pages/Profile';
-// import Checkout from './Pages/Checkout';
-
-// function App() {
-//   return (
-//     <View style={styles}>
-
-//     <StripeProvider
-//       publishableKey="pk_test_51LoBCWGC9MhpkKozMAo0UEkGa8FS5TEx8ExG6T702Z8HCA7BvkLRe9jvKHZn26XTJobo4eSgAhVcRQIdAJSJVYAk0077oMzWuL"
-//       >
-//         <View style={{paddingTop: 25, backgroundColor: "#2A3E57"}}>
-//       <Profile />
-//       {/* <Checkout /> */}
-//         </View>
-//     </StripeProvider>
-//       </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#2A3E57',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
-
-// export default App;
-// import firebase from 'firebase/app';
 
 import "react-native-gesture-handler";
 import React, { useState,useEffect, useMemo } from "react";
@@ -76,6 +43,7 @@ import Test from "./src/Views/Rent/Equipment";
 // }, []);
 import { Text, View, Button } from "react-native";
 import * as Notifications from "expo-notifications";
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 const Stack = createStackNavigator();
 
@@ -83,11 +51,13 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   return (
+    <StripeProvider publishableKey="pk_test_51LoBCWGC9MhpkKozMAo0UEkGa8FS5TEx8ExG6T702Z8HCA7BvkLRe9jvKHZn26XTJobo4eSgAhVcRQIdAJSJVYAk0077oMzWuL">
+
     <UserProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login"  
         screenOptions={{ headerShown: false, // This will hide the header for all screens
-        }}>
+      }}>
           <Stack.Screen name="Home" component={HomeScreen}/>
           <Stack.Screen name="Login" component={LoginScreen}/>
           <Stack.Screen name="Registration" component={RegisterScreen}/>
@@ -102,5 +72,6 @@ export default function App() {
 
       
     </UserProvider>
+          </StripeProvider>
   );
 }
