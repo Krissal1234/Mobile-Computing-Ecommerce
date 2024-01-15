@@ -58,9 +58,11 @@ const EquipmentDetails = ({ route }) => {
   // Dates
   const [startDate, setStartDate] = useState(""); //for order (ISO / YYYY-MM-DD)
   const [endDate, setEndDate] = useState(""); //for order (ISO / YYYY-MM-DD) (isn't null, uses '')
-  const [minDate, setMinDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  const [minDate, setMinDate] = useState(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); // Adding 1 day to the current date
+    return tomorrow.toISOString().split("T")[0];
+  });
 
   //Scroll and Enlarge
 
@@ -484,55 +486,42 @@ const EquipmentDetails = ({ route }) => {
       totalPrice,
     };
 
-    // let paymentResponse = await ListingsController._createPaymentSheet(order);
-    // if(paymentResponse.success){
-    console.log("payment successful");
-    const response = await OrderController.createOrder(order, user);
-    if (response.success) {
-      console.log("order response", response.message);
-      return true;
-      // }
+    console.log(_order.item.itemId)
+    let _response = await ListingsController._createPaymentSheet(_order);
+    console.log(_response)
+
+    
+      const {
+        paymentIntent,
+        ephemeralKey,
+        customer,
+        publishableKey,
+        order
+      } = _response.data;
+
+           await initPaymentSheet({
+        merchantDisplayName: "Sporty Rentals",
+        customerId: customer,
+        customerEphemeralKeySecret: ephemeralKey,
+        paymentIntentClientSecret: paymentIntent
+ 
+      });
+
+      const { error } = await presentPaymentSheet();
+
+    if(!error){
+
+      console.log("payment successful");
+      const response = await OrderController.createOrder(_order, user);
+      if (response.success) {
+        console.log("order response", response.message);
+        return true;
+      } else return false;
     }
-
-    // console.log(response)
-
-    //   const {
-    //     paymentIntent,
-    //     ephemeralKey,
-    //     customer,
-    //     publishableKey,
-    //     price
-    //   } = response.data
-
-    // console.log("PRICE")
-    // console.log("PRICE")
-    // console.log("PRICE")
-    // console.log("PRICE")
-    // console.log("PRICE")
-    // console.log("PRICE")
-    // console.log(price)
-    // console.log(paymentIntent)
-
-    //   await initPaymentSheet({
-    //     merchantDisplayName: "Sporty Rentals",
-    //     customerId: customer,
-    //     customerEphemeralKeySecret: ephemeralKey,
-    //     paymentIntentClientSecret: paymentIntent,
-    //     // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-    //     //methods that complete payment after a delay, like SEPA Debit and Sofort.
-    //     allowsDelayedPaymentMethods: true,
-    //     defaultBillingDetails: {
-    //       name: 'Jane Doe',
-    //     }
-    //   });
-
-    //   const { error } = await presentPaymentSheet();
-
-    // if (error) {
-    //   return false;
-    // } else {
-    //   return true;
-    // }
+    else {
+      console.log(error)
+      return false;
+    }
   };
 
   // ---------------------------------------------------------------------------------------------------------------------

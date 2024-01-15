@@ -7,15 +7,15 @@ import { ListingsController } from '../../Controllers/ListingsController';
 import styles from 'store-frontend/src/Views/styles';
 import { colors } from '../colors'; 
 
-const EquipmentList = ({ navigation }) => {
+const FacilityList = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user } = useContext(UserContext);
 
-  const fetchAllEquipment = async () => {
+  const fetchAllFacilities = async () => {
     setLoading(true); 
     try {
-      const response = await ListingsController.getAllEquipmentUserListings(user.user.uid);
+      const response = await ListingsController.getAllFacilityUserListings(user.user.uid);
       if (response && response.success) {
         setData(response.data);
       }
@@ -28,7 +28,7 @@ const EquipmentList = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      fetchAllEquipment();
+      fetchAllFacilities();
     }, [])
   );
 
@@ -39,15 +39,17 @@ const EquipmentList = ({ navigation }) => {
       </View>
     );
   }
-
-  const handleItemPress = (equipment) => {
-    navigation.navigate('EquipmentDetails', { equipment });
+  
+  
+  
+  const handleItemPress = (pitch) => {
+    navigation.navigate('FacilityDetails', { pitch });
   };
 
   return (
     <View style={{ flex: 1, padding: 10 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, color: 'white', margin: 5 }}>
-        Your Equipment Listings:
+        Your Facility Listings:
       </Text>
       <FlatList
         data={data}
@@ -70,4 +72,5 @@ const EquipmentList = ({ navigation }) => {
   );
 };
 
-export default EquipmentList;
+export default FacilityList;
+

@@ -16,7 +16,7 @@ import { ActivityIndicator } from 'react-native';
 
 
 
-const PitchDetails = ({ route }) => {
+const FacilityDetails = ({ route }) => {
   const { pitch } = route.params;
   const navigation = useNavigation();
   const [isEditMode, setIsEditMode] = useState(false);
@@ -60,7 +60,6 @@ const PitchDetails = ({ route }) => {
   };
   const handleEdit = () => {
     if (isEditMode) {
-      // TODO: Implement update logic here
       console.log('facilityId:', pitch.id);
       const availableStatusBoolean = selectedAvailable === "Yes" ? true : false;
 
@@ -73,7 +72,7 @@ const PitchDetails = ({ route }) => {
           availableStatus: availableStatusBoolean,
           createdAt: pitch.createdAt,
           id: pitch.id,
-          location: pitch.location, //still to arrange
+          location: pitch.location, 
           owner: pitch.owner,
           type: pitch.type,
 
@@ -335,4 +334,4 @@ const PitchDetails = ({ route }) => {
   );
 };
 
-export default PitchDetails;
+export default FacilityDetails;

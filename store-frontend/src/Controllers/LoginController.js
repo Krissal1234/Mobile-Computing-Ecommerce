@@ -3,6 +3,7 @@
 import { login, auth, registerUser, getUserFunc } from "../../config/firebase";
 
 export class LoginController {
+
   static async registerUser(email, username, password, passwordVerify) {
     const result = this.validateRegistrationInputs(
       email,
@@ -15,7 +16,7 @@ export class LoginController {
 
     try {
       const userData = {
-        email: email,
+        email: email.toLowerCase(),
         password: password,
         username: username,
       };

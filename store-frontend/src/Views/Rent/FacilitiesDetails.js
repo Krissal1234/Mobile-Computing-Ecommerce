@@ -53,9 +53,11 @@ const FacilitiesDetails = ({ route }) => {
   // Dates
   const [startDate, setStartDate] = useState(""); //for order (ISO / YYYY-MM-DD)
   const [endDate, setEndDate] = useState(""); //for order (ISO / YYYY-MM-DD) (isn't null, uses '')
-  const [minDate, setMinDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  const [minDate, setMinDate] = useState(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); // Adding 1 day to the current date
+    return tomorrow.toISOString().split("T")[0];
+  });
 
   //Scroll and Enlarge
 
@@ -570,6 +572,12 @@ const FacilitiesDetails = ({ route }) => {
     return token;
   }
 
+  const isBuyNowEnabled = () => {
+    return (
+      startDate && selectedStartTime && selectedEndTime && totalPrice
+    );
+  };
+
   // ---------------------------------------------------------------------------------------------------------------------
 
   return (
@@ -618,7 +626,7 @@ const FacilitiesDetails = ({ route }) => {
         {/* Location */}
         {/* Show location */}
         <View style={styles.card}>
-          <Text style={styles.subtitle}>Pickup Location:</Text>
+          <Text style={styles.subtitle}>Location:</Text>
           <MapView
             style={styles.map}
             initialRegion={{
@@ -712,7 +720,11 @@ const FacilitiesDetails = ({ route }) => {
         </View>
 
         {/* Buy Now */}
-        <TouchableOpacity onPress={openModal} style={styles.card}>
+        <TouchableOpacity onPress={isBuyNowEnabled() ? openModal : null}
+        style={[
+          styles.card,
+          isBuyNowEnabled() ? styles.enabledButton : styles.disabledButton,
+        ]}>
           <View style={styles.timeContainer}>
             <Text style={styles.title}>Buy Now</Text>
             <Image source={basket_outline_black} style={styles.basket} />

@@ -5,6 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
+  View,
+  ActivityIndicator
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styles from "store-frontend/src/Views/styles";
@@ -18,6 +20,7 @@ export default function RegisterScreen({ navigation }) {
   const [passwordVerify, setPasswordVerify] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState("");
+  const [loading,setLoading] = useState(false);
 
   const onFooterLinkPress = () => {
     navigation.navigate("Login");
@@ -26,10 +29,12 @@ export default function RegisterScreen({ navigation }) {
     /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{9,}$/;
 
   const onRegisterPress = async () => {
+    setLoading(true);
     // Basic validation
     if (!email || !password || !passwordVerify) {
       console.log("Please fill in all fields");
       setErrorMessage("Please fill in all fields");
+      setLoading(false);
       return;
     }
 
@@ -40,11 +45,13 @@ export default function RegisterScreen({ navigation }) {
       setErrorMessage(
         "Password must contain at least one uppercase letter, one number, one symbol, and be at least 9 characters long"
       );
+      setLoading(false);
       return;
     }
     if (password !== passwordVerify) {
       console.log("Passwords do not match");
       setErrorMessage("Passwords do not match");
+      setLoading(false);
       return;
     }
 
@@ -59,9 +66,11 @@ export default function RegisterScreen({ navigation }) {
           console.log("Registration successful:", result.message);
           setRegisterSuccess("Registration Successful!");
           setErrorMessage("");
+          setLoading(false);
         } else {
           console.log("Registration failed:", result.message);
           setErrorMessage(result.message);
+          setLoading(false);
         }
       })
       .catch((error) => {
@@ -71,6 +80,15 @@ export default function RegisterScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+
+      {loading?(
+
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </View>
+
+      ):(
+
       <KeyboardAwareScrollView
         contentContainerStyle={styles.keyboardContainer}
         keyboardShouldPersistTaps="never"
@@ -82,7 +100,7 @@ export default function RegisterScreen({ navigation }) {
           source={require("store-frontend/assets/logo.png")}
         />
         {errorMessage !== "" && (
-          <Text style={{ color: "red", textAlign: "center", marginBottom: 10 }}>
+          <Text style={styles.errorMessage}>
             {errorMessage}
           </Text>
         )}
@@ -146,6 +164,7 @@ export default function RegisterScreen({ navigation }) {
           </Text>
         </SafeAreaView>
       </KeyboardAwareScrollView>
+      )}
     </SafeAreaView>
   );
 }

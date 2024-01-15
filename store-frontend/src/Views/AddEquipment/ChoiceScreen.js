@@ -3,12 +3,12 @@ import { View, TouchableOpacity, Text, Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import styles from "store-frontend/src/Views/styles";
-import AddEquipment from "./AddEquipment.js"; // Your AddEquipment screen
-import AddPitch from "./AddPitch.js"; // Your AddPitch screen
+import AddEquipment from "./AddEquipment.js"; 
+import AddFacility from "./AddFacility.js"; 
 import addEquipmentStyles from "./styles";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { colors } from "../colors";
-import { Image } from "react-native";
+import { Image,ActivityIndicator } from "react-native";
 import { ListingsController } from "../../Controllers/ListingsController.js";
 import { openBrowserAsync } from "expo-web-browser";
 import setUpPayment from "../../../assets/setup_payment.png";
@@ -34,11 +34,12 @@ const ChoosingScreen = ({ navigation }) => {
                 }
     }
   }, [])
-  if (loading){
-    return(
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color={colors.white} />
-            </View>)
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
   }
 
   return (
@@ -68,7 +69,7 @@ const ChoosingScreen = ({ navigation }) => {
             onPress={async () => {
               let u = await getUserFunc({email: user.user.email});
               if(u.data.data.stripeAccountId){
-                navigation.navigate("Add Pitch")
+                navigation.navigate("Add Facility")
               } else {
                 Alert.alert("Please setup payment info first")
               }
@@ -95,12 +96,14 @@ const ChoosingScreen = ({ navigation }) => {
 
   async function createPaymentAccount() {
     setLoading(true);
+    setLoading(true);
     let paymentSheet = await ListingsController._getPaymentSheet(user.user.uid);
     console.log(paymentSheet);
     setUser((prev) => {
       return { ...prev, stripeAccountId: paymentSheet.data.accountId };
     });
     await openBrowserAsync(paymentSheet.data.accountLink);
+    setLoading(false);
     setLoading(false);
     //Query stripe users for current user id, and save payment id in database
   }
@@ -120,9 +123,21 @@ const ChoiceScreen = () => {
     
     <NavigationContainer independent={true}>
       <Stack.Navigator initialRouteName="ChoosingScreen">
-        <Stack.Screen name="ChoosingScreen" component={ChoosingScreen} options={{ headerShown: false }}/>
-        <Stack.Screen name="Add Equipment" component={AddEquipment} options={{ headerShown: false }}/>
-        <Stack.Screen name="Add Pitch" component={AddPitch} options={{ headerShown: false }}/>
+        <Stack.Screen
+          name="ChoosingScreen"
+          component={ChoosingScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Add Equipment"
+          component={AddEquipment}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Add Facility"
+          component={AddFacility}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -28,7 +28,7 @@ import { ActivityIndicator } from "react-native";
 
 import addEquipmentStyles from "./styles"; // Modify as needed for AddPitch
 
-const AddPitch = () => {
+const AddFacility = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -130,6 +130,8 @@ const AddPitch = () => {
       const response = await FacilitiesController.postFacility(newPitch, user);
       alert("Facility added successfully!");
       setSuccessMessage("Facility added successfully!"); // Notification if success
+      navigation.goBack();
+
 
       console.log(response);
     } catch (error) {
@@ -378,4 +380,4 @@ const AddPitch = () => {
   );
 };
 
-export default AddPitch;
+export default AddFacility;
