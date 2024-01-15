@@ -35,10 +35,6 @@ const AddEquipment = () => {
   const [availableStatus, setAvailableStatus] = useState("Yes");
   const [deliveryType, setDeliveryType] = useState(null);
   const [images, setImages] = useState([]);
-  const [pickupLocation, setPickupLocation] = useState({
-    latitude: "",
-    longitude: "",
-  });
   const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] =
     useState(false);
   const { user } = useContext(UserContext);
@@ -146,6 +142,7 @@ const AddEquipment = () => {
       !availableStatus ||
       !deliveryType ||
       !condition ||
+      !location||
       images.length === 0
     ) {
       setErrorMessage("Please fill in all fields and select an image.");
@@ -165,7 +162,7 @@ const AddEquipment = () => {
         deliveryType,
         condition,
         imageReference: images[0],
-        pickupLocation: deliveryType === "delivery" ? null : pickupLocation,
+        pickupLocation: deliveryType === "delivery" ? null : location,
       };
       console.log("New Equipment:", newEquipment);
 

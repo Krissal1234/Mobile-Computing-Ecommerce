@@ -236,7 +236,7 @@ export default StyleSheet.create({
     horizontalFlatList: {
     },
     sectionTitle:{
-      fontSize:20,
+      fontSize:width*0.06,
       color:colors.white,
       marginLeft:width*0.05,
       fontWeight:'bold'
@@ -291,7 +291,7 @@ export default StyleSheet.create({
       alignSelf: 'center',
     },
     title: {
-      fontSize: 20,
+      fontSize: width*0.055,
       fontWeight: 'bold',
       textAlign: 'center',
       color: colors.black,
@@ -299,7 +299,7 @@ export default StyleSheet.create({
     },
 
     noEquipmentTitle: {
-      fontSize: 20,
+      fontSize: width*0.055,
       fontWeight: 'bold',
       textAlign: 'center',
       color: colors.white,
@@ -420,7 +420,7 @@ export default StyleSheet.create({
         ios: {  
         },
         android: {
-          fontSize:20,
+          fontSize:width*0.055,
         },
       }),
     },
@@ -507,9 +507,11 @@ export default StyleSheet.create({
     resizeMode:'contain',
   },
   disabledButton: {
-    backgroundColor: '#cccccc', // Example grey color
-    opacity: 0.5,  
+    backgroundColor: colors.semiTransGrey,
   },
-  
+  errorMessage:{
+    fontSize:width*0.055,
+    color:colors.red,
+  },
     
 })

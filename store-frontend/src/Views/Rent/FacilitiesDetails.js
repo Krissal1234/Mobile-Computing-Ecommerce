@@ -53,9 +53,11 @@ const FacilitiesDetails = ({ route }) => {
   // Dates
   const [startDate, setStartDate] = useState(""); //for order (ISO / YYYY-MM-DD)
   const [endDate, setEndDate] = useState(""); //for order (ISO / YYYY-MM-DD) (isn't null, uses '')
-  const [minDate, setMinDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  const [minDate, setMinDate] = useState(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); // Adding 1 day to the current date
+    return tomorrow.toISOString().split("T")[0];
+  });
 
   //Scroll and Enlarge
 
