@@ -68,7 +68,7 @@ const ChoosingScreen = ({ navigation }) => {
             onPress={async () => {
               let u = await getUserFunc({email: user.user.email});
               if(u.data.data.stripeAccountId){
-                navigation.navigate("Add Pitch")
+                navigation.navigate("Add Facility")
               } else {
                 Alert.alert("Please setup payment info first")
               }

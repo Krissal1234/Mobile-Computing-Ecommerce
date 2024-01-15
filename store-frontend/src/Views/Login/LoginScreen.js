@@ -76,7 +76,7 @@ export default function LoginScreen({ navigation }) {
 
             {errorMessage !== "" && (
               <Text
-                style={{ color: "red", textAlign: "center", marginBottom: 10 }}
+                style={styles.errorMessage}
               >
                 {errorMessage}
               </Text>
