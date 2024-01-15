@@ -14,7 +14,7 @@ import { openBrowserAsync } from "expo-web-browser";
 import setUpPayment from "../../../assets/setup_payment.png";
 import { UserContext } from "../../Contexts/UserContext.js";
 import { getUserFunc } from "../../../config/firebase.js";
-import { ActivityIndicator } from "react-native";
+
 
 const Stack = createStackNavigator();
 

@@ -463,6 +463,7 @@ const EquipmentDetails = ({ route }) => {
 
   const handleBuyNow = async () => {
     console.log("Buy Now Pressed");
+    setLoading(true);
     equipment.itemId = route.params.equipmentId;
     //Used if user only decides to rent for one day
     var finalEndDate = '';
@@ -471,7 +472,7 @@ const EquipmentDetails = ({ route }) => {
     }else{
       finalEndDate = endDate;
     }
-    const order = {
+    const _order = {
       rentalPeriod: {
         start: {
           startDate: startDate,
@@ -515,10 +516,15 @@ const EquipmentDetails = ({ route }) => {
       const response = await OrderController.createOrder(_order, user);
       if (response.success) {
         console.log("order response", response.message);
+        setLoading(false);
         return true;
-      } else return false;
+      } else {
+        setLoading(false);
+        return false;
+      }
     }
     else {
+      setLoading(false);
       console.log(error)
       return false;
     }
@@ -559,7 +565,7 @@ const EquipmentDetails = ({ route }) => {
       await scheduleLocalNotification();
       setModalVisible(true);
     } else {
-      console.error("Error in creating order");
+      console.log("Error in creating order");
     }
   };
 
