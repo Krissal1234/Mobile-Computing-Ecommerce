@@ -16,7 +16,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const functions = getFunctions(app);
+const functions = getFunctions(app,"europe-west1");
 //For firebase emulator
 //connectFunctionsEmulator(functions, "127.0.0.1", 50001)
 

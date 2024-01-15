@@ -12,7 +12,7 @@ admin.initializeApp(functions.config().firebase)
 const db = admin.firestore();
 
 //Register a User into sportyRentals -------------
-exports.registerUser = functions.https.onCall(async (data, context) => {
+exports.registerUser = functions.region('europe-west1').https.onCall(async (data, context) => {
   try {
     // Extract data from the argument
     const { email, password, username } = data;
@@ -83,7 +83,7 @@ async function isUsernameInUse(username) {
 
 //Param: email
 //checks if user has already been registered through their email
-exports.getUser = functions.https.onCall(async (data, context) => {
+exports.getUser = functions.region('europe-west1').https.onCall(async (data, context) => {
   try {
     // Assuming the email is passed as a property of the data parameter
     const email = data.email;
@@ -117,7 +117,7 @@ exports.getUser = functions.https.onCall(async (data, context) => {
 });
 
 //Equipment Input
-exports.postEquipment = functions.https.onCall(async (data, context) => {
+exports.postEquipment = functions.region('europe-west1').https.onCall(async (data, context) => {
   // Ensure user is authenticated
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
@@ -137,7 +137,7 @@ exports.postEquipment = functions.https.onCall(async (data, context) => {
 });
 
 //FACILITY INPUT
-exports.postFacility = functions.https.onCall(async (data, context) => {
+exports.postFacility = functions.region('europe-west1').https.onCall(async (data, context) => {
   // Ensure user is authenticated
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
@@ -156,7 +156,7 @@ exports.postFacility = functions.https.onCall(async (data, context) => {
     });
 });
 
-exports.getListingsByUserUid = functions.https.onCall(async (data,context) => {
+exports.getListingsByUserUid = functions.region('europe-west1').https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -201,7 +201,7 @@ exports.getListingsByUserUid = functions.https.onCall(async (data,context) => {
 
 
 
-exports.getFacilityListingsByUserUID =functions.https.onCall(async (data,context) => {
+exports.getFacilityListingsByUserUID =functions.region('europe-west1').https.onCall(async (data,context) => {
 if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -232,7 +232,7 @@ if (!context.auth) {
     };
   }
 });
-exports.getEquipmentListingsByUserUID =functions.https.onCall(async (data,context) => {
+exports.getEquipmentListingsByUserUID =functions.region('europe-west1').https.onCall(async (data,context) => {
 if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -264,7 +264,7 @@ if (!context.auth) {
     };
   }
 });
-exports.getFacilityById =functions.https.onCall(async (data,context) => {
+exports.getFacilityById =functions.region('europe-west1').https.onCall(async (data,context) => {
 
 try{
     const facility = await db.collection('facilities').doc(data).get();
@@ -280,7 +280,7 @@ try{
 
 });
 
-exports.getEquipmentById= functions.https.onCall(async (data,context) => {
+exports.getEquipmentById= functions.region('europe-west1').https.onCall(async (data,context) => {
 
   try{
     const equipment = await db.collection('equipment').doc(data).get();
@@ -295,7 +295,7 @@ exports.getEquipmentById= functions.https.onCall(async (data,context) => {
 }
 });
 
-exports.postOrder = functions.https.onCall(async (data,context) => {
+exports.postOrder = functions.region('europe-west1').https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -315,7 +315,7 @@ exports.postOrder = functions.https.onCall(async (data,context) => {
 });
 
 
-exports.getAllAvailableEquipment = functions.https.onCall(async (data,context) => {
+exports.getAllAvailableEquipment = functions.region('europe-west1').https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -334,7 +334,7 @@ exports.getAllAvailableEquipment = functions.https.onCall(async (data,context) =
     }
 });
 
-exports.getAllAvailableFacilities = functions.https.onCall(async (data,context) => {
+exports.getAllAvailableFacilities = functions.region('europe-west1').https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -353,7 +353,7 @@ exports.getAllAvailableFacilities = functions.https.onCall(async (data,context) 
     }
 });
 
-exports.filterFacilitiesBySport = functions.https.onCall(async (data,context) => {
+exports.filterFacilitiesBySport = functions.region('europe-west1').https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -374,7 +374,7 @@ exports.filterFacilitiesBySport = functions.https.onCall(async (data,context) =>
     }
 })
 
-exports.filterEquipmentBySport = functions.https.onCall(async (data,context) => {
+exports.filterEquipmentBySport = functions.region('europe-west1').https.onCall(async (data,context) => {
   try {
 
     const snapshot = await db.collection('equipment')
@@ -391,7 +391,7 @@ exports.filterEquipmentBySport = functions.https.onCall(async (data,context) => 
     }
 });
 
-exports.getAllListedSports = functions.https.onCall(async (data, context) => {
+exports.getAllListedSports = functions.region('europe-west1').https.onCall(async (data, context) => {
   try {
       const sportsSnapshot = await admin.firestore().collection('sports').get();
       const sports = [];
@@ -405,7 +405,7 @@ exports.getAllListedSports = functions.https.onCall(async (data, context) => {
   }
 });
 
-exports.getPaymentSheet = functions.https.onCall(async (data, context) => {
+exports.getPaymentSheet = functions.region('europe-west1').https.onCall(async (data, context) => {
   try {
     // Create a new Stripe express account
 
@@ -439,7 +439,7 @@ exports.getPaymentSheet = functions.https.onCall(async (data, context) => {
   }
 });
 
-exports.getLeaserFutureOrderedListings = functions.https.onCall(async (data,context) => {
+exports.getLeaserFutureOrderedListings = functions.region('europe-west1').https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -470,7 +470,7 @@ exports.getLeaserFutureOrderedListings = functions.https.onCall(async (data,cont
   }
 });
 
-exports.getLeaserPastOrderedListings = functions.https.onCall(async (data, context) => {
+exports.getLeaserPastOrderedListings = functions.region('europe-west1').https.onCall(async (data, context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -501,7 +501,7 @@ exports.getLeaserPastOrderedListings = functions.https.onCall(async (data, conte
     };
   }
 });
-exports.getCurrentOrders = functions.https.onCall(async (data,context) => {
+exports.getCurrentOrders = functions.region('europe-west1').https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -533,7 +533,7 @@ exports.getCurrentOrders = functions.https.onCall(async (data,context) => {
   }
 });
 
-exports.getPastOrders = functions.https.onCall(async (data, context) => {
+exports.getPastOrders = functions.region('europe-west1').https.onCall(async (data, context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -566,7 +566,7 @@ exports.getPastOrders = functions.https.onCall(async (data, context) => {
 });
 
 
-exports.deleteFacilityById = functions.https.onCall(async (data,context) => {
+exports.deleteFacilityById = functions.region('europe-west1').https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -578,7 +578,7 @@ exports.deleteFacilityById = functions.https.onCall(async (data,context) => {
       return {success:false, message: "Item successfully deleted"};
     });
 });
-exports.deleteEquipmentById = functions.https.onCall(async (data,context) => {
+exports.deleteEquipmentById = functions.region('europe-west1').https.onCall(async (data,context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -591,7 +591,7 @@ exports.deleteEquipmentById = functions.https.onCall(async (data,context) => {
     });
 });
 
-exports.editFacility = functions.https.onCall(async (data, context) => {
+exports.editFacility = functions.region('europe-west1').https.onCall(async (data, context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -608,7 +608,7 @@ exports.editFacility = functions.https.onCall(async (data, context) => {
     throw new functions.https.HttpsError('unknown', 'An error occurred while updating the item');
   }
 });
-exports.editEquipment = functions.https.onCall(async (data, context) => {
+exports.editEquipment = functions.region('europe-west1').https.onCall(async (data, context) => {
   if (!context.auth) {
     throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
   }
@@ -627,7 +627,7 @@ exports.editEquipment = functions.https.onCall(async (data, context) => {
 });
 
 
-exports.createPaymentSheet = functions.https.onCall(async (data, context) => {
+exports.createPaymentSheet = functions.region('europe-west1').https.onCall(async (data, context) => {
 
   try{
   
@@ -700,7 +700,7 @@ const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
   }
   });
 
-  exports.getPaymentIdFromUserId = functions.https.onCall(async (data, context) => {
+  exports.getPaymentIdFromUserId = functions.region('europe-west1').https.onCall(async (data, context) => {
 
     const accountId = data.accountId;
 
