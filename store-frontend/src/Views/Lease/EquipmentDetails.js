@@ -28,7 +28,6 @@ const EquipmentDetails = ({ route }) => {
   const [editableDescription, setEditableDescription] = useState(equipment.description);
   const [editablePrice, setEditablePrice] = useState(equipment.price.toString());
   const [editableSportCategory, setEditableSportCategory] = useState(equipment.sportCategory);
-  const [editableAvailable, setEditableAvailable] = useState(equipment.availableStatus.toString());
   const [editableDeliveryType, setEditableDeliveryType] = useState(equipment.deliveryType);
   const [selectedSport, setSelectedSport] = useState(equipment.sportCategory);
   const [isSportDropdownVisible, setIsSportDropdownVisible] = useState(false);
@@ -43,21 +42,24 @@ const EquipmentDetails = ({ route }) => {
   const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
   const availableOptions = ["Yes", "No"];
   const [isLoading, setIsLoading] = useState(false); 
+  const initialAvailableString = equipment.availableStatus ? "Yes" : "No";
+  const [selectedAvailable, setSelectedAvailable] = useState(initialAvailableString);
+  const [editableAvailable, setEditableAvailable] = useState(equipment.availableStatus);
+
+
 
 
   const initialAvailableValue = equipment.availableStatus ? "Yes" : "No";
-  const [selectedAvailable, setSelectedAvailable] = useState(initialAvailableValue);
 
   useEffect(() => {
     setSports(["No Filter", ...sportCategories]);
-    // Set initial pickup location
     if (equipment.location) {
       setPickupLocation({
         latitude: equipment.location.latitude,
         longitude: equipment.location.longitude,
       });
     }
-  }, [sportCategories, equipment.location]); // Add equipment.location to dependency array
+  }, [sportCategories, equipment.location]); 
 
 
   const selectImage = async () => {
@@ -244,10 +246,11 @@ const toggleSportDropdown = () => {
 
   const handleAvailableSelection = (selectedValue) => {
     setSelectedAvailable(selectedValue);
-    // Convert "Yes" or "No" back to boolean for editableAvailable
     setEditableAvailable(selectedValue === "Yes");
     setIsAvailableDropdownVisible(false);
   };
+  
+  
 
   const handleLatitudeChange = (text) => {
     setPickupLocation({ ...pickupLocation, latitude: parseFloat(text) });
@@ -410,7 +413,7 @@ const toggleSportDropdown = () => {
         </TouchableOpacity>
       ) : (
         <Card style={styles.card}>
-          <Text style={styles.price}>Available: {editableAvailable ? 'Yes' : 'No'}</Text>
+<           Text style={styles.price}>Available: {editableAvailable ? 'Yes' : 'No'}</Text>
         </Card>
       )}
 
