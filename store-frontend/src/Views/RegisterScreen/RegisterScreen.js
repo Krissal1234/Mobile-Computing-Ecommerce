@@ -67,6 +67,7 @@ export default function RegisterScreen({ navigation }) {
           setRegisterSuccess("Registration Successful!");
           setErrorMessage("");
           setLoading(false);
+          navigation.navigate("Login");
         } else {
           console.log("Registration failed:", result.message);
           setErrorMessage(result.message);
