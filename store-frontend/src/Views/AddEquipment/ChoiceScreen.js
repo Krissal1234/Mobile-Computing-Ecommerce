@@ -23,6 +23,7 @@ const ChoosingScreen = ({ navigation }) => {
   const [hasStripeAccount, setHasStripeAccount] = useState(false);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
+    
     setButtonStyling();
     async function setButtonStyling(){
       let u = await getUserFunc({email: user.user.email});
@@ -43,16 +44,11 @@ const ChoosingScreen = ({ navigation }) => {
 
   return (
     <View style={addEquipmentStyles.choiceScreenContainer}>
-        <>
+        {hasStripeAccount && <>
           <TouchableOpacity
-            style={hasStripeAccount ? styles.button : {...styles.button, backgroundColor: "gray"}}
+            style={styles.button}
             onPress={async () => {
-              let u = await getUserFunc({email: user.user.email});
-              if(u.data.data.stripeAccountId){
                   navigation.navigate("Add Equipment")
-                } else {
-                  Alert.alert("Please setup payment info first")
-                }
             }}
             disabled={!hasStripeAccount}
           >
@@ -64,14 +60,9 @@ const ChoosingScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={hasStripeAccount ? styles.button : {...styles.button, backgroundColor: "gray"}}
+            style={styles.button}
             onPress={async () => {
-              let u = await getUserFunc({email: user.user.email});
-              if(u.data.data.stripeAccountId){
-                navigation.navigate("Add Facility")
-              } else {
-                Alert.alert("Please setup payment info first")
-              }
+              navigation.navigate("Add Facility")
             }}
           >
             <Image
@@ -80,8 +71,8 @@ const ChoosingScreen = ({ navigation }) => {
             />
             <Text style={styles.buttonTitle}>Add Facility Listing</Text>
           </TouchableOpacity>
-        </>
-        <>
+        </>}
+        {!hasStripeAccount && <>
           <TouchableOpacity
             style={styles.button}
             onPress={() => createPaymentAccount()}
@@ -89,7 +80,7 @@ const ChoosingScreen = ({ navigation }) => {
             <Image source={setUpPayment} style={styles.choiceImg} />
             <Text style={styles.buttonTitle}>Setup Payment Info</Text>
           </TouchableOpacity>
-        </>
+        </>}
     </View>
   );
 
