@@ -116,6 +116,10 @@ const AddFacility = () => {
     try {
       const parsedPrice = parseInt(price);
       const availableStatusBoolean = availableStatus === "Yes";
+      const parsedPickupLocation = {
+        longitude: parseFloat(pickupLocation.longitude),
+        latitude: parseFloat(pickupLocation.latitude)
+      }
       const newPitch = {
         title,
         description,
@@ -123,7 +127,7 @@ const AddFacility = () => {
         sportCategory: selectedSport,
         availableStatus: availableStatusBoolean,
         imageReference: images[0],
-        location: pickupLocation,
+        location: parsedPickupLocation,
       };
 
       console.log("New Pitch:", newPitch);
