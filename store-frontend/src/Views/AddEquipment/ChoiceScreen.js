@@ -10,7 +10,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { colors } from "../colors";
 import { Image,ActivityIndicator } from "react-native";
 import { ListingsController } from "../../Controllers/ListingsController.js";
-import { openBrowserAsync } from "expo-web-browser";
+import { openAuthSessionAsync } from "expo-web-browser";
 import setUpPayment from "../../../assets/setup_payment.png";
 import { UserContext } from "../../Contexts/UserContext.js";
 import { getUserFunc } from "../../../config/firebase.js";
@@ -88,14 +88,25 @@ const ChoosingScreen = ({ navigation }) => {
     setLoading(true);
     let paymentSheet = await ListingsController._getPaymentSheet(user.user.uid);
     console.log(paymentSheet);
+    
     setUser((prev) => {
       return { ...prev, stripeAccountId: paymentSheet.data.accountId };
     });
-    await openBrowserAsync(paymentSheet.data.accountLink);
+    await openAuthSessionAsync(paymentSheet.data.accountLink);
     setLoading(false);
 
     let u = await getUserFunc({email: user.user.email});
-              if(u.data.data.stripeAccountId){
+
+              console.log("u.data.data")
+              console.log("u.data.data")
+              console.log("u.data.data")
+              console.log("u.data.data")
+              console.log(u.data.data)
+              console.log("u.data.data")
+              console.log("u.data.data")
+              console.log("u.data.data")
+              console.log("u.data.data")
+              if(u.data.data.paymentAccountSetup){
                 setHasStripeAccount(true);
               }
               else setHasStripeAccount(false)

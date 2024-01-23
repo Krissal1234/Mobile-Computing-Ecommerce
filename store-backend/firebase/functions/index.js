@@ -420,9 +420,10 @@ exports.getPaymentSheet = functions.region('europe-west1').https.onCall(async (d
     // Create an account link for the onboarding process
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
-      refresh_url: 'https://example.com/reauth',
-      return_url: 'https://example.com/return',
-      type: 'account_onboarding'    });
+      refresh_url: `https://sportyrentals.web.app/paymentSetupSuccess?userId=${data.userId}`,
+      return_url: `https://sportyrentals.web.app/paymentSetupSuccess?userId=${data.userId}`,
+      type: 'account_onboarding'    
+    });
 
     return {
       success: true,
@@ -702,29 +703,34 @@ const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
 
   exports.getPaymentIdFromUserId = functions.region('europe-west1').https.onCall(async (data, context) => {
 
-    const accountId = data.accountId;
-
     try {
-      const accounts = await stripe.accounts.list({limit: 20})
-
-      for (let i = 0; i < accounts.data.length; i++) {
-        if (accounts.data[i].metadata.sportyRentalsUserId === accountId) {
-            return({
-                sportyRentalsUserId: accounts.data[i].metadata.sportyRentalsUserId,
-                stripeAccountId: accounts.data[i].id
-            });
-
-        }
-    }
-
-      //not found in loop
-      return({
-        error: "No matching account found",
-        message: "You don't have a payment account linked to your account"
-      })
-    
+      await db.collection("users").doc(data.userId).set({paymentAccountSetup: true}, {merge: true})
+      return({success: true})
     } catch (error) {
-      res.json({error: error})      
+      return({success: false, error: error})
     }
+
+    // try {
+    //   const accounts = await stripe.accounts.list({limit: 20})
+
+    //   for (let i = 0; i < accounts.data.length; i++) {
+    //     if (accounts.data[i].metadata.sportyRentalsUserId === accountId) {
+    //         return({
+    //             sportyRentalsUserId: accounts.data[i].metadata.sportyRentalsUserId,
+    //             stripeAccountId: accounts.data[i].id
+    //         });
+
+    //     }
+    // }
+
+    //   //not found in loop
+    //   return({
+    //     error: "No matching account found",
+    //     message: "You don't have a payment account linked to your account"
+    //   })
+    
+    // } catch (error) {
+    //   res.json({error: error})      
+    // }
 
     });
