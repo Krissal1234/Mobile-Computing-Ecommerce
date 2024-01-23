@@ -16,11 +16,12 @@ const Bookings = ({ route }) => {
   const {user} = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(false); // new state variable for loading status
   const [selectedBooking, setSelectedBooking] = useState(null)
-
+  const [fromPage, setFromPage] = useState(null);
   // const from = "";
   useEffect(() => {
     setShowFilter(false);
     const {from} = route.params;
+    setFromPage(from);
     
     setIsLoading(true); // Start loading
     fetchPastBookingOrders(from);
@@ -144,7 +145,7 @@ const Bookings = ({ route }) => {
         }
         </ScrollView>
         
-      </View> : <BookingDetails backFunction={navigateToAllBookings} booking={selectedBooking} />
+      </View> : <BookingDetails  fromPage={fromPage} backFunction={navigateToAllBookings} booking={selectedBooking} />
       }
         
         </>
