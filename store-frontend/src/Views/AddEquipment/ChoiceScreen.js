@@ -93,6 +93,12 @@ const ChoosingScreen = ({ navigation }) => {
     });
     await openBrowserAsync(paymentSheet.data.accountLink);
     setLoading(false);
+
+    let u = await getUserFunc({email: user.user.email});
+              if(u.data.data.stripeAccountId){
+                setHasStripeAccount(true);
+              }
+              else setHasStripeAccount(false)
     //Query stripe users for current user id, and save payment id in database
   }
 
