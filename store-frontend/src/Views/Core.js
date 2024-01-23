@@ -17,7 +17,7 @@ import bookingsFillIcon from '../../assets/bookings_fill_black.png'
 import bookingsTransparentIcon from '../../assets/bookings.png'
 import pitchFillIcon from '../../assets/pitch_fill_black.png'
 import pitchTransparentIcon from '../../assets/pitch.png'
-import profileTransparent from '../../assets/profile.png'
+import profileTransparent from '../../assets/logo.png'
 import profileFill from '../../assets/profile_fill_black.png'
 import homeTransparent from '../../assets/home_button.png'
 import homeFill from '../../assets/home_button_fill.png'
@@ -193,8 +193,8 @@ const Core = () => {
           </TouchableOpacity>
         )}
                   
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.headerIcon}>
-              <Image source={profileTransparent} style={styles.iconImage} />
+        <TouchableOpacity style={styles.headerIcon}>
+              <Image source={profileTransparent} style={{...styles.iconImage, width: 50, height: 50}} />
         </TouchableOpacity>
       
       </BlurView>

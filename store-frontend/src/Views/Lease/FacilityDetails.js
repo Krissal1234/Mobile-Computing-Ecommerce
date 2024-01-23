@@ -25,16 +25,19 @@ const FacilityDetails = ({ route }) => {
   const [editableDescription, setEditableDescription] = useState(pitch.description);
   const [editablePrice, setEditablePrice] = useState(pitch.price.toString());
   const [editableSportCategory, setEditableSportCategory] = useState(pitch.sportCategory);
-  const [editableAvailable, setEditableAvailable] = useState(pitch.availableStatus.toString());
   const [isSportDropdownVisible, setIsSportDropdownVisible] = useState(false);
   const [sports, setSports] = useState([]);
   const { user, sportCategories } = useContext(UserContext);
   const [selectedSport, setSelectedSport] = useState(pitch.sportCategory);
   const [isAvailableDropdownVisible, setIsAvailableDropdownVisible] = useState(false);
   const availableOptions = ["Yes", "No"];
-  const initialAvailableValue = pitch.availableStatus ? "Yes" : "No";
-  const [selectedAvailable, setSelectedAvailable] = useState(initialAvailableValue);
   const [isLoading, setIsLoading] = useState(false);
+  const initialAvailableValue = Boolean(pitch.availableStatus);
+  const initialAvailableString = initialAvailableValue ? "Yes" : "No";
+  const [selectedAvailable, setSelectedAvailable] = useState(initialAvailableString);
+const [editableAvailable, setEditableAvailable] = useState(initialAvailableValue);
+
+
 
   useEffect(() => {
     setSports(["No Filter", ...sportCategories]);
@@ -152,6 +155,7 @@ const FacilityDetails = ({ route }) => {
       setEditableAvailable(selectedValue === "Yes");
       setIsAvailableDropdownVisible(false);
     };
+    
 
 
 
@@ -301,7 +305,7 @@ const FacilityDetails = ({ route }) => {
             </TouchableOpacity>
         ) : (
           <Card style={styles.card}>
-            <Text style={styles.price}>Available: {editableAvailable ? 'Yes' : 'No'}</Text>
+              <Text style={styles.price}>Available: {editableAvailable ? 'Yes' : 'No'}</Text>
           </Card>
         )}
       

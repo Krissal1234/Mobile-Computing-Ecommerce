@@ -10,7 +10,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { colors } from "../colors";
 import { Image,ActivityIndicator } from "react-native";
 import { ListingsController } from "../../Controllers/ListingsController.js";
-import { openBrowserAsync } from "expo-web-browser";
+import { openAuthSessionAsync } from "expo-web-browser";
 import setUpPayment from "../../../assets/setup_payment.png";
 import { UserContext } from "../../Contexts/UserContext.js";
 import { getUserFunc } from "../../../config/firebase.js";
@@ -24,6 +24,7 @@ const ChoosingScreen = ({ navigation }) => {
   const [hasStripeAccount, setHasStripeAccount] = useState(false);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
+    
     setButtonStyling();
     async function setButtonStyling(){
       let u = await getUserFunc({email: user.user.email});
@@ -44,16 +45,11 @@ const ChoosingScreen = ({ navigation }) => {
 
   return (
     <View style={addEquipmentStyles.choiceScreenContainer}>
-        <>
+        {hasStripeAccount && <>
           <TouchableOpacity
-            style={hasStripeAccount ? styles.button : {...styles.button, backgroundColor: "gray"}}
+            style={styles.button}
             onPress={async () => {
-              let u = await getUserFunc({email: user.user.email});
-              if(u.data.data.stripeAccountId){
                   navigation.navigate("Add Equipment")
-                } else {
-                  Alert.alert("Please setup payment info first")
-                }
             }}
             disabled={!hasStripeAccount}
           >
@@ -65,14 +61,9 @@ const ChoosingScreen = ({ navigation }) => {
       </TouchableOpacity>
 
           <TouchableOpacity
-            style={hasStripeAccount ? styles.button : {...styles.button, backgroundColor: "gray"}}
+            style={styles.button}
             onPress={async () => {
-              let u = await getUserFunc({email: user.user.email});
-              if(u.data.data.stripeAccountId){
-                navigation.navigate("Add Facility")
-              } else {
-                Alert.alert("Please setup payment info first")
-              }
+              navigation.navigate("Add Facility")
             }}
           >
             <Image
@@ -81,8 +72,8 @@ const ChoosingScreen = ({ navigation }) => {
             />
             <Text style={styles.buttonTitle}>Add Facility Listing</Text>
           </TouchableOpacity>
-        </>
-        <>
+        </>}
+        {!hasStripeAccount && <>
           <TouchableOpacity
             style={styles.button}
             onPress={() => createPaymentAccount()}
@@ -90,7 +81,7 @@ const ChoosingScreen = ({ navigation }) => {
             <Image source={setUpPayment} style={styles.choiceImg} />
             <Text style={styles.buttonTitle}>Setup Payment Info</Text>
           </TouchableOpacity>
-        </>
+        </>}
     </View>
   );
 
@@ -99,12 +90,28 @@ const ChoosingScreen = ({ navigation }) => {
     setLoading(true);
     let paymentSheet = await ListingsController._getPaymentSheet(user.user.uid);
     console.log(paymentSheet);
+    
     setUser((prev) => {
       return { ...prev, stripeAccountId: paymentSheet.data.accountId };
     });
-    await openBrowserAsync(paymentSheet.data.accountLink);
+    await openAuthSessionAsync(paymentSheet.data.accountLink);
     setLoading(false);
-    setLoading(false);
+
+    let u = await getUserFunc({email: user.user.email});
+
+              console.log("u.data.data")
+              console.log("u.data.data")
+              console.log("u.data.data")
+              console.log("u.data.data")
+              console.log(u.data.data)
+              console.log("u.data.data")
+              console.log("u.data.data")
+              console.log("u.data.data")
+              console.log("u.data.data")
+              if(u.data.data.paymentAccountSetup){
+                setHasStripeAccount(true);
+              }
+              else setHasStripeAccount(false)
     //Query stripe users for current user id, and save payment id in database
   }
 

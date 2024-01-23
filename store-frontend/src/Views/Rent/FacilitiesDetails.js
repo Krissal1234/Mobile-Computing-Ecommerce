@@ -426,6 +426,7 @@ const FacilitiesDetails = ({ route }) => {
 
   const handleBuyNow = async () => {
     console.log("Buy Now Pressed");
+    setLoading(true);
     //Used if user only decides to rent for one day
     var finalEndDate = '';
     if (!endDate){
@@ -481,13 +482,20 @@ const FacilitiesDetails = ({ route }) => {
       const { error } = await presentPaymentSheet();
 
       if(!error){
-        
+        console.log("payment successful");
         const response = await OrderController.createOrder(order, user);
         if(response.success){
           console.log("order response", response.message);
+          setLoading(false);
           return true;
-        } else return false;
-      } else return false;
+        } else {
+          setLoading(false);
+          return false;
+        } 
+      } else {
+        setLoading(false);
+        return false;
+      }
   };
 
   // ---------------------------------------------------------------------------------------------------------------------

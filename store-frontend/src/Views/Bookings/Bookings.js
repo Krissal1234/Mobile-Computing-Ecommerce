@@ -15,10 +15,13 @@ const Bookings = ({ route }) => {
   const [futureBookingOrders, setFutureBookingOrders] = useState([]) // State to store booking orders
   const {user} = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(false); // new state variable for loading status
+  const [selectedBooking, setSelectedBooking] = useState(null)
+  const [fromPage, setFromPage] = useState(null);
   // const from = "";
   useEffect(() => {
     setShowFilter(false);
     const {from} = route.params;
+    setFromPage(from);
     
     setIsLoading(true); // Start loading
     fetchPastBookingOrders(from);
@@ -130,7 +133,7 @@ const Bookings = ({ route }) => {
         ) : Array.isArray(pastbookingOrders) && renderBookingCards(futureBookingOrders)
         }
         
-      </View> : <BookingDetails backFunction={navigateToAllBookings} />
+      </View> : <BookingDetails  fromPage={fromPage} backFunction={navigateToAllBookings} booking={selectedBooking} />
       }
         
         </>

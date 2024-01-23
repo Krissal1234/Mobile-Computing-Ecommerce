@@ -22,6 +22,7 @@ import LeaseEquipment from './src/Views/Lease/EquipmentLease.js';
 import RegisterScreen from "./src/Views/RegisterScreen/RegisterScreen";
 import Equipment from "./src/Views/Rent/Equipment";
 import Profile from './src/Views/Profile/profileCore.js'
+import { LogBox } from "react-native";
 
 
 
@@ -48,6 +49,7 @@ import { StripeProvider } from "@stripe/stripe-react-native";
 const Stack = createStackNavigator();
 
 export default function App() {
+  LogBox.ignoreAllLogs();
   const [loading, setLoading] = useState(true);
 
   return (

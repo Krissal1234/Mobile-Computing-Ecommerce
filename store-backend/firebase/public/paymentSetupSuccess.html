@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sporty Rentals Payments</title>
+  </head>
+  <body
+    style="
+      background-color: #001935;
+      color: #f3f4f6;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      height: 95vh;
+    "
+  >
+    <img
+      src="./logo.png"
+      style="width: 60%; aspect-ratio: 1; max-width: 400px"
+    />
+    <h3 style="margin-bottom: 0" id="message-1">
+      We are finalizing setting up your payment account.
+    </h3>
+    <h4 style="font-weight: normal" id="message-2">
+      Please wait for a few seconds...
+    </h4>
+    <script>
+      const currentUrl = window.location.href;
+
+      // Create a URLSearchParams object from the URL
+      const urlParams = new URLSearchParams(new URL(currentUrl).search);
+
+      // Get the value of the 'userId' parameter
+      const userId = urlParams.get("userId");
+
+      console.log(userId); // Outputs: 0x123
+
+
+      fetch(
+        "https://europe-west1-sportyrentals.cloudfunctions.net/getPaymentIdFromUserId",
+        {
+          method: "POST", // Specify the method
+          headers: {
+            "Content-Type": "application/json", // Set the Content-Type header
+          },
+          body: JSON.stringify({
+            // Convert the body to a JSON string
+            data: {
+              userId: userId,
+            },
+          }),
+        }
+      )
+        .then((response) => response.json()) // Parse the JSON response
+        .then((data) => {
+          console.log("Success:", data); // Handle the response data
+
+          document.getElementById("message-1").textContent = "Your payment account has been succesfully setup!"
+          document.getElementById("message-2").textContent = "You can close the browser and return to the app."
+        })
+        .catch((error) => {
+          console.error("Error:", error); // Handle any errors
+        });
+    </script>
+  </body>
+</html>

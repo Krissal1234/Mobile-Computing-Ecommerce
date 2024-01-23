@@ -2,8 +2,15 @@ import { View, Text, Image } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-ico-material-design";
+import { colors } from "../colors";
+import { openBrowserAsync } from "expo-web-browser";
 
-const BookingDetails = ({ backFunction }) => {
+const BookingDetails = ({fromPage, backFunction, booking }) => {
+
+  useEffect(() => {
+    console.log(booking.item.imageReference)
+    console.log(booking);
+  })
   return (
     <View
       style={{
@@ -49,8 +56,14 @@ const BookingDetails = ({ backFunction }) => {
           marginBottom: 16,
         }}
       >
-        <Text>Price:</Text>
-        <Text style={{ marginLeft: "auto" }}>€20.45 / hour</Text>
+        <View style={{flexDirection: "row"}}>
+        <Text>Price</Text>
+        <Text style={{ marginLeft: "auto" }}>€{booking.item.price} / hour</Text>
+        </View>
+        <View style={{flexDirection: "row"}}>
+        <Text>{fromPage == "rent"? "Owner" : "Renter"  }</Text>
+        <Text style={{ marginLeft: "auto" }}>{fromPage== "rent" ? booking.item.owner.username : booking.renter.username}</Text>
+        </View>
       </View>
 
       <View style={{ backgroundColor: "white", padding: 16, borderRadius: 8 }}>
